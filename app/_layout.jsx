@@ -1,7 +1,5 @@
-
 import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
-import { useEffect } from 'react';
 
 const Layout = () => {
   const [fontsLoaded] = useFonts({

@@ -1,7 +1,6 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
-import DashboardHeader from '../../components/DashHeader'
+import DashboardHeader from '../../components/AppHeader'
 
 const DashboardLayout = () => {
   return (

@@ -29,7 +29,7 @@ const UserRides = () => {
         { name: 'Tahmid Zubayer', handle: '@tzubayer20' },
       ],
       fare: '210.00 BDT',
-      transport: 'Uber XL',
+      transport: 'Local Bus',
     }
   ];
 
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     padding: 25,
-    paddingTop: 0,
+    paddingTop: 10,
     backgroundColor: '#fff',
   },
   contentContainer: {

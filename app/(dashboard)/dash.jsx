@@ -1,5 +1,6 @@
 import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../components/StyledText'
+import { useRouter } from 'expo-router';
 import React from 'react'
 
 const Dash = () => {
@@ -13,6 +14,8 @@ const Dash = () => {
       transport: 'Uber',
     };
 
+    const router = useRouter();
+
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
       <Text style={styles.title}>Start your journey!</Text>
@@ -22,7 +25,7 @@ const Dash = () => {
         <Text style={styles.buttonText}>Choose your destination and look for others to share the journey.</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/availableRides')}>
         <Text style={styles.buttonTitle}>Join a Ride</Text>
         <Text style={styles.buttonText}>Find others going your way who are also looking to share.</Text>
       </TouchableOpacity>
