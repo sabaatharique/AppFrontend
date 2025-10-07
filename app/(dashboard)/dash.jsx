@@ -1,20 +1,15 @@
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../components/StyledText'
+import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
+import { StyledScrollView as ScrollView} from '../../components/StyledScrollView';
 import { useRouter } from 'expo-router';
+import rides from '../../data/rideData.json';
 import React from 'react'
 
 const Dash = () => {
-  const lastRide = { 
-      location: 'House #18, Road 6, Sector 5, Uttara',
-      partners: [
-        { name: 'Saba Atharique', handle: '@saba130' },
-        { name: 'Ridita Alam', handle: '@ridita110' },
-      ],
-      fare: '173.33 BDT',
-      transport: 'Uber',
-    };
+  const lastRide = rides[0];
 
-    const router = useRouter();
+  const router = useRouter();
 
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
@@ -32,38 +27,35 @@ const Dash = () => {
 
       <Text style={styles.title}>Your Last Ride</Text>
       
-      <View style={styles.rideCard}>
-        <View style={styles.rideRow}>
-          <Text style={styles.rideIcon}>📍</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.rideText}>{lastRide.location}</Text>
+      <CardButton>
+        <View style={styles.rideDetails}>
+          <View style={styles.rideRow}>
+            <Text style={styles.rideIcon}>📍</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.rideText, {fontWeight: 'bold'}]}>{lastRide.destination}</Text>
+            </View>
+          </View>
+
+          <View style={styles.rideRow}>
+            <Text style={styles.rideText}>{lastRide.date.day} • {lastRide.date.time}</Text>
+          </View>
+
+          <View style={styles.rideRow}>
+            <Text style={styles.rideText}>{lastRide.creator.name} </Text>
+            <Text style={styles.handle}>{lastRide.creator.handle}</Text>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.rideColumn}>
+              <Text style={[styles.rideText, styles.transportText]}>{lastRide.transport}</Text>
+            </View>
+
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>BDT {lastRide.fare}</Text>
+            </View>
           </View>
         </View>
-
-        <View style={styles.rideRow}>
-          <Text style={styles.rideLabel}>Ride partners:</Text>
-          <View style={{ flex: 1 }}>
-            {lastRide.partners.map((partner, i) => (
-              <View key={i} style={styles.partnerRow}>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  <Text style={styles.partnerName}>{partner.name} </Text>
-                  <Text style={styles.handle}>{partner.handle}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.rideRow}>
-          <Text style={styles.rideLabel}>Your fare:</Text>
-          <Text style={styles.rideText}>{lastRide.fare}</Text>
-        </View>
-
-        <View style={styles.rideRow}>
-          <Text style={styles.rideLabel}>Transport:</Text>
-          <Text style={styles.rideText}>{lastRide.transport}</Text>
-        </View>
-      </View>
+      </CardButton>
     </ScrollView>
   )
 }
@@ -75,15 +67,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     fontSize: 22, 
     marginTop: 15,
-  },
-  scrollView: {
-    padding: 25,
-    paddingTop: 10,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    alignItems: 'flex-start',
-    paddingBottom: 30,
   },
   button: {
     marginVertical: 10,
@@ -102,14 +85,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
   },
-  rideCard: { 
-    backgroundColor: '#fff', 
-    borderRadius: 16,
-    borderWidth: 1,     
-    borderColor: '#000000',
-    padding: 14, 
-    marginTop: 10,
-    width: '100%',
+  rideDetails: {
+    flex: 1,
   },
   rideRow: {
     flexDirection: 'row',
@@ -125,16 +102,20 @@ const styles = StyleSheet.create({
   },
   rideText: {
     fontSize: 14,
-    flex: 1,
+    flexShrink: 1,
   },
-  partnerRow: {
-    marginBottom: 5,
+  rideColumn: {
+    alignItems: 'flex-start',
+    width: '50%',
   },
-  partnerName: {
-    fontSize: 14,
+  transportText: {
+    backgroundColor: '#2b2b2b',
+    color: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 12
   },
   handle: {
-    fontSize: 14,
     color: '#888',
   }
 });
