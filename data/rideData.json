@@ -1,0 +1,43 @@
+[
+    {
+      "destination": "House #18, Road 6, Sector 5, Uttara",
+      "creator": { "name": "Saba Atharique", "handle": "@saba130" },
+      "partners": [
+        { "name": "Ridita Alam", "handle": "@ridita110" }
+      ],
+      "date": { "day": "7 October", "time": "2:30 PM" },
+      "fare": "173.33",
+      "transport": "Private Car"
+    },
+    {
+      "destination": "Capawcino, 27 Dhanmondi",
+      "creator": { "name": "Ridita Alam", "handle": "@ridita110" },
+      "partners": [
+        { "name": "Rahatut Tahrim Mounota", "handle": "@mounota122" },
+        { "name": "Saba Atharique", "handle": "@saba130" }
+      ],
+      "date": { "day": "7 October", "time": "2:30 PM" },
+      "fare": "80.25",
+      "transport": "Uber"
+    },
+    {
+      "destination": "Tokyo Kitchen, House 56/B, Banani",
+      "creator": { "name": "Rahatut Tahrim Mounota", "handle": "@mounota2" },
+      "partners": [
+        { "name": "Ridita Alam", "handle": "@ridita110" },
+        { "name": "Saba Atharique", "handle": "@saba130" }
+      ],
+      "date": { "day": "7 October", "time": "2:30 PM" },
+      "fare": "100.50",
+      "transport": "Pathao Car"
+    },
+    {
+      "destination": "North South University, Block C, Bashundhara R/A",
+      "creator": { "name": "Tahmid Zubayer", "handle": "@tzubayer" },
+      "partners": [],
+      "date": { "day": "7 October", "time": "2:30 PM" },
+      "fare": "20.00",
+      "transport": "Local Bus"
+    }
+  ]
+  
