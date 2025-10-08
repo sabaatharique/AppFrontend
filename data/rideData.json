@@ -1,5 +1,7 @@
 [
     {
+      "id": 1,
+      "start": "Islamic University of Technology, Boardbazar",
       "destination": "House #18, Road 6, Sector 5, Uttara",
       "creator": { "name": "Saba Atharique", "handle": "@saba130" },
       "partners": [
@@ -7,9 +9,12 @@
       ],
       "date": { "day": "7 October", "time": "2:30 PM" },
       "fare": "173.33",
+      "totalPassengers": 5,
       "transport": "Private Car"
     },
     {
+      "id": 2,
+      "start": "Islamic University of Technology, Boardbazar",
       "destination": "Capawcino, 27 Dhanmondi",
       "creator": { "name": "Ridita Alam", "handle": "@ridita110" },
       "partners": [
@@ -18,9 +23,12 @@
       ],
       "date": { "day": "7 October", "time": "2:30 PM" },
       "fare": "80.25",
+      "totalPassengers": 3,
       "transport": "Uber"
     },
     {
+      "id": 3,
+      "start": "Islamic University of Technology, Boardbazar",
       "destination": "Tokyo Kitchen, House 56/B, Banani",
       "creator": { "name": "Rahatut Tahrim Mounota", "handle": "@mounota2" },
       "partners": [
@@ -29,14 +37,18 @@
       ],
       "date": { "day": "7 October", "time": "2:30 PM" },
       "fare": "100.50",
+      "totalPassengers": 4,
       "transport": "Pathao Car"
     },
     {
+      "id": 4,
+      "start": "Islamic University of Technology, Boardbazar",
       "destination": "North South University, Block C, Bashundhara R/A",
       "creator": { "name": "Tahmid Zubayer", "handle": "@tzubayer" },
       "partners": [],
       "date": { "day": "7 October", "time": "2:30 PM" },
       "fare": "20.00",
+      "totalPassengers": 1,
       "transport": "Local Bus"
     }
   ]

@@ -1,9 +1,10 @@
-import { View, StyleSheet, } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { StyledText as Text } from '../../components/StyledText'
 import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
 import { StyledScrollView as ScrollView} from '../../components/StyledScrollView';
 import rides from '../../data/rideData.json';
 import React from 'react'
+import { Link } from 'expo-router';
 
 const UserRides = () => {
   return (
@@ -11,35 +12,37 @@ const UserRides = () => {
       <Text style={styles.title}>Your Previous Rides</Text>
       
       {rides.map((ride, index) => (
-        <CardButton key={index}>
-          <View style={styles.rideDetails}>
-            <View style={styles.rideRow}>
-              <Text style={styles.rideIcon}>📍</Text>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, {fontWeight: 'bold'}]}>{ride.destination}</Text>
-              </View>
-            </View>
-
-            <View style={styles.rideRow}>
-              <Text style={styles.rideText}>{ride.date.day} • {ride.date.time}</Text>
-            </View>
-
-            <View style={styles.rideRow}>
-              <Text style={styles.rideText}>{ride.creator.name} </Text>
-              <Text style={styles.handle}>{ride.creator.handle}</Text>
-            </View>
-
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.rideColumn}>
-                <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
+        <Link href={`ride/${ride.id}`} asChild key={index}>
+          <CardButton>
+            <View style={styles.rideDetails}>
+              <View style={styles.rideRow}>
+                <Text style={styles.rideIcon}>📍</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.rideText, {fontWeight: 'bold'}]}>{ride.destination}</Text>
+                </View>
               </View>
 
-              <View style={styles.rideColumn}>
-                <Text style={styles.rideText}>BDT {ride.fare}</Text>
+              <View style={styles.rideRow}>
+                <Text style={styles.rideText}>{ride.date.day} • {ride.date.time}</Text>
+              </View>
+
+              <View style={styles.rideRow}>
+                <Text style={styles.rideText}>{ride.creator.name} </Text>
+                <Text style={styles.handle}>{ride.creator.handle}</Text>
+              </View>
+
+              <View style={{flexDirection: 'row'}}>
+                <View style={styles.rideColumn}>
+                  <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
+                </View>
+
+                <View style={styles.rideColumn}>
+                  <Text style={styles.rideText}>BDT {ride.fare}</Text>
+                </View>
               </View>
             </View>
-          </View>
-        </CardButton>
+          </CardButton>
+        </Link>
       ))}
     </ScrollView>
   )

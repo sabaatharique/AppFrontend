@@ -1,9 +1,10 @@
 import { View, StyleSheet } from 'react-native'
 import { StyledText as Text } from '../../components/StyledText'
 import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
-import { StyledScrollView as ScrollView} from '../../components/StyledScrollView';
+import { StyledScrollView as ScrollView} from '../../components/StyledScrollView'
 import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar'
-import rides from '../../data/rideData.json';
+import { Link } from 'expo-router'
+import rides from '../../data/rideData.json'
 import React, { useState } from 'react'
 
 const availableRides = () => {
@@ -26,36 +27,36 @@ const availableRides = () => {
       <Text style={styles.title}>Available Rides</Text>
       
       {filteredRides.map((ride, index) => (
-        <CardButton key={index}>
-          
-          <View style={{flexDirection: 'row'}}>
-            <View style={styles.locationColumn}>
-              <View style={styles.rideRow}>
-                <Text style={styles.rideIcon}>📍</Text>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.rideText}>{ride.destination}</Text>
+        <Link href={`ride/${ride.id}`} asChild key={index}>
+          <CardButton>
+            <View style={{flexDirection: 'row'}}>
+              <View style={styles.locationColumn}>
+                <View style={styles.rideRow}>
+                  <Text style={styles.rideIcon}>📍</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.rideText}>{ride.destination}</Text>
+                  </View>
+                </View>
+
+                <View style={{flexDirection: 'row'}}>
+                  <View style={styles.rideColumn}>
+                    <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
+                  </View>
+
+                  <View style={styles.rideColumn}>
+                    <Text style={styles.rideText}>BDT {ride.fare}</Text>
+                  </View>
                 </View>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <View style={styles.rideColumn}>
-                  <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-                </View>
-
-                <View style={styles.rideColumn}>
-                  <Text style={styles.rideText}>BDT {ride.fare}</Text>
-                </View>
+              <View style={styles.creatorColumn}>
+                <Text style={{fontSize: 18}}>👤</Text>
+                <Text>{ride.creator.name}</Text>
+                <Text style={styles.handle}>{ride.creator.handle}</Text>
               </View>
             </View>
-
-            <View style={styles.creatorColumn}>
-              <Text style={{fontSize: 18}}>👤</Text>
-              <Text style={styles.creatorName}>{ride.creator.name}</Text>
-              <Text style={styles.handle}>{ride.creator.handle}</Text>
-            </View>
-          </View>
-          
-        </CardButton>
+          </CardButton>
+        </Link>
       ))}
     </ScrollView>
   )
