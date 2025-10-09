@@ -16,7 +16,6 @@ const UserRides = () => {
         <Link href={`ride/${ride.id}`} asChild key={index}>
           <CardButton>
           <View style={[styles.creatorRow]}>
-              <Text style={{fontSize: 18}}>📍 </Text>
               <Text style={[styles.rideText, {fontSize: 16}]}>{ride.destination}</Text>
             </View>
 
