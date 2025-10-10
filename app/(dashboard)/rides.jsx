@@ -17,18 +17,12 @@ const UserRides = () => {
           <CardButton>
            {/* destination location */}
            <View style={styles.rideRow}>
-              <Text>📍  </Text>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{ride.destination}</Text>
-              </View>
+              <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{ride.destination}</Text>
             </View>
 
             {/* time & date */}
             <View style={styles.rideRow}>
-              <Text>🕛  </Text>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
-              </View>
+              <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
             </View>
 
           <View style={styles.creatorRow}>
@@ -69,7 +63,7 @@ const styles = StyleSheet.create({
   },
   rideColumn: {
     alignItems: 'flex-start',
-    marginVertical: 5,
+    marginTop: 5,
     width: '50%'
   },
   transportText: {

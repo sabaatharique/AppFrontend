@@ -5,6 +5,7 @@ import { StyledScrollView as ScrollView } from '../../components/StyledScrollVie
 import { StyledTitle as Title } from '../../components/StyledTitle';
 import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar';
 import { StyledButton as Button } from '../../components/StyledButton';
+import { StyledBorderText as BorderText} from '../../components/StyledBorderText';
 import { StyledDateTimePicker } from '../../components/StyledDateTimePicker';
 import { Link } from 'expo-router';
 import rides from '../../data/rideData.json';
@@ -89,18 +90,12 @@ const AvailableRides = () => {
         <Link href={`ride/${ride.id}`} asChild key={index}>
           <CardButton>
             {/* ride creator */}
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <TouchableOpacity style={styles.creatorRow}>
-                <Text style={{fontSize: 30}}>👤 </Text>
-                <View >
-                  <Text style={{fontWeight: 'semibold', fontSize: 16}}>{ride.creator.name}</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontSize: 30}}>👤 </Text>
+              <View>
+                <Text style={{fontWeight: 'semibold', fontSize: 16}}>{ride.creator.name}</Text>
                 <Text style={styles.handle}>{ride.creator.handle}</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{paddingHorizontal: 10}}> 
-                <Text>📞</Text>
-              </TouchableOpacity>
+              </View>
             </View>
 
 
@@ -108,7 +103,7 @@ const AvailableRides = () => {
             <View style={styles.rideRow}>
               <Text>⭕  </Text>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.borderText, styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
+                <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</BorderText>
               </View>
             </View>
 
@@ -116,7 +111,7 @@ const AvailableRides = () => {
             <View style={styles.rideRow}>
               <Text>📍  </Text>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, styles.borderText, {marginVertical: 0}]}>{ride.destination}</Text>
+                <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</BorderText>
               </View>
             </View>
 
@@ -180,15 +175,6 @@ const styles = StyleSheet.create({
   rideColumn: {
     alignItems: 'flex-start',
     width: '50%',
-  },
-  borderText: {
-    borderRadius: 20,
-    borderWidth: 1,     
-    borderColor: '#ababab',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    marginVertical: 5,
-    flex: 1
   },
   transportContainer: {
     borderRadius: 14,    

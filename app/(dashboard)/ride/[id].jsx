@@ -3,13 +3,15 @@ import { StyledText as Text } from '../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
 import { StyledCard as Card} from '../../../components/StyledCard'
 import { StyledTitle as Title } from '../../../components/StyledTitle' 
-import { useLocalSearchParams } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import rides from '../../../data/rideData.json'
 import React, { useState } from 'react';
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
   const ride = rides.find(r => r.id === parseInt(id));
+
+  const router = useRouter();
   
   const [showPassengers, setShowPassengers] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -55,13 +57,13 @@ const RideDetails = () => {
           <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Ride creator</Text>
         </View>
 
-        <View style={styles.creatorRow}>
+        <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../(joinRide)/user/${ride.creator.handle}`)}}>
           <Text style={{fontSize: 30}}>👤 </Text>
-          <View>
+          <View >
             <Text style={styles.creatorName}>{ride.creator.name}</Text>
-            <Text style={styles.handle}>{ride.creator.handle}</Text>
+          <Text style={styles.handle}>{ride.creator.handle}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
 
         {/* ride passengers */}
         <View style={styles.subtitle}>
@@ -76,13 +78,13 @@ const RideDetails = () => {
               <Text style={[styles.handle, styles.rideRow]}>No other passengers.</Text>
             ) : (
               ride.partners.map((partner, index) => (
-                <View key={index} style={styles.creatorRow}>
+                <TouchableOpacity key={index} style={styles.creatorRow} onPress={() => {router.push(`../../(joinRide)/user/${partner.handle}`)}}>
                   <Text style={{fontSize: 30}}>👤 </Text>
-                  <View>
+                  <View >
                     <Text style={styles.creatorName}>{partner.name}</Text>
-                    <Text style={styles.handle}>{partner.handle}</Text>
+                  <Text style={styles.handle}>{partner.handle}</Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))
             )}
           </View>

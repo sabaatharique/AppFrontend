@@ -1,15 +1,19 @@
-import { View, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
 import { StyledCard as Card} from '../../../components/StyledCard'
 import { StyledButton as Button} from '../../../components/StyledButton'
-import { useLocalSearchParams } from 'expo-router'
+import { StyledBorderText as BorderText} from '../../../components/StyledBorderText'
+import { StyledBorderView as BorderView} from '../../../components/StyledBorderView'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import rides from '../../../data/rideData.json'
 import React, { useState } from 'react';
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
   const ride = rides.find(r => r.id === parseInt(id));
+
+  const router = useRouter();
 
   const [showPassengers, setShowPassengers] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -28,15 +32,13 @@ const RideDetails = () => {
         <Text>Map</Text>
       </View>
 
-      
       <Card>
         <Button title="Request to Join"></Button>
-
         {/* start location */}
         <View style={styles.rideRow}>
           <Text>⭕  </Text>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.borderText, styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
+            <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</BorderText>
           </View>
         </View>
 
@@ -44,7 +46,7 @@ const RideDetails = () => {
         <View style={styles.rideRow}>
           <Text>📍  </Text>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.rideText, styles.borderText, {marginVertical: 0}]}>{ride.destination}</Text>
+            <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</BorderText>
           </View>
         </View>
 
@@ -62,7 +64,7 @@ const RideDetails = () => {
         </View>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <TouchableOpacity style={styles.creatorRow}>
+          <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../user/${ride.creator.handle}`)}}>
             <Text style={{fontSize: 30}}>👤 </Text>
             <View >
               <Text>{ride.creator.name}</Text>
@@ -89,7 +91,7 @@ const RideDetails = () => {
             ) : (
               ride.partners.map((partner, index) => (
                 <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <TouchableOpacity style={styles.creatorRow}>
+                  <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../user/${partner.handle}`)}}>
                     <Text style={{fontSize: 30}}>👤 </Text>
                     <View >
                       <Text style={styles.creatorName}>{partner.name}</Text>
@@ -111,7 +113,7 @@ const RideDetails = () => {
           <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Preferences</Text>
         </View>
 
-        <View style={styles.borderText}>
+        <BorderView>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.rideColumn}>
               <Text style={styles.rideText}>Total passengers:</Text>
@@ -138,7 +140,7 @@ const RideDetails = () => {
               <Text style={styles.rideText}>Would prefer people from the same university.</Text>
             </View>
           </View>
-        </View>
+        </BorderView>
         
         {/* transport & fare */}
         <View style={styles.subtitle}>
@@ -163,7 +165,7 @@ const RideDetails = () => {
         </View>
 
         {showBreakdown && (
-          <View style={styles.borderText}>
+          <BorderView>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.rideColumn}>
                 <Text style={styles.rideText}>{ride.creator.name}</Text>
@@ -186,7 +188,7 @@ const RideDetails = () => {
                 </View>
               ))
             )}
-          </View>
+          </BorderView>
         )}
       </Card>
     </ScrollView>
@@ -200,15 +202,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     fontSize: 14, 
     marginTop: 10,
-  },
-  borderText: {
-    borderRadius: 20,
-    borderWidth: 1,     
-    borderColor: '#ababab',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    marginVertical: 5,
-    flex: 1
   },
   mapPlaceholder: {
     height: 300,

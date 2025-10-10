@@ -32,18 +32,12 @@ const Dash = () => {
         <CardButton>
            {/* destination location */}
            <View style={styles.rideRow}>
-              <Text>📍  </Text>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{lastRide.destination}</Text>
-              </View>
+              <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{lastRide.destination}</Text>
             </View>
 
             {/* time & date */}
             <View style={styles.rideRow}>
-              <Text>🕛  </Text>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.rideText}>{lastRide.date.day} {lastRide.date.time}</Text>
-              </View>
+              <Text style={styles.rideText}>{lastRide.date.day} {lastRide.date.time}</Text>
             </View>
 
           <View style={styles.creatorRow}>
@@ -100,7 +94,7 @@ const styles = StyleSheet.create({
   },
   rideColumn: {
     alignItems: 'flex-start',
-    marginVertical: 5,
+    marginTop: 5,
     width: '50%'
   },
   transportText: {

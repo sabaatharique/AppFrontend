@@ -1,19 +1,22 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { StyledCard as Card} from '../../components/StyledCard'
-import { StyledBorderView as BorderView} from '../../components/StyledBorderView'
-import users from '../../data/userData.json'
-import rides from '../../data/rideData.json'
+import { StyledText as Text } from '../../../components/StyledText'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import { StyledCard as Card} from '../../../components/StyledCard'
+import { StyledBorderView as BorderView} from '../../../components/StyledBorderView'
+import { useLocalSearchParams } from 'expo-router'
+import users from '../../../data/userData.json'
+import rides from '../../../data/rideData.json'
 import React from 'react'
 
-const UserProfile = () => {
-  const user = users[0];
+const UserDetails = () => {
+  const { handle } = useLocalSearchParams();
+  const user = users.find(u => u.handle === handle);
 
   const createdRides = rides.filter(r => r.creator.handle === user.handle);
 
   const joinedRides = rides.filter(r => r.partners.some(p => p.handle === user.handle));
 
+  
   if (!user) {
     return (
       <View style={styles.centered}>
@@ -112,7 +115,7 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserDetails;
 
 const styles = StyleSheet.create({
   centered: {
