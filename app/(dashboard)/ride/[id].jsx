@@ -93,7 +93,7 @@ const RideDetails = () => {
           <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Transport</Text>
         </View>
 
-        <View style={{flexDirection: 'row'}}>
+        <View style={styles.rideRow}>
           <View style={styles.rideColumn}>
             <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
           </View>
@@ -185,12 +185,11 @@ const styles = StyleSheet.create({
     width: '50%'
   },
   transportText: {
-    backgroundColor: '#888',
+    backgroundColor: '#ababab',
     color: '#fff',
     paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
-    flex: 1
+    paddingVertical: 4,
+    borderRadius: 12
   },
   handle: {
     color: '#888',

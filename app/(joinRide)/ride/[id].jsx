@@ -2,7 +2,6 @@ import { View, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
 import { StyledText as Text } from '../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
 import { StyledCard as Card} from '../../../components/StyledCard'
-import { StyledTitle as Title } from '../../../components/StyledTitle' 
 import { StyledButton as Button} from '../../../components/StyledButton'
 import { useLocalSearchParams } from 'expo-router'
 import rides from '../../../data/rideData.json'
@@ -13,6 +12,7 @@ const RideDetails = () => {
   const ride = rides.find(r => r.id === parseInt(id));
 
   const [showPassengers, setShowPassengers] = useState(false);
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   if (!ride) {
     return (
@@ -24,37 +24,36 @@ const RideDetails = () => {
 
   return (
     <ScrollView>
-        <View style={styles.headerRow}>
-          <Title style={{width: '50%'}}>Ride Details</Title>
+      <View style={styles.mapPlaceholder}>
+        <Text>Map</Text>
+      </View>
 
-          <View style={{width: '50%', marginTop: 10}}>
-            <Button style={{alignSelf: 'flex-end'}} title="Request to Join">
-            </Button>
-          </View>
-        </View>
       
       <Card>
+        <Button title="Request to Join"></Button>
+
         {/* start location */}
         <View style={styles.rideRow}>
-          <Text style={{fontSize: 18}}>⭕ </Text>
+          <Text>⭕  </Text>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.rideText, styles.borderText]}>{ride.start}</Text>
+            <Text style={[styles.borderText, styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
           </View>
         </View>
-
-        {/* stop locations */}
 
         {/* destination location */}
         <View style={styles.rideRow}>
-          <Text style={{fontSize: 18}}>📍 </Text>
+          <Text>📍  </Text>
           <View style={{ flex: 1 }}>
-          <Text style={[styles.rideText, styles.borderText]}>{ride.destination}</Text>
+            <Text style={[styles.rideText, styles.borderText, {marginVertical: 0}]}>{ride.destination}</Text>
           </View>
         </View>
 
         {/* time & date */}
-        <View style={[styles.rideRow, {marginTop: 15}]}>
-          <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
+        <View style={styles.rideRow}>
+          <Text>🕛   </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
+          </View>
         </View>
 
         {/* ride creator */}
@@ -62,12 +61,18 @@ const RideDetails = () => {
           <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Ride creator</Text>
         </View>
 
-        <View style={styles.creatorRow}>
-          <Text style={{fontSize: 30}}>👤 </Text>
-          <View>
-            <Text style={styles.creatorName}>{ride.creator.name}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <TouchableOpacity style={styles.creatorRow}>
+            <Text style={{fontSize: 30}}>👤 </Text>
+            <View >
+              <Text>{ride.creator.name}</Text>
             <Text style={styles.handle}>{ride.creator.handle}</Text>
-          </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{paddingHorizontal: 10}}> 
+            <Text>📞</Text>
+          </TouchableOpacity>
         </View>
 
         {/* ride passengers */}
@@ -83,32 +88,23 @@ const RideDetails = () => {
               <Text style={[styles.handle, styles.rideRow]}>No other passengers.</Text>
             ) : (
               ride.partners.map((partner, index) => (
-                <View key={index} style={styles.creatorRow}>
-                  <Text style={{fontSize: 30}}>👤 </Text>
-                  <View>
-                    <Text style={styles.creatorName}>{partner.name}</Text>
+                <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <TouchableOpacity style={styles.creatorRow}>
+                    <Text style={{fontSize: 30}}>👤 </Text>
+                    <View >
+                      <Text style={styles.creatorName}>{partner.name}</Text>
                     <Text style={styles.handle}>{partner.handle}</Text>
-                  </View>
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={{paddingHorizontal: 10}}> 
+                    <Text>📞</Text>
+                  </TouchableOpacity>
                 </View>
               ))
             )}
           </View>
         )}
-
-        {/* transport & total fare */}
-        <View style={styles.subtitle}>
-          <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Transport</Text>
-        </View>
-
-        <View style={styles.rideRow}>
-          <View style={styles.rideColumn}>
-            <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-          </View>
-
-          <View style={styles.rideColumn}>
-            <Text style={styles.rideText}>BDT {ride.fare}</Text>
-          </View>
-        </View>
 
         {/* preferences */}
         <View style={styles.subtitle}>
@@ -118,7 +114,7 @@ const RideDetails = () => {
         <View style={styles.borderText}>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.rideColumn}>
-              <Text style={styles.rideText}>Number of passengers:</Text>
+              <Text style={styles.rideText}>Total passengers:</Text>
             </View>
             <View style={styles.rideColumn}>
               <Text style={styles.rideText}>{ride.partners.length} / {ride.totalPassengers}</Text>
@@ -143,10 +139,55 @@ const RideDetails = () => {
             </View>
           </View>
         </View>
-
         
-        <Button style={{alignSelf: 'flex-start', marginTop: 10}} title="Estimate Fare">
-        </Button>
+        {/* transport & fare */}
+        <View style={styles.subtitle}>
+          <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Transport</Text>
+        </View>
+
+        <View style={styles.rideRow}>
+          <View style={styles.rideColumn}>
+            <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
+          </View>
+
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>BDT {ride.fare}</Text>
+          </View>
+        </View>
+
+        {/* fare breakdown */}
+        <View style={styles.subtitle}>
+          <TouchableOpacity onPress={() => setShowBreakdown(!showBreakdown)}>
+            <Text style={[styles.rideText, {fontWeight: 'bold'}]}>Fare Breakdown {showBreakdown ? '▲' : '▼'} </Text>
+          </TouchableOpacity>
+        </View>
+
+        {showBreakdown && (
+          <View style={styles.borderText}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={styles.rideColumn}>
+                <Text style={styles.rideText}>{ride.creator.name}</Text>
+              </View>
+              <View style={styles.rideColumn}>
+                <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>BDT {ride.fare}</Text>
+              </View>
+            </View>
+
+            {ride.partners.length === 0 ? (
+              <></>
+            ) : (
+              ride.partners.map((partner, index) => (
+                <View  key={index} style={{flexDirection: 'row'}}>
+                  <View style={styles.rideColumn}>
+                    <Text style={styles.rideText}>{partner.name}</Text>
+                  </View><View style={styles.rideColumn}>
+                      <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>BDT {ride.fare}</Text>
+                  </View>
+                </View>
+              ))
+            )}
+          </View>
+        )}
       </Card>
     </ScrollView>
   );
@@ -166,12 +207,20 @@ const styles = StyleSheet.create({
     borderColor: '#ababab',
     paddingVertical: 6,
     paddingHorizontal: 12,
+    marginVertical: 5,
     flex: 1
   },
+  mapPlaceholder: {
+    height: 300,
+    width: '100%',
+    backgroundColor: '#eee',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },  
   rideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: 10,
     flex: 1
   },
   rideText: {
@@ -184,12 +233,11 @@ const styles = StyleSheet.create({
     width: '50%'
   },
   transportText: {
-    backgroundColor: '#888',
+    backgroundColor: '#ababab',
     color: '#fff',
     paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
-    flex: 1
+    paddingVertical: 4,
+    borderRadius: 12
   },
   handle: {
     color: '#888',
@@ -199,11 +247,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 5
   }
 });

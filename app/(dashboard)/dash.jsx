@@ -30,19 +30,26 @@ const Dash = () => {
       
       <Link href={`ride/${lastRide.id}`} asChild>
         <CardButton>
-          <View style={[styles.creatorRow]}>
-            <Text style={{fontSize: 18}}>📍 </Text>
-            <Text style={[styles.rideText, {fontSize: 16}]}>{lastRide.destination}</Text>
-          </View>
+           {/* destination location */}
+           <View style={styles.rideRow}>
+              <Text>📍  </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{lastRide.destination}</Text>
+              </View>
+            </View>
 
-          <View style={styles.rideRow}>
-            <Text style={styles.rideText}>{lastRide.date.day} • {lastRide.date.time}</Text>
-          </View>
+            {/* time & date */}
+            <View style={styles.rideRow}>
+              <Text>🕛  </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.rideText}>{lastRide.date.day} {lastRide.date.time}</Text>
+              </View>
+            </View>
 
           <View style={styles.creatorRow}>
             <Text style={{fontSize: 30}}>👤 </Text>
             <View>
-              <Text style={styles.creatorName}>{lastRide.creator.name}</Text>
+              <Text style={styles.rideText}>{lastRide.creator.name}</Text>
               <Text style={styles.handle}>{lastRide.creator.handle}</Text>
             </View>
           </View>
@@ -85,8 +92,7 @@ const styles = StyleSheet.create({
   rideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
-    flex: 1
+    marginVertical: 5
   },
   rideText: {
     fontSize: 14,
@@ -98,12 +104,11 @@ const styles = StyleSheet.create({
     width: '50%'
   },
   transportText: {
-    backgroundColor: '#888',
+    backgroundColor: '#ababab',
     color: '#fff',
     paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
-    flex: 1
+    paddingVertical: 4,
+    borderRadius: 12
   },
   handle: {
     color: '#888',

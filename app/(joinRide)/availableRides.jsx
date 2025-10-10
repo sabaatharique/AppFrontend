@@ -73,11 +73,12 @@ const AvailableRides = () => {
           />
 
           <Button
-            title="Apply"
+            title="Ready to Go"
             onPress={() => {
               setShowAdvancedSearch(false);
               //clearSearch();
             }}
+            style={{alignSelf: 'flex-end'}}
           />
         </View>
       )}
@@ -87,33 +88,66 @@ const AvailableRides = () => {
       {filteredRides.map((ride, index) => (
         <Link href={`ride/${ride.id}`} asChild key={index}>
           <CardButton>
-            <View style={styles.creatorRow}>
-              <Text style={[styles.rideText, { fontSize: 16 }]}>{ride.destination}</Text>
-            </View>
-
-            <View style={styles.rideRow}>
-              <Text style={styles.rideText}>
-                {ride.date.day} • {ride.date.time}
-              </Text>
-            </View>
-
-            <View style={styles.creatorRow}>
-              <Text style={{ fontSize: 30 }}>👤 </Text>
-              <View>
-                <Text style={styles.creatorName}>{ride.creator.name}</Text>
+            {/* ride creator */}
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+              <TouchableOpacity style={styles.creatorRow}>
+                <Text style={{fontSize: 30}}>👤 </Text>
+                <View >
+                  <Text style={{fontWeight: 'semibold', fontSize: 16}}>{ride.creator.name}</Text>
                 <Text style={styles.handle}>{ride.creator.handle}</Text>
-              </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{paddingHorizontal: 10}}> 
+                <Text>📞</Text>
+              </TouchableOpacity>
             </View>
 
+
+            {/* start location */}
             <View style={styles.rideRow}>
-              <View style={styles.rideColumn}>
-                <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-              </View>
-
-              <View style={styles.rideColumn}>
-                <Text style={styles.rideText}>BDT {ride.fare}</Text>
+              <Text>⭕  </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.borderText, styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
               </View>
             </View>
+
+            {/* destination location */}
+            <View style={styles.rideRow}>
+              <Text>📍  </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.rideText, styles.borderText, {marginVertical: 0}]}>{ride.destination}</Text>
+              </View>
+            </View>
+
+            {/* time & date */}
+            <View style={styles.rideRow}>
+              <Text>🕛   </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
+              </View>
+            </View>
+
+            {/* transport & fare */}
+            <View style={styles.transportContainer}>
+              <View style={{width: '33%', flex: 1, alignItems: 'center'}}>
+                <Text style={{fontSize: 12}}>Transport</Text>
+                  <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{ride.transport}</Text>
+                
+              </View>
+
+              <View style={{width: '33%', alignItems: 'center'}}>
+                <Text style={{fontSize: 12}}>Seats</Text>
+                <Text style={[styles.rideText, {fontWeight: 'semibold'}]}> {ride.totalPassengers - ride.partners.length}</Text>  
+              </View>
+
+              <View style={{width: '33%', alignItems: 'center'}}>
+                <Text style={{fontSize: 12}}>Your fare</Text>
+                <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>BDT {ride.fare}</Text>
+              </View>
+            </View>
+
+            <Button style={{marginTop: 10}} title="Request to Join"></Button>
           </CardButton>
         </Link>
       ))}
@@ -136,7 +170,7 @@ const styles = StyleSheet.create({
   rideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: 8,
     flex: 1,
   },
   rideText: {
@@ -145,16 +179,24 @@ const styles = StyleSheet.create({
   },
   rideColumn: {
     alignItems: 'flex-start',
-    marginVertical: 5,
     width: '50%',
   },
-  transportText: {
-    backgroundColor: '#888',
-    color: '#fff',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
-    flex: 1,
+  borderText: {
+    borderRadius: 20,
+    borderWidth: 1,     
+    borderColor: '#ababab',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    marginVertical: 5,
+    flex: 1
+  },
+  transportContainer: {
+    borderRadius: 14,    
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    marginVertical: 6,
+    padding: 8,
+    alignItems: 'flex-end'
   },
   handle: {
     color: '#888',
@@ -163,6 +205,6 @@ const styles = StyleSheet.create({
   creatorRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginBottom: 8,
   },
 });
