@@ -57,7 +57,7 @@ const RideDetails = () => {
           <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Ride creator</Text>
         </View>
 
-        <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../(joinRide)/user/${ride.creator.handle}`)}}>
+        <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${ride.creator.handle}`)}}>
           <Text style={{fontSize: 30}}>👤 </Text>
           <View >
             <Text style={styles.creatorName}>{ride.creator.name}</Text>
@@ -78,7 +78,7 @@ const RideDetails = () => {
               <Text style={[styles.handle, styles.rideRow]}>No other passengers.</Text>
             ) : (
               ride.partners.map((partner, index) => (
-                <TouchableOpacity key={index} style={styles.creatorRow} onPress={() => {router.push(`../../(joinRide)/user/${partner.handle}`)}}>
+                <TouchableOpacity key={index} style={styles.creatorRow} onPress={() => {router.push(`../../user/${partner.handle}`)}}>
                   <Text style={{fontSize: 30}}>👤 </Text>
                   <View >
                     <Text style={styles.creatorName}>{partner.name}</Text>
@@ -101,7 +101,7 @@ const RideDetails = () => {
           </View>
 
           <View style={styles.rideColumn}>
-            <Text style={styles.rideText}>BDT {ride.fare}</Text>
+            <Text>BDT {ride.fare}</Text>
           </View>
         </View>
 

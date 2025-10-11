@@ -64,7 +64,7 @@ const RideDetails = () => {
         </View>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../user/${ride.creator.handle}`)}}>
+          <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${ride.creator.handle}`)}}>
             <Text style={{fontSize: 30}}>👤 </Text>
             <View >
               <Text>{ride.creator.name}</Text>
@@ -72,9 +72,15 @@ const RideDetails = () => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{paddingHorizontal: 10}}> 
-            <Text>📞</Text>
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity style={{paddingHorizontal: 10}}> 
+              <Text>💬</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{paddingHorizontal: 10}}> 
+              <Text>📞</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* ride passengers */}
@@ -91,7 +97,7 @@ const RideDetails = () => {
             ) : (
               ride.partners.map((partner, index) => (
                 <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../user/${partner.handle}`)}}>
+                  <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${partner.handle}`)}}>
                     <Text style={{fontSize: 30}}>👤 </Text>
                     <View >
                       <Text style={styles.creatorName}>{partner.name}</Text>
@@ -99,9 +105,15 @@ const RideDetails = () => {
                     </View>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={{paddingHorizontal: 10}}> 
-                    <Text>📞</Text>
-                  </TouchableOpacity>
+                  <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity style={{paddingHorizontal: 10}}> 
+                      <Text>💬</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{paddingHorizontal: 10}}> 
+                      <Text>📞</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))
             )}

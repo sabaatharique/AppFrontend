@@ -67,7 +67,7 @@ const Layout = () => {
         options={{ href: null }}
       />
       <Tabs.Screen
-        name="(joinRide)/user/[handle]"
+        name="user/[handle]"
         options={{ href: null }}
       />
     </Tabs>

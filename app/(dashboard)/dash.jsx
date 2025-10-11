@@ -54,7 +54,7 @@ const Dash = () => {
             </View>
 
             <View style={styles.rideColumn}>
-              <Text style={styles.rideText}>BDT {lastRide.fare}</Text>
+              <Text>BDT {lastRide.fare}</Text>
             </View>
           </View>
         </CardButton>

@@ -37,14 +37,14 @@ const UserProfile = () => {
           </View>
 
           <TouchableOpacity>
-            <Text style={{fontSize: 28}}>💬</Text>
+            <Text style={{fontSize: 28}}>✏️</Text>
           </TouchableOpacity>
         </View>
 
         {/* stats */}
         <View style={styles.statBox}>
           <View style={{alignItems: 'center'}}>
-            <Text style={styles.statValue}>{12}</Text>
+            <Text style={styles.statValue}>{joinedRides.length + createdRides.length}</Text>
             <Text style={{fontSize: 12}}>Rides</Text>
           </View>
           <View style={{alignItems: 'center'}}>
@@ -71,42 +71,7 @@ const UserProfile = () => {
           <TouchableOpacity>
             <Text style={styles.infoText}>✉️ {user.email || '-'}</Text>
           </TouchableOpacity> 
-        </View>
-
-        {/* recent rides */}
-        {createdRides.length > 0 && (
-          <BorderView>
-            <Text style={styles.sectionTitle}>Rides Created</Text>
-            {createdRides.map((ride, index) => (
-              <View key={index} style={styles.rideCard}>
-                <Text style={styles.rideTransport}>{ride.transport}</Text>
-                <Text style={styles.rideRoute}>
-                  {ride.start} → {ride.destination}
-                </Text>
-                <Text style={styles.rideDate}>
-                  {ride.date.day}, {ride.date.time}
-                </Text>
-              </View>
-            ))}
-          </BorderView>
-        )}
-
-        {joinedRides.length > 0 && (
-          <BorderView>
-            <Text style={styles.sectionTitle}>Rides Joined</Text>
-            {joinedRides.map((ride, index) => (
-              <View key={index} style={styles.rideCard}>
-                <Text style={styles.rideTransport}>{ride.transport}</Text>
-                <Text style={styles.rideRoute}>
-                  {ride.start} → {ride.destination}
-                </Text>
-                <Text style={styles.rideDate}>
-                  {ride.date.day}, {ride.date.time}
-                </Text>
-              </View>
-            ))}
-          </BorderView>
-        )}      
+        </View>      
       </Card>
     </ScrollView>
   );

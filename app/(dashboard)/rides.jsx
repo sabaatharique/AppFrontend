@@ -39,7 +39,7 @@ const UserRides = () => {
             </View>
 
             <View style={styles.rideColumn}>
-              <Text style={styles.rideText}>BDT {ride.fare}</Text>
+              <Text>BDT {ride.fare}</Text>
             </View>
           </View>
         </CardButton>
