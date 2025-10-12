@@ -1,31 +1,58 @@
-import { StyleSheet, View } from 'react-native'
-import { StyledText as Text } from '../components/StyledText'
-import React from 'react'
-import { Link } from 'expo-router'
+import { useEffect, useRef } from 'react';
+import { StyleSheet, View, Animated } from 'react-native';
+import { StyledText as Text } from '../components/StyledText';
+import { useFonts } from 'expo-font';
+import { useRouter } from 'expo-router';
+import React from 'react';
 
 const Home = () => {
+  const router = useRouter();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const [fontsLoaded] = useFonts({
+    'Montserrat-Regular': require('../assets/fonts/Montserrat-Regular.ttf'),
+    'Montserrat-Bold': require('../assets/fonts/Montserrat-Bold.ttf'),
+    'Montserrat-SemiBold': require('../assets/fonts/Montserrat-SemiBold.ttf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Fade in animation
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start(() => {
+        // After 3 second, navigate to dashboard
+        setTimeout(() => router.replace('/dash'), 3000);
+      });
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>BashayJabo</Text>
-
-      <Link href="/dash">
-        <Text>Dashboard</Text>
-      </Link>
+      <Animated.View style={{ opacity: fadeAnim }}>
+        <Text style={styles.title}>BashayJabo</Text>
+      </Animated.View>
     </View>
-  ) 
-}
+  );
+};
 
-export default Home
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#f7f7f7',
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 18,
-    margin: 20
-  }
-})
+    color: '#e63e4c',
+    fontSize: 24,
+    textAlign: 'center',
+  },
+});
