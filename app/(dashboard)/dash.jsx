@@ -1,9 +1,10 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../components/StyledText'
 import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
-import { StyledScrollView as ScrollView} from '../../components/StyledScrollView';
-import { useRouter } from 'expo-router';
-import rides from '../../data/rideData.json';
+import { StyledScrollView as ScrollView} from '../../components/StyledScrollView'
+import { StyledTitle as Title } from '../../components/StyledTitle' 
+import { useRouter, Link } from 'expo-router'
+import rides from '../../data/rideData.json'
 import React from 'react'
 
 const Dash = () => {
@@ -13,7 +14,7 @@ const Dash = () => {
 
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
-      <Text style={styles.title}>Start your journey!</Text>
+      <Title>Start your journey!</Title>
 
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonTitle}>Create a Ride</Text>
@@ -25,37 +26,39 @@ const Dash = () => {
         <Text style={styles.buttonText}>Find others going your way who are also looking to share.</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Your Last Ride</Text>
+      <Title>Your Last Ride</Title>
       
-      <CardButton>
-        <View style={styles.rideDetails}>
-          <View style={styles.rideRow}>
-            <Text style={styles.rideIcon}>📍</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.rideText, {fontWeight: 'bold'}]}>{lastRide.destination}</Text>
+      <Link href={`ride/${lastRide.id}`} asChild>
+        <CardButton>
+           {/* destination location */}
+           <View style={styles.rideRow}>
+              <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{lastRide.destination}</Text>
+            </View>
+
+            {/* time & date */}
+            <View style={styles.rideRow}>
+              <Text style={styles.rideText}>{lastRide.date.day} {lastRide.date.time}</Text>
+            </View>
+
+          <View style={styles.creatorRow}>
+            <Text style={{fontSize: 30}}>👤 </Text>
+            <View>
+              <Text style={styles.rideText}>{lastRide.creator.name}</Text>
+              <Text style={styles.handle}>{lastRide.creator.handle}</Text>
             </View>
           </View>
 
           <View style={styles.rideRow}>
-            <Text style={styles.rideText}>{lastRide.date.day} • {lastRide.date.time}</Text>
-          </View>
-
-          <View style={styles.rideRow}>
-            <Text style={styles.rideText}>{lastRide.creator.name} </Text>
-            <Text style={styles.handle}>{lastRide.creator.handle}</Text>
-          </View>
-
-          <View style={{flexDirection: 'row'}}>
             <View style={styles.rideColumn}>
               <Text style={[styles.rideText, styles.transportText]}>{lastRide.transport}</Text>
             </View>
 
             <View style={styles.rideColumn}>
-              <Text style={styles.rideText}>BDT {lastRide.fare}</Text>
+              <Text>BDT {lastRide.fare}</Text>
             </View>
           </View>
-        </View>
-      </CardButton>
+        </CardButton>
+      </Link>
     </ScrollView>
   )
 }
@@ -63,11 +66,6 @@ const Dash = () => {
 export default Dash
 
 const styles = StyleSheet.create({
-  title: {
-    fontWeight: 'bold', 
-    fontSize: 22, 
-    marginTop: 15,
-  },
   button: {
     marginVertical: 10,
     padding: 20,
@@ -85,37 +83,34 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
   },
-  rideDetails: {
-    flex: 1,
-  },
   rideRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 10,
-  },
-  rideIcon: {
-    marginRight: 10,
-  },
-  rideLabel: {
-    fontWeight: 'bold',
-    marginRight: 10,
+    alignItems: 'center',
+    marginVertical: 5
   },
   rideText: {
     fontSize: 14,
-    flexShrink: 1,
+    flex: 1,
   },
   rideColumn: {
     alignItems: 'flex-start',
-    width: '50%',
+    marginTop: 5,
+    width: '50%'
   },
   transportText: {
-    backgroundColor: '#2b2b2b',
-    color: 'white',
+    backgroundColor: '#ababab',
+    color: '#fff',
     paddingHorizontal: 10,
-    paddingVertical: 2,
+    paddingVertical: 4,
     borderRadius: 12
   },
   handle: {
     color: '#888',
+    flex: 1
+  },
+  creatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
   }
 });

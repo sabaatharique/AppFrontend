@@ -8,7 +8,7 @@ const DashboardHeader = () => {
       <Text style={{fontWeight: 'bold', color: '#e63e4c'}}>BashayJabo</Text>
       
       <TouchableOpacity style={styles.button}>
-        <Text>Settings</Text>
+        <Text>⚙️</Text>
       </TouchableOpacity>
     </View>
   );
