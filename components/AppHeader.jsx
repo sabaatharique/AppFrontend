@@ -1,7 +1,6 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from './StyledText';
 import React from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 const DashboardHeader = () => {
   return (
@@ -9,7 +8,7 @@ const DashboardHeader = () => {
       <Text style={{fontWeight: 'bold', color: '#e63e4c'}}>BashayJabo</Text>
       
       <TouchableOpacity style={styles.button}>
-        <Ionicons name="settings-sharp" size={24} color="#ababab" />
+        <Text>Settings</Text>
       </TouchableOpacity>
     </View>
   );
