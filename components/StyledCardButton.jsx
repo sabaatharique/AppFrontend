@@ -1,13 +1,19 @@
 import { Pressable, StyleSheet } from 'react-native';
 
 export function StyledCardButton(props) {
-  return <Pressable {...props} 
-    style={({pressed}) =>  [
-      styles.card, 
-      props.style, 
-      {backgroundColor: pressed ? '#e6e6e6' : '#fff'}]}>
-    {props.children}
-    </Pressable>;
+  const { onPress, style, children } = props;
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.card,
+        style,
+        { backgroundColor: pressed ? '#e6e6e6' : '#f7f7f7' },
+      ]}
+    >
+      {children}
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -18,7 +24,7 @@ const styles = StyleSheet.create({
     padding: 14, 
     marginVertical: 10,
     width: '100%',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-between',
   }
 })
