@@ -1,13 +1,10 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
-export function StyledCardButton(props) {
-  return <Pressable {...props} 
-    style={({pressed}) =>  [
-      styles.card, 
-      props.style, 
-      {backgroundColor: pressed ? '#e6e6e6' : '#fff'}]}>
+export function StyledCard(props) {
+  return <View {...props} 
+    style={[styles.card, props.style]}>
     {props.children}
-    </Pressable>;
+    </View>;
 }
 
 const styles = StyleSheet.create({
@@ -15,6 +12,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,     
     borderColor: '#000000',
+    backgroundColor: '#fff',
     padding: 14, 
     marginVertical: 10,
     width: '100%',
