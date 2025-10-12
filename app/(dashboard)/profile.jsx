@@ -2,7 +2,9 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
 import { StyledCard as Card} from '../../components/StyledCard'
-import { StyledBorderView as BorderView} from '../../components/StyledBorderView'
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import Entypo from '@expo/vector-icons/Entypo'
 import users from '../../data/userData.json'
 import rides from '../../data/rideData.json'
 import React from 'react'
@@ -37,39 +39,44 @@ const UserProfile = () => {
           </View>
 
           <TouchableOpacity>
-            <Text style={{fontSize: 28}}>✏️</Text>
+            <FontAwesome5 name="user-edit" size={22} color="#888" style={styles.icon}/>
           </TouchableOpacity>
         </View>
 
         {/* stats */}
         <View style={styles.statBox}>
           <View style={{alignItems: 'center'}}>
-            <Text style={styles.statValue}>{joinedRides.length + createdRides.length}</Text>
-            <Text style={{fontSize: 12}}>Rides</Text>
+            <Text style={styles.statValue}>{createdRides.length}</Text>
+            <Text style={{fontSize: 11}}>Rides Created</Text>
           </View>
+          
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.statValue}>{joinedRides.length}</Text>
+            <Text style={{fontSize: 11}}>Rides Joined</Text>
+          </View>
+          
           <View style={{alignItems: 'center'}}>
             <Text style={styles.statValue}>{user.rating}</Text>
-            <Text style={{fontSize: 12}}>Rating</Text>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.statValue}>{user.membersSince || '2023'}</Text>
-            <Text style={{fontSize: 12}}>Member Since</Text>
+            <Text style={{fontSize: 11}}>Overall Rating</Text>
           </View>
         </View>
 
         {/* contact info */}
         <View>
           <Text style={styles.sectionTitle}>Contact</Text>
-          <TouchableOpacity>
-            <Text style={[styles.infoText, {fontWeight: 'bold', color: 'skyblue'}]}>f   {user.name}</Text>
+          <TouchableOpacity style={styles.contactLink}>
+            <Entypo name="facebook" size={22} color="#1877f2" style={styles.icon} />
+            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.name}</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity>
-            <Text style={styles.infoText}>📞 {user.phone || '-'}</Text>
+          <TouchableOpacity style={styles.contactLink}>
+            <FontAwesome name="phone" size={22} color="black" style={styles.icon} />
+            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.phone || '-'}</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity>
-            <Text style={styles.infoText}>✉️ {user.email || '-'}</Text>
+          <TouchableOpacity style={styles.contactLink}>
+            <Entypo name="email" size={20} color="#888" style={styles.icon} />
+            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.email || '-'}</Text>
           </TouchableOpacity> 
         </View>      
       </Card>
@@ -139,23 +146,13 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 14,
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 10,
   },
-  rideCard: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingVertical: 10,
+  contactLink: {
+    flexDirection: 'row',
+    alignContent: 'center'
   },
-  rideTransport: {
-    fontWeight: 'semibold',
-    fontSize: 14
-  },
-  rideRoute: {
-    fontSize: 14,
-    color: '#333',
-  },
-  rideDate: {
-    fontSize: 12,
-    color: '#888',
-  },
+  icon: {
+    marginRight: 10
+  }
 });

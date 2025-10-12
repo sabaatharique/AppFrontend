@@ -7,34 +7,20 @@ import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar';
 import { StyledButton as Button } from '../../components/StyledButton';
 import { StyledBorderText as BorderText} from '../../components/StyledBorderText';
 import { StyledDateTimePicker } from '../../components/StyledDateTimePicker';
+import Entypo from '@expo/vector-icons/Entypo'
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Octicons from '@expo/vector-icons/Octicons';
 import { Link } from 'expo-router';
 import rides from '../../data/rideData.json';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AvailableRides = () => {
   const [start, setStart] = useState('');
   const [destination, setDestination] = useState('');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [search, setSearch] = useState('');
-
   const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const clearSearch = () => {
-    setStart('');
-    setDestination('');
-    setSelectedDate(new Date());
-    setSearch('');
-  };
-
-  const filteredRides = rides.filter((ride) => {
-    const destinationMatch = ride.destination.toLowerCase().includes(destination.toLowerCase());
-    const startMatch = ride.start?.toLowerCase().includes(start.toLowerCase());
-    //const rideDate = new Date(ride.date);
-    //const dateMatch = rideDate.getFullYear() === selectedDate.getFullYear() && rideDate.getMonth() === selectedDate.getMonth() && rideDate.getDate() === selectedDate.getDate();
-
-    if (showAdvancedSearch) return (destinationMatch || startMatch);
-    return ride.destination.toLowerCase().includes(search.toLowerCase());
-  });
+  const [displayedRides, setDisplayedRides] = useState(rides);
 
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
@@ -77,16 +63,27 @@ const AvailableRides = () => {
             title="Ready to Go"
             onPress={() => {
               setShowAdvancedSearch(false);
-              //clearSearch();
+
+              // filter rides based on input
+              const filteredRides = rides.filter((ride) => {
+                const destinationMatch = ride.destination.toLowerCase().includes(destination.toLowerCase());
+                const startMatch = ride.start?.toLowerCase().includes(start.toLowerCase());
+
+                if (showAdvancedSearch) return (destinationMatch || startMatch);
+                return ride.destination.toLowerCase().includes(search.toLowerCase());
+              });
+
+              setDisplayedRides(filteredRides);
             }}
-            style={{alignSelf: 'flex-end'}}
+            style={{ alignSelf: 'flex-end' }}
           />
+
         </View>
       )}
 
       <Title>Available Rides</Title>
 
-      {filteredRides.map((ride, index) => (
+      {displayedRides.map((ride, index) => (
         <Link href={`ride/${ride.id}`} asChild key={index}>
           <CardButton>
             {/* ride creator */}
@@ -101,7 +98,7 @@ const AvailableRides = () => {
 
             {/* start location */}
             <View style={styles.rideRow}>
-              <Text>⭕  </Text>
+              <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
               <View style={{ flex: 1 }}>
                 <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</BorderText>
               </View>
@@ -109,7 +106,7 @@ const AvailableRides = () => {
 
             {/* destination location */}
             <View style={styles.rideRow}>
-              <Text>📍  </Text>
+              <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
               <View style={{ flex: 1 }}>
                 <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</BorderText>
               </View>
@@ -117,7 +114,7 @@ const AvailableRides = () => {
 
             {/* time & date */}
             <View style={styles.rideRow}>
-              <Text>🕛   </Text>
+              <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
               </View>
@@ -193,4 +190,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  icon: {
+    marginRight: 10
+  }
 });

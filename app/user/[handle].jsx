@@ -3,6 +3,10 @@ import { StyledText as Text } from '../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
 import { StyledCard as Card} from '../../components/StyledCard'
 import { StyledBorderView as BorderView} from '../../components/StyledBorderView'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import Entypo from '@expo/vector-icons/Entypo'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import Octicons from '@expo/vector-icons/Octicons'
 import { useLocalSearchParams } from 'expo-router'
 import users from '../../data/userData.json'
 import rides from '../../data/rideData.json'
@@ -40,7 +44,7 @@ const UserDetails = () => {
           </View>
 
           <TouchableOpacity>
-            <Text style={{fontSize: 28}}>💬</Text>
+            <Ionicons name="chatbubble-ellipses" size={28} color="#888" style={styles.icon} />
           </TouchableOpacity>
         </View>
 
@@ -63,16 +67,19 @@ const UserDetails = () => {
         {/* contact info */}
         <View>
           <Text style={styles.sectionTitle}>Contact</Text>
-          <TouchableOpacity>
-            <Text style={[styles.infoText, {fontWeight: 'bold', color: 'skyblue'}]}>f   {user.name}</Text>
+          <TouchableOpacity style={styles.contactLink}>
+            <Entypo name="facebook" size={22} color="#1877f2" style={styles.icon} />
+            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.name}</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity>
-            <Text style={styles.infoText}>📞 {user.phone || '-'}</Text>
+          <TouchableOpacity style={styles.contactLink}>
+            <FontAwesome name="phone" size={22} color="black" style={styles.icon} />
+            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.phone || '-'}</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity>
-            <Text style={styles.infoText}>✉️ {user.email || '-'}</Text>
+          <TouchableOpacity style={styles.contactLink}>
+            <Entypo name="email" size={20} color="#888" style={styles.icon} />
+            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.email || '-'}</Text>
           </TouchableOpacity> 
         </View>
 
@@ -83,14 +90,14 @@ const UserDetails = () => {
             {createdRides.map((ride, index) => (
               <BorderView key={index}>
                 <View style={styles.rideRow}>
-                  <Text>⭕  </Text>
+                  <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
                   </View>
                 </View>
 
                 <View style={styles.rideRow}>
-                  <Text>📍  </Text>
+                  <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</Text>
                   </View>
@@ -116,14 +123,14 @@ const UserDetails = () => {
             {joinedRides.map((ride, index) => (
               <BorderView key={index}>
                 <View style={styles.rideRow}>
-                  <Text>⭕  </Text>
+                  <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
                   </View>
                 </View>
 
                 <View style={styles.rideRow}>
-                  <Text>📍  </Text>
+                  <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</Text>
                   </View>
@@ -212,12 +219,20 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginTop: 10,
+    marginTop: 8,
+    marginBottom: 4
   },
   infoText: {
     fontSize: 14,
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 10,
+  },
+  contactLink: {
+    flexDirection: 'row',
+    alignContent: 'center'
+  },
+  icon: {
+    marginRight: 10
   },
   rideRow: {
     flexDirection: 'row',

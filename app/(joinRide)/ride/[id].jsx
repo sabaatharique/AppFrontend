@@ -5,6 +5,10 @@ import { StyledCard as Card} from '../../../components/StyledCard'
 import { StyledButton as Button} from '../../../components/StyledButton'
 import { StyledBorderText as BorderText} from '../../../components/StyledBorderText'
 import { StyledBorderView as BorderView} from '../../../components/StyledBorderView'
+import Entypo from '@expo/vector-icons/Entypo'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import Octicons from '@expo/vector-icons/Octicons'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import rides from '../../../data/rideData.json'
 import React, { useState } from 'react';
@@ -33,10 +37,10 @@ const RideDetails = () => {
       </View>
 
       <Card>
-        <Button title="Request to Join"></Button>
+        <Button style={{marginBottom: 20}} title="Request to Join"></Button>
         {/* start location */}
         <View style={styles.rideRow}>
-          <Text>⭕  </Text>
+          <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
           <View style={{ flex: 1 }}>
             <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</BorderText>
           </View>
@@ -44,7 +48,7 @@ const RideDetails = () => {
 
         {/* destination location */}
         <View style={styles.rideRow}>
-          <Text>📍  </Text>
+          <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
           <View style={{ flex: 1 }}>
             <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</BorderText>
           </View>
@@ -52,7 +56,7 @@ const RideDetails = () => {
 
         {/* time & date */}
         <View style={styles.rideRow}>
-          <Text>🕛   </Text>
+          <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
           <View style={{ flex: 1 }}>
             <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
           </View>
@@ -74,19 +78,20 @@ const RideDetails = () => {
 
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{paddingHorizontal: 10}}> 
-              <Text>💬</Text>
+              <Ionicons name="chatbubble-ellipses" size={22} color="#888" style={styles.icon} />
             </TouchableOpacity>
 
             <TouchableOpacity style={{paddingHorizontal: 10}}> 
-              <Text>📞</Text>
+              <FontAwesome name="phone" size={22} color="black"/>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ride passengers */}
         <View style={styles.subtitle}>
-          <TouchableOpacity onPress={() => setShowPassengers(!showPassengers)}>
-            <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Ride passengers {showPassengers ? '▲' : '▼'} </Text>
+          <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShowPassengers(!showPassengers)}>
+            <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Ride passengers</Text>
+            <Entypo name={showPassengers ? "chevron-up" : "chevron-down"} size={18} color="black" style={styles.icon} />
           </TouchableOpacity>
         </View>
 
@@ -107,11 +112,11 @@ const RideDetails = () => {
 
                   <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity style={{paddingHorizontal: 10}}> 
-                      <Text>💬</Text>
+                      <Ionicons name="chatbubble-ellipses" size={22} color="#888" style={styles.icon} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{paddingHorizontal: 10}}> 
-                      <Text>📞</Text>
+                      <FontAwesome name="phone" size={22} color="black"/>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -171,8 +176,9 @@ const RideDetails = () => {
 
         {/* fare breakdown */}
         <View style={styles.subtitle}>
-          <TouchableOpacity onPress={() => setShowBreakdown(!showBreakdown)}>
-            <Text style={[styles.rideText, {fontWeight: 'bold'}]}>Fare Breakdown {showBreakdown ? '▲' : '▼'} </Text>
+          <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShowBreakdown(!showBreakdown)}>
+            <Text style={[styles.rideText, {fontWeight: 'bold'}]}>Fare Breakdown </Text>
+            <Entypo name={showBreakdown ? "chevron-up" : "chevron-down"} size={18} color="black" style={styles.icon} />
           </TouchableOpacity>
         </View>
 
@@ -213,7 +219,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontWeight: 'bold', 
     fontSize: 14, 
-    marginTop: 10,
+    marginVertical: 10,
   },
   mapPlaceholder: {
     height: 300,
@@ -225,7 +231,7 @@ const styles = StyleSheet.create({
   rideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    marginBottom: 10,
     flex: 1
   },
   rideText: {
@@ -234,7 +240,7 @@ const styles = StyleSheet.create({
   },
   rideColumn: {
     alignItems: 'flex-start',
-    marginVertical: 5,
+    marginTop: 5,
     width: '50%'
   },
   transportText: {
@@ -252,5 +258,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+    width: '70%'
+  },
+  icon: {
+    marginRight: 10
   }
 });

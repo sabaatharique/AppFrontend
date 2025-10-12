@@ -3,6 +3,8 @@ import { StyledText as Text } from '../../components/StyledText'
 import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
 import { StyledScrollView as ScrollView} from '../../components/StyledScrollView'
 import { StyledTitle as Title } from '../../components/StyledTitle' 
+import Entypo from '@expo/vector-icons/Entypo'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useRouter, Link } from 'expo-router'
 import rides from '../../data/rideData.json'
 import React from 'react'
@@ -32,12 +34,18 @@ const Dash = () => {
         <CardButton>
            {/* destination location */}
            <View style={styles.rideRow}>
-              <Text style={[styles.rideText, {fontWeight: 'semibold'}]}>{lastRide.destination}</Text>
+              <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.rideText, {marginVertical: 0}]}>{lastRide.destination}</Text>
+              </View>
             </View>
 
             {/* time & date */}
             <View style={styles.rideRow}>
-              <Text style={styles.rideText}>{lastRide.date.day} {lastRide.date.time}</Text>
+              <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.rideText}>{lastRide.date.day} {lastRide.date.time}</Text>
+              </View>
             </View>
 
           <View style={styles.creatorRow}>
@@ -112,5 +120,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+  }, 
+  icon: {
+    marginRight: 10
   }
 });

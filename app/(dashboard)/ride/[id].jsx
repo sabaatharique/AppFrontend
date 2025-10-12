@@ -1,8 +1,13 @@
-import { View, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
 import { StyledCard as Card} from '../../../components/StyledCard'
 import { StyledTitle as Title } from '../../../components/StyledTitle' 
+import { StyledBorderText as BorderText } from '../../../components/StyledBorderText'
+import { StyledBorderView as BorderView } from '../../../components/StyledBorderView'
+import Entypo from '@expo/vector-icons/Entypo'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import Octicons from '@expo/vector-icons/Octicons'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import rides from '../../../data/rideData.json'
 import React, { useState } from 'react';
@@ -31,25 +36,26 @@ const RideDetails = () => {
       <Card>
         {/* start location */}
         <View style={styles.rideRow}>
-          <Text>⭕ </Text>
+          <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
           <View style={{ flex: 1 }}>
-            <Text style={[styles.rideText, styles.borderText]}>{ride.start}</Text>
+            <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</BorderText>
           </View>
         </View>
 
-        {/* stop locations */}
-
         {/* destination location */}
         <View style={styles.rideRow}>
-          <Text>📍 </Text>
+          <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
           <View style={{ flex: 1 }}>
-            <Text style={[styles.rideText, styles.borderText]}>{ride.destination}</Text>
+            <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</BorderText>
           </View>
         </View>
 
         {/* time & date */}
-        <View style={[styles.rideRow, {marginTop: 15}]}>
-          <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
+        <View style={styles.rideRow}>
+          <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
+          </View>
         </View>
 
         {/* ride creator*/}
@@ -67,8 +73,9 @@ const RideDetails = () => {
 
         {/* ride passengers */}
         <View style={styles.subtitle}>
-          <TouchableOpacity onPress={() => setShowPassengers(!showPassengers)}>
-            <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Ride passengers {showPassengers ? '▲' : '▼'} </Text>
+          <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShowPassengers(!showPassengers)}>
+            <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Ride passengers</Text>
+            <Entypo name={showPassengers ? "chevron-up" : "chevron-down"} size={18} color="black" style={styles.icon} />
           </TouchableOpacity>
         </View>
 
@@ -107,13 +114,14 @@ const RideDetails = () => {
 
         {/* fare breakdown */}
         <View style={styles.subtitle}>
-          <TouchableOpacity onPress={() => setShowBreakdown(!showBreakdown)}>
-            <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Fare Breakdown {showBreakdown ? '▲' : '▼'} </Text>
+          <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShowBreakdown(!showBreakdown)}>
+            <Text style={[styles.rideText, {fontWeight: 'bold'}]}>Fare Breakdown </Text>
+            <Entypo name={showBreakdown ? "chevron-up" : "chevron-down"} size={18} color="black" style={styles.icon} />
           </TouchableOpacity>
         </View>
 
         {showBreakdown && (
-          <View style={styles.borderText}>
+          <BorderView>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.rideColumn}>
                 <Text style={styles.rideText}>{ride.creator.name}</Text>
@@ -136,7 +144,7 @@ const RideDetails = () => {
                 </View>
               ))
             )}
-          </View>
+          </BorderView>
         )}
       </Card>
     </ScrollView>
@@ -149,41 +157,21 @@ const styles = StyleSheet.create({
   subtitle: {
     fontWeight: 'bold', 
     fontSize: 14, 
-    marginTop: 10,
-  },
-  borderText: {
-    borderRadius: 20,
-    borderWidth: 1,     
-    borderColor: '#ababab',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    flex: 1
+    marginVertical: 10,
   },
   rideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    marginBottom: 10,
     flex: 1
   },
   rideText: {
     fontSize: 14,
     flex: 1,
   },
-  locationColumn: {
-    alignItems: 'flex-start',
-    marginRight: 5,
-    marginBottom: 10,
-    width: '65%',
-  },
-  creatorColumn: {
-    alignItems: 'flex-start',
-    marginLeft: 5,
-    marginBottom: 10,
-    width: '30%',
-  },
   rideColumn: {
     alignItems: 'flex-start',
-    marginVertical: 10,
+    marginTop: 5,
     width: '50%'
   },
   transportText: {
@@ -201,18 +189,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+    width: '70%'
   },
-  button: {
-    flex: 1,
-    marginVertical: 10,
-    marginHorizontal: 5,
-    padding: 10,
-    borderRadius: 16,
-    backgroundColor: '#1f1f1f'
-  },
-  buttonText: {
-    alignSelf: 'center',
-    color: '#fff',
-    fontSize: 14
+  icon: {
+    marginRight: 10
   }
 });
