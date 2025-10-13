@@ -5,17 +5,25 @@ import { StyledCard as Card} from '../../../components/StyledCard'
 import { StyledButton as Button} from '../../../components/StyledButton'
 import { StyledBorderText as BorderText} from '../../../components/StyledBorderText'
 import { StyledBorderView as BorderView} from '../../../components/StyledBorderView'
+import { StyledLink } from '../../../components/StyledLink'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import Octicons from '@expo/vector-icons/Octicons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import rides from '../../../data/rideData.json'
+import users from '../../../data/userData.json'
 import React, { useState } from 'react';
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
   const ride = rides.find(r => r.id === parseInt(id));
+
+  const findUserByHandle = (handle) => {
+    return users.find(u => u.handle === handle);
+  };
+
+  const creator = findUserByHandle(ride.creator.handle);
 
   const router = useRouter();
 
@@ -68,11 +76,11 @@ const RideDetails = () => {
         </View>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${ride.creator.handle}`)}}>
+          <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${creator.handle}`)}}>
             <Text style={{fontSize: 30}}>👤 </Text>
             <View >
-              <Text>{ride.creator.name}</Text>
-            <Text style={styles.handle}>{ride.creator.handle}</Text>
+              <Text>{creator.name}</Text>
+            <Text style={styles.handle}>{creator.handle}</Text>
             </View>
           </TouchableOpacity>
 
@@ -81,9 +89,7 @@ const RideDetails = () => {
               <Ionicons name="chatbubble-ellipses" size={22} color="#888" style={styles.icon} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{paddingHorizontal: 10}}> 
-              <FontAwesome name="phone" size={22} color="black"/>
-            </TouchableOpacity>
+            <StyledLink type='phone' value={creator.phone} style={{marginVertical: 0}}></StyledLink>
           </View>
         </View>
 
@@ -100,27 +106,28 @@ const RideDetails = () => {
             {ride.partners.length === 0 ? (
               <Text style={[styles.handle, styles.rideRow]}>No other passengers.</Text>
             ) : (
-              ride.partners.map((partner, index) => (
-                <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${partner.handle}`)}}>
-                    <Text style={{fontSize: 30}}>👤 </Text>
-                    <View >
-                      <Text style={styles.creatorName}>{partner.name}</Text>
-                    <Text style={styles.handle}>{partner.handle}</Text>
+              ride.partners.map((partnerData, index) => {
+                const partner = findUserByHandle(partnerData.handle);
+                return (
+                  <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <TouchableOpacity style={styles.creatorRow} onPress={() => router.push(`../../user/${partner.handle}`)}>
+                      <Text style={{fontSize: 30}}>👤 </Text>
+                      <View>
+                        <Text style={styles.creatorName}>{partner.name}</Text>
+                        <Text style={styles.handle}>{partner.handle}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                    <View style={{flexDirection: 'row'}}>
+                      <TouchableOpacity style={{paddingHorizontal: 10}}>
+                        <Ionicons name="chatbubble-ellipses" size={22} color="#888" style={styles.icon} />
+                      </TouchableOpacity>
+
+                      <StyledLink type='phone' value={partner.phone} style={{marginVertical: 0}} />
                     </View>
-                  </TouchableOpacity>
-
-                  <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={{paddingHorizontal: 10}}> 
-                      <Ionicons name="chatbubble-ellipses" size={22} color="#888" style={styles.icon} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{paddingHorizontal: 10}}> 
-                      <FontAwesome name="phone" size={22} color="black"/>
-                    </TouchableOpacity>
                   </View>
-                </View>
-              ))
+                );
+              })
             )}
           </View>
         )}

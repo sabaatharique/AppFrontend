@@ -3,7 +3,7 @@ import { StyledText as Text } from '../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
 import { StyledCard as Card} from '../../components/StyledCard'
 import { StyledBorderView as BorderView} from '../../components/StyledBorderView'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { StyledLink } from '../../components/StyledLink'
 import Entypo from '@expo/vector-icons/Entypo'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import Octicons from '@expo/vector-icons/Octicons'
@@ -67,21 +67,12 @@ const UserDetails = () => {
         {/* contact info */}
         <View>
           <Text style={styles.sectionTitle}>Contact</Text>
-          <TouchableOpacity style={styles.contactLink}>
-            <Entypo name="facebook" size={22} color="#1877f2" style={styles.icon} />
-            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.name}</Text>
-          </TouchableOpacity>
+          <StyledLink type='facebook' text={user.name} value={user.fb}></StyledLink>
           
-          <TouchableOpacity style={styles.contactLink}>
-            <FontAwesome name="phone" size={22} color="black" style={styles.icon} />
-            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.phone || '-'}</Text>
-          </TouchableOpacity>
+          <StyledLink type='phone' text={user.phone} value={user.phone}></StyledLink>
           
-          <TouchableOpacity style={styles.contactLink}>
-            <Entypo name="email" size={20} color="#888" style={styles.icon} />
-            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.email || '-'}</Text>
-          </TouchableOpacity> 
-        </View>
+          <StyledLink type='email' text={user.email} value={user.email} ></StyledLink>
+        </View> 
 
         {/* recent rides */}
         {createdRides.length > 0 && (
