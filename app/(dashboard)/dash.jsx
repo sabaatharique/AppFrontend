@@ -1,11 +1,9 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { StyledText as Text } from '../../components/StyledText';
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
 import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
 import { StyledTitle as Title } from '../../components/StyledTitle';
-import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useRouter, Link } from 'expo-router';
+import { RideHistoryCard } from '../../components/RideHistoryCard';
+import { useRouter } from 'expo-router';
 import rides from '../../data/rideData.json';
 import React from 'react';
 
@@ -14,7 +12,7 @@ const Dash = () => {
   const router = useRouter();
 
   return (
-    <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
+    <ScrollView>
       <Title>Start your journey!</Title>
 
       {/* Create Ride */}
@@ -44,50 +42,7 @@ const Dash = () => {
       <Title>Your Last Ride</Title>
 
       {/* Last Ride Card */}
-      <Link href={`ride/${lastRide.id}`} asChild>
-        <CardButton>
-          <View style={styles.rideDetails}>
-            {/* Destination */}
-            <View style={styles.rideRow}>
-              <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.rideText}>{lastRide.destination.name}</Text>
-              </View>
-            </View>
-
-            {/* Date & Time */}
-            <View style={styles.rideRow}>
-              <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
-              <Text style={styles.rideText}>
-                {new Date(lastRide.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
-                {' • '}
-                {new Date(lastRide.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
-              </Text>
-            </View>
-
-            {/* Creator */}
-            <View style={styles.creatorRow}>
-              <Text style={{ fontSize: 30 }}>👤 </Text>
-              <View>
-                <Text style={styles.rideText}>{lastRide.creator.name}</Text>
-                <Text style={styles.handle}>{lastRide.creator.handle}</Text>
-              </View>
-            </View>
-
-            {/* Transport & Fare */}
-            <View style={{ flexDirection: 'row' }}>
-              <View style={styles.rideColumn}>
-                <Text style={[styles.rideText, styles.transportText]}>
-                  {lastRide.transport}
-                </Text>
-              </View>
-              <View style={styles.rideColumn}>
-                <Text style={styles.rideText}>BDT {lastRide.fare}</Text>
-              </View>
-            </View>
-          </View>
-        </CardButton>
-      </Link>
+      <RideHistoryCard ride={lastRide} onPress={() => router.push(`/ride/${lastRide.id}`)}/>
     </ScrollView>
   );
 };
@@ -117,41 +72,5 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 14,
-  },
-  rideDetails: {
-    flex: 1,
-  },
-  rideRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  rideText: {
-    fontSize: 14,
-    flexShrink: 1,
-    flex: 1,
-  },
-  rideColumn: {
-    alignItems: 'flex-start',
-    width: '50%',
-  },
-  transportText: {
-    backgroundColor: '#2b2b2b',
-    color: 'white',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  handle: {
-    color: '#888',
-  },
-  creatorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 10
-  },
-  icon: {
-    marginRight: 10,
   },
 });

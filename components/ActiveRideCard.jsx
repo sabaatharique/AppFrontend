@@ -81,7 +81,7 @@ export default function ActiveRideCard({ ride, showRequestButton = false, showPr
 
       {showPreferences && ( <>
         <View style={styles.subtitle}>
-          <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Preferences</Text>
+          <Text style={[styles.rideText,{fontWeight: 'semibold'}]}>Preferences</Text>
         </View>
 
         <BorderView>
@@ -120,7 +120,7 @@ export default function ActiveRideCard({ ride, showRequestButton = false, showPr
 
 const styles = StyleSheet.create({
   subtitle: {
-    fontWeight: 'bold', 
+    fontWeight: 'semibold', 
     fontSize: 14, 
     marginVertical: 5,
   },
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
   },
   handle: {
     color: '#888',
+    fontSize: 13,
     flex: 1,
   },
   icon: {

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { StyledText as Text } from '../components/StyledText';
-import { StyledCard as Card } from '../components/StyledCard';
-import { StyledBorderText as BorderText } from '../components/StyledBorderText';
-import { StyledBorderView as BorderView } from '../components/StyledBorderView';
-import { StyledButton as Button } from '../components/StyledButton';
-import { StyledLink } from '../components/StyledLink';
+import { StyledText as Text } from './StyledText';
+import { StyledCard as Card } from './StyledCard';
+import { StyledBorderText as BorderText } from './StyledBorderText';
+import { StyledBorderView as BorderView } from './StyledBorderView';
+import { StyledButton as Button } from './StyledButton';
+import { StyledLink } from './StyledLink';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
   },
   handle: {
     color: '#888',
+    fontSize: 13,
     flex: 1,
   },
   creatorContainer: {

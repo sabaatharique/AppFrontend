@@ -19,7 +19,7 @@ export default function MapSearch({ onPlaceSelected, searchQuery, style }) {
   const [sessionToken, setSessionToken] = useState(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_PLACES_API_KEY
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
   function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   suggestionOverlay: {
     position: 'absolute',
-    top: 50, // adjust to sit right below the search bar
+    top: 50, 
     left: 10,
     right: 10,
     zIndex: 10,

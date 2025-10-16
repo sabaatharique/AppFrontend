@@ -59,7 +59,7 @@ export default function TimeDetails() {
 
       {selection === 'later' && (
         <StyledDateTimePicker
-          style={{alignSelf: 'flex-end'}}
+          style={{width: '100%'}}
           value={date}
           mode="datetime"
           onChange={onDateChange}

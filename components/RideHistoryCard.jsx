@@ -2,40 +2,40 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StyledText as Text } from './StyledText';
 import { StyledCardButton as CardButton } from './StyledCardButton';
+import { StyledBorderText as BorderText } from './StyledBorderText';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
 import { Link } from 'expo-router';
 
-export function RideHistoryCard({ ride }) {
+export function RideHistoryCard({ ride, onPress }) {
   return (
-    <Link href={`ride/${ride.id}`} asChild>
-      <CardButton style={styles.card}>
+      <CardButton style={styles.card} onPress={onPress}>
+        {/* creator */}
+        <View style={styles.creatorRow}>
+          <Text style={{ fontSize: 30 }}>👤 </Text>
+          <View>
+            <Text style={styles.rideText}>{ride.creator.name}</Text>
+            <Text style={styles.handle}>{ride.creator.handle}</Text>
+          </View>
+        </View>
+
         {/* start location */}
         <View style={styles.rideRow}>
           <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
-          <Text style={[styles.rideText, { marginVertical: 0 }]}>{ride.start.name}</Text>
+          <BorderText style={[styles.rideText, { marginVertical: 0 }]}>{ride.start.name}</BorderText>
         </View>
 
         {/* destination location */}
         <View style={styles.rideRow}>
           <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
-          <Text style={[styles.rideText, { marginVertical: 0 }]}>{ride.destination.name}</Text>
+          <BorderText style={[styles.rideText, { marginVertical: 0 }]}>{ride.destination.name}</BorderText>
         </View>
 
         {/* time & date */}
         <View style={styles.rideRow}>
           <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, { marginLeft: 4 }]} />
           <Text style={styles.rideText}>{ride.date.day}, {ride.date.time}</Text>
-        </View>
-
-        {/* creator */}
-        <View style={styles.creatorRow}>
-          <Text style={{ fontSize: 30 }}>👤</Text>
-          <View>
-            <Text style={styles.rideText}>{ride.creator.name}</Text>
-            <Text style={styles.handle}>{ride.creator.handle}</Text>
-          </View>
         </View>
 
         {/* transport & fare */}
@@ -49,7 +49,6 @@ export function RideHistoryCard({ ride }) {
           </View>
         </View>
       </CardButton>
-    </Link>
   );
 }
 
@@ -80,6 +79,7 @@ const styles = StyleSheet.create({
   },
   handle: {
     color: '#888',
+    fontSize: 13,
     flex: 1,
   },
   creatorRow: {
