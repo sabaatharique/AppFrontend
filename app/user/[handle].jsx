@@ -50,17 +50,19 @@ const UserDetails = () => {
 
         {/* stats */}
         <View style={styles.statBox}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.statValue}>{joinedRides.length + createdRides.length}</Text>
-            <Text style={{fontSize: 12}}>Rides</Text>
+        <View style={{alignItems: 'center'}}>
+            <Text style={styles.statValue}>{createdRides.length}</Text>
+            <Text style={{fontSize: 11}}>Rides Created</Text>
           </View>
+          
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.statValue}>{joinedRides.length}</Text>
+            <Text style={{fontSize: 11}}>Rides Joined</Text>
+          </View>
+          
           <View style={{alignItems: 'center'}}>
             <Text style={styles.statValue}>{user.rating}</Text>
-            <Text style={{fontSize: 12}}>Rating</Text>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.statValue}>2025</Text>
-            <Text style={{fontSize: 12}}>Member Since</Text>
+            <Text style={{fontSize: 11}}>Overall Rating</Text>
           </View>
         </View>
 
@@ -73,81 +75,6 @@ const UserDetails = () => {
           
           <StyledLink type='email' text={user.email} value={user.email} ></StyledLink>
         </View> 
-
-        {/* recent rides */}
-        {createdRides.length > 0 && (
-          <View>
-            <Text style={styles.sectionTitle}>Rides Created</Text>
-            {createdRides.map((ride, index) => (
-              <BorderView key={index}>
-                <View style={styles.rideRow}>
-                  <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.rideRow}>
-                  <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.rideRow}>
-                  <View style={styles.rideColumn}>
-                    <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-                  </View>
-
-                  <View style={styles.rideColumn}>
-                    <Text>{ride.date.day}</Text>
-                  </View>
-                </View>
-              </BorderView>
-            ))}
-          </View>
-        )}
-
-        {joinedRides.length > 0 && (
-          <View>
-            <Text style={styles.sectionTitle}>Rides Joined</Text>
-            {joinedRides.map((ride, index) => (
-              <BorderView key={index}>
-                <View style={styles.rideRow}>
-                  <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.rideRow}>
-                  <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.creatorRow}>
-                  <Text style={{fontSize: 30}}>👤 </Text>
-                  <View>
-                    <Text style={styles.rideText}>{ride.creator.name}</Text>
-                    <Text style={styles.handle}>{ride.creator.handle}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.rideRow}>
-                  <View style={styles.rideColumn}>
-                    <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-                  </View>
-
-                  <View style={styles.rideColumn}>
-                    <Text>{ride.date.day}</Text>
-                  </View>
-                </View>
-              </BorderView>
-            ))}
-          </View>
-        )}
       </Card>
     </ScrollView>
   );

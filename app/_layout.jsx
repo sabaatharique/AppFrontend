@@ -74,12 +74,16 @@ const Layout = () => {
       ></Tabs.Screen>
       {/* hide from tabs */}
       <Tabs.Screen
+        name="index"
+        options={{ href: null }}
+      />
+      <Tabs.Screen
         name="(joinRide)/availableRides"
         options={{ href: null}}
       />
       <Tabs.Screen
-        name="index"
-        options={{ href: null }}
+        name="(joinRide)/searchRides"
+        options={{ href: null}}
       />
       <Tabs.Screen
         name="(dashboard)/ride/[id]"
@@ -98,27 +102,7 @@ const Layout = () => {
         options={{ href: null }}
       />
       <Tabs.Screen
-        name="(createRide)/transportOptions"
-        options={{ href: null }}
-      />
-      <Tabs.Screen
-        name="(createRide)/ridePreferences"
-        options={{ href: null }}
-      />
-      <Tabs.Screen
-        name="(createRide)/rideCreated"
-        options={{ href: null }}
-      />
-      <Tabs.Screen
-        name="(createRide)/preferencesDisplay"
-        options={{ href: null }}
-      />
-      <Tabs.Screen
-        name="(createRide)/create"
-        options={{ href: null }}
-      />
-      <Tabs.Screen
-        name="(createRide)/chooseTransport"
+        name="(createRide)"
         options={{ href: null }}
       />
     </Tabs>

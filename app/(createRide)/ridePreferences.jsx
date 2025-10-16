@@ -1,94 +1,184 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
-import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar'
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
+import { useRouter } from 'expo-router';
+import { StyledText as Text } from '../../components/StyledText';
+import { StyledTitle as Title } from '../../components/StyledTitle'; 
+import ActiveRideCard from '../../components/ActiveRideCard';
+import { StyledCard as Card} from '../../components/StyledCard';
+import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar';
+import { StyledButton as Button } from '../../components/StyledButton';
+import { useRide } from '../../context/RideContext';
+import user from '../../data/userData.json'
+
 
 export default function RidePreferences() {
   const router = useRouter();
-  const { address = 'Destination', transport = 'UberX' } = useLocalSearchParams();
-  const [numPartners, setNumPartners] = useState('');
-  const [gender, setGender] = useState('Any');
-  const [department, setDepartment] = useState('');
-  const [otherNotes, setOtherNotes] = useState('');
+  const { rideData, setRideData } = useRide();
+  const [preferences, setPreferences] = useState({
+    numPartners: 1,
+    gender: 'Any',
+    otherNotes: ''
+  });
+  
+
+  const creator = user[0];
+
+  const handleNext = () => {
+    setRideData({
+      ...rideData,
+      gender: preferences.gender,
+      totalPassengers: preferences.numPartners,
+      preferences: preferences.otherNotes,
+      fare: '100',
+    });
+    router.push('/rideCreated');
+  };
+  
 
   return (
     <ScrollView>
-      <Text style={styles.title}>Your destination</Text>
+      <Title>Your trip</Title>
 
-      <CardButton>
-        <View style={{width: '100%'}}>
-          <Text style={{fontSize: 14}}>To</Text>
-          <Text style={{fontWeight: 'bold', fontSize: 16}}>{address}</Text>
+      <ActiveRideCard ride={rideData} />
+
+      <Title>Ride preferences</Title>
+
+      <Card>
+        <Text style={styles.formText}>Number of ride partners</Text>
+        <View style={styles.numericInputContainer}>
+          <TouchableOpacity onPress={() => setPreferences(p => ({ ...p, numPartners: Math.max(1, p.numPartners - 1) }))} style={styles.numericButton}>
+            <Text style={styles.numericButtonText}>-</Text>
+          </TouchableOpacity>
+          <Text style={styles.numericValue}>{preferences.numPartners}</Text>
+          <TouchableOpacity onPress={() => setPreferences(p => ({ ...p, numPartners: Math.min(10, p.numPartners + 1 )}))} style={styles.numericButton}>
+            <Text style={styles.numericButtonText}>+</Text>
+          </TouchableOpacity>
         </View>
-      </CardButton>
 
-      <Text style={styles.subtitle}>Chosen transport</Text>
-      <CardButton>
-        <Text style={{fontWeight: 'bold'}}>{transport}</Text>
-      </CardButton>
-
-      <Text style={styles.subtitle}>Ride preferences</Text>
-      <CardButton>
-        <View style={{width: '100%'}}>
-          <Text style={{marginBottom: 6}}>Number of ride partners</Text>
-          <TextInput placeholder="e.g. 3-5" value={numPartners} onChangeText={setNumPartners} />
-
-          <Text style={{marginTop: 10, marginBottom: 6}}>Preferred gender</Text>
-          <View style={{flexDirection: 'row'}}>
-            {['Any','Female','Male'].map(option => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => setGender(option)}
-                style={[styles.pill, gender === option && styles.pillActive]}
-              >
-                <Text style={[styles.pillText, gender === option && styles.pillTextActive]}>{option}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <Text style={{marginTop: 10, marginBottom: 6}}>Preferred department</Text>
-          <TextInput placeholder="e.g. CSE" value={department} onChangeText={setDepartment} />
-
-          <Text style={{marginTop: 10, marginBottom: 6}}>Other</Text>
-          <View style={styles.textArea}>
-            <TextInput placeholder="Additional notes" value={otherNotes} onChangeText={setOtherNotes} multiline />
-          </View>
+        <Text style={styles.formText}>Preferred gender</Text>
+        <View style={{ flexDirection: 'row', marginVertical: 5 }}>
+          {['Any', 'Male', 'Female'].map(opt => (
+            <TouchableOpacity
+              key={opt}
+              onPress={() => setPreferences(p => ({ ...p, gender: opt }))}
+              style={[styles.pill, preferences.gender === opt && styles.pillActive]}>
+              <Text style={[styles.pillText, preferences.gender === opt && styles.pillTextActive]}>{opt}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      </CardButton>
 
-      <TouchableOpacity style={styles.primaryCta} onPress={() => router.push({ 
-        pathname: '/rideCreated', 
-        params: { 
-          address, 
-          transport,
-          numPartners,
-          gender,
-          department,
-          otherNotes
-        } 
-      })}>
-        <Text style={styles.primaryCtaText}>Next</Text>
-      </TouchableOpacity>
+        <Text style={styles.formText}>Other</Text>
+        <TextInput
+          placeholder='Add notes (optional)'
+          value={preferences.otherNotes}
+          onChangeText={text => setPreferences(p => ({ ...p, otherNotes: text }))}
+          multiline
+        />
+      </Card>
+
+
+      <View style={styles.buttonRow}>
+        <Button
+          title='Back'
+          onPress={() => router.back()}
+          style={{ width: '30%' }}
+        ></Button>
+        <Button
+          title='Finish'
+          onPress={handleNext}
+          style={{ width: '35%' }}
+        ></Button>
+      </View>
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 25, paddingTop: 10, backgroundColor: '#f7f7f7' },
-  title: { fontWeight: 'bold', fontSize: 22, marginTop: 15 },
-  subtitle: { fontWeight: 'bold', fontSize: 18, marginTop: 20, marginBottom: 6 },
-  primaryCta: { marginTop: 10, padding: 16, borderRadius: 14, backgroundColor: '#1f1f1f', alignItems: 'center' },
-  primaryCtaText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  pill: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: '#000', marginRight: 8, backgroundColor: '#fff' },
-  pillActive: { backgroundColor: '#1f1f1f', borderColor: '#1f1f1f' },
-  pillText: { fontSize: 14 },
-  pillTextActive: { color: '#fff', fontWeight: 'bold' },
-  textArea: { backgroundColor: '#fff', borderRadius: 16, borderWidth: 1, borderColor: '#000', padding: 6, minHeight: 90 },
+  formText: {
+    fontSize: 16,
+    fontWeight: 'semibold',
+    marginTop: 10
+  },
+  primaryCta: { 
+    marginTop: 10, 
+    padding: 16, 
+    borderRadius: 14, 
+    backgroundColor: '#1f1f1f', 
+    alignItems: 'center' 
+  },
+  primaryCtaText: { 
+    color: '#fff', 
+    fontWeight: 'bold', 
+    fontSize: 16 
+  },
+  pill: { 
+    paddingHorizontal: 12, 
+    paddingVertical: 8, 
+    borderRadius: 999, 
+    borderWidth: 1, 
+    borderColor: '#000', 
+    marginRight: 8, 
+    backgroundColor: '#fff', 
+    marginTop: 5
+  },
+  pillActive: { 
+    backgroundColor: 
+    '#1f1f1f', 
+    borderColor: '#1f1f1f' 
+  },
+  pillText: { 
+    fontSize: 14 
+  },
+  pillTextActive: { 
+    color: '#fff', 
+    fontWeight: 'bold' 
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+    width: '100%',
+  },
+  creatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  rideRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+    flex: 1,
+  },
+  rideText: {
+    fontSize: 14,
+    flex: 1,
+  },
+  handle: {
+    color: '#888',
+    flex: 1,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  numericInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  numericButton: {
+    backgroundColor: '#eee',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  numericButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  numericValue: {
+    fontSize: 16,
+    marginHorizontal: 15,
+  },
 })
-
-
-
-

@@ -1,58 +1,60 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
+import { StyledText as Text } from '../../components/StyledText';
+import { StyledTitle as Title } from '../../components/StyledTitle';
+import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
+import ActiveRideCard from '../../components/ActiveRideCard';
+import { StyledButton as Button } from '../../components/StyledButton';
+import { StyledBorderText as BorderText } from '../../components/StyledBorderText';
+import Entypo from '@expo/vector-icons/Entypo';
+import Octicons from '@expo/vector-icons/Octicons';
+import { useRide } from '../../context/RideContext';
+import { useRouter } from 'expo-router';
+import user from '../../data/userData.json'
+
 
 export default function TransportOptions() {
   const router = useRouter();
-  const { address = 'Destination' } = useLocalSearchParams();
+  const { rideData, setRideData } = useRide();
   const [selectedTransport, setSelectedTransport] = useState(null);
   const transportOptions = ['Uber', 'Pathao', 'Private Car', 'Other'];
 
+  const creator = user[0];
+
   return (
     <ScrollView>
-      <Text style={styles.title}>Your destination</Text>
+      <Title>Your Trip</Title>
 
-      <CardButton>
-        <View style={{width: '100%'}}>
-          <Text style={{fontSize: 14}}>To</Text>
-          <Text style={{fontWeight: 'bold', fontSize: 16}}>{address}</Text>
-        </View>
-      </CardButton>
+      <ActiveRideCard ride={rideData} />
 
-      <Text style={styles.subtitle}>Choose a service</Text>
+      <Title>Choose a service</Title>
 
       {transportOptions.map((option) => (
-        <CardButton key={option} onPress={() => setSelectedTransport(option)}>
+        <CardButton key={option} onPress={() => setSelectedTransport(option)}  style={selectedTransport === option ? styles.selectedCard : {}} >
           <Text style={styles.transportText}>{option}</Text>
         </CardButton>
       ))}
 
-      {selectedTransport && (
-        <>
-          <Text style={styles.subtitle}>Chosen service</Text>
-          <CardButton>
-            <Text style={{fontWeight: 'bold'}}>{selectedTransport}</Text>
-          </CardButton>
-
+      
           <View style={styles.buttonRow}>
-            <TouchableOpacity
-              style={[styles.primaryCta, { flex: 1, marginRight: 8 }]}
-              onPress={() => router.back()}
-            >
-              <Text style={styles.primaryCtaText}>Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.primaryCta, { flex: 1, marginLeft: 8 }]}
-              onPress={() => router.push({ pathname: '/ridePreferences', params: { address, transport: selectedTransport } })}
-            >
-              <Text style={styles.primaryCtaText}>Next</Text>
-            </TouchableOpacity>
+            <Button
+            title='Back'
+            onPress={() => router.back()}
+            style={{ width: '30%' }}
+            ></Button>
+
+            {selectedTransport && (
+              <Button
+                title="Next"
+                onPress={() => {
+                  setRideData({ ...rideData, transport: selectedTransport });
+                  router.push('/ridePreferences');
+                }}
+              ></Button>
+            )}
           </View>
-        </>
-      )}
+      
     </ScrollView>
   )
 }
@@ -66,18 +68,9 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    marginTop: 10,
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 22,
+    justifyContent: 'space-between',
     marginTop: 15,
-  },
-  subtitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 6,
+    width: '100%',
   },
   transportText: {
     fontSize: 16,
@@ -95,5 +88,38 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  selectedCard: {
+    backgroundColor: '#888',
+    borderWidth: 2,
+    borderColor: '#000',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+    width: '100%',
+  },
+  creatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  rideRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+    flex: 1,
+  },
+  rideText: {
+    fontSize: 14,
+    flex: 1,
+  },
+  handle: {
+    color: '#888',
+    flex: 1,
+  },
+  icon: {
+    marginRight: 10,
   },
 })

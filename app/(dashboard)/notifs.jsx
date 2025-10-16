@@ -86,7 +86,7 @@ const Notifications = () => {
             {/* Ride Info */}
             <View style={styles.rideInfo}>
               <Text style={styles.rideDestination}>
-                📍 {notification.ride.destination}
+                📍 {notification.ride.destination.name}
               </Text>
               <Text style={styles.rideDetails}>
                 {notification.ride.transport} • {notification.ride.date} •{' '}

@@ -20,7 +20,7 @@ export default function FareCalculation() {
 
       <CardButton>
         <View style={{width: '100%'}}>
-          <Text style={{fontSize: 14}}>📍 {currentRide.destination}</Text>
+          <Text style={{fontSize: 14}}>📍 {currentRide.destination.name}</Text>
           <Text style={{marginTop: 4}}>{currentRide.transport}</Text>
           <Text style={{marginTop: 4, color: '#666'}}>{currentRide.date.day} • {currentRide.date.time}</Text>
         </View>

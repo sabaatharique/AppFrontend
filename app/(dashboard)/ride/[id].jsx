@@ -5,6 +5,7 @@ import { StyledCard as Card} from '../../../components/StyledCard'
 import { StyledTitle as Title } from '../../../components/StyledTitle' 
 import { StyledBorderText as BorderText } from '../../../components/StyledBorderText'
 import { StyledBorderView as BorderView } from '../../../components/StyledBorderView'
+import RideDetailsCard from '../../../components/RideDetailsCard'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import Octicons from '@expo/vector-icons/Octicons'
@@ -33,120 +34,7 @@ const RideDetails = () => {
     <ScrollView>
       <Title>Ride Details</Title>
 
-      <Card>
-        {/* start location */}
-        <View style={styles.rideRow}>
-          <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
-          <View style={{ flex: 1 }}>
-            <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start}</BorderText>
-          </View>
-        </View>
-
-        {/* destination location */}
-        <View style={styles.rideRow}>
-          <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
-          <View style={{ flex: 1 }}>
-            <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination}</BorderText>
-          </View>
-        </View>
-
-        {/* time & date */}
-        <View style={styles.rideRow}>
-          <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.rideText}>{ride.date.day} {ride.date.time}</Text>
-          </View>
-        </View>
-
-        {/* ride creator*/}
-        <View style={styles.subtitle}>
-          <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Ride creator</Text>
-        </View>
-
-        <TouchableOpacity style={styles.creatorRow} onPress={() => {router.push(`../../user/${ride.creator.handle}`)}}>
-          <Text style={{fontSize: 30}}>👤 </Text>
-          <View >
-            <Text style={styles.creatorName}>{ride.creator.name}</Text>
-          <Text style={styles.handle}>{ride.creator.handle}</Text>
-          </View>
-        </TouchableOpacity>
-
-        {/* ride passengers */}
-        <View style={styles.subtitle}>
-          <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShowPassengers(!showPassengers)}>
-            <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Ride passengers</Text>
-            <Entypo name={showPassengers ? "chevron-up" : "chevron-down"} size={18} color="black" style={styles.icon} />
-          </TouchableOpacity>
-        </View>
-
-        {showPassengers && (
-          <View>
-            {ride.partners.length === 0 ? (
-              <Text style={[styles.handle, styles.rideRow]}>No other passengers.</Text>
-            ) : (
-              ride.partners.map((partner, index) => (
-                <TouchableOpacity key={index} style={styles.creatorRow} onPress={() => {router.push(`../../user/${partner.handle}`)}}>
-                  <Text style={{fontSize: 30}}>👤 </Text>
-                  <View >
-                    <Text style={styles.creatorName}>{partner.name}</Text>
-                  <Text style={styles.handle}>{partner.handle}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
-          </View>
-        )}
-
-        {/* transport & total fare */}
-        <View style={styles.subtitle}>
-          <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Transport</Text>
-        </View>
-
-        <View style={styles.rideRow}>
-          <View style={styles.rideColumn}>
-            <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-          </View>
-
-          <View style={styles.rideColumn}>
-            <Text>BDT {ride.fare}</Text>
-          </View>
-        </View>
-
-        {/* fare breakdown */}
-        <View style={styles.subtitle}>
-          <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => setShowBreakdown(!showBreakdown)}>
-            <Text style={[styles.rideText, {fontWeight: 'bold'}]}>Fare Breakdown </Text>
-            <Entypo name={showBreakdown ? "chevron-up" : "chevron-down"} size={18} color="black" style={styles.icon} />
-          </TouchableOpacity>
-        </View>
-
-        {showBreakdown && (
-          <BorderView>
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.rideColumn}>
-                <Text style={styles.rideText}>{ride.creator.name}</Text>
-              </View>
-              <View style={styles.rideColumn}>
-                <Text style={styles.rideText}>BDT {ride.fare}</Text>
-              </View>
-            </View>
-
-            {ride.partners.length === 0 ? (
-              <></>
-            ) : (
-              ride.partners.map((partner, index) => (
-                <View  key={index} style={{flexDirection: 'row'}}>
-                  <View style={styles.rideColumn}>
-                    <Text style={styles.rideText}>{partner.name}</Text>
-                  </View><View style={styles.rideColumn}>
-                      <Text style={styles.rideText}>BDT {ride.fare}</Text>
-                  </View>
-                </View>
-              ))
-            )}
-          </BorderView>
-        )}
-      </Card>
+      <RideDetailsCard ride={ride} showRequestJoin={false}></RideDetailsCard>
     </ScrollView>
   );
 };

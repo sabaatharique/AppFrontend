@@ -33,13 +33,13 @@ const Dash = () => {
         </Text>
       </TouchableOpacity>
 
-      {/* Fare Calculation */}
+      {/* Fare Calculation 
       <TouchableOpacity style={styles.button} onPress={() => router.push('/fareCalculation')}>
         <Text style={styles.buttonTitle}>Fare Calculation</Text>
         <Text style={styles.buttonText}>
           Calculate and split fare for your current ride.
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <Title>Your Last Ride</Title>
 
@@ -51,17 +51,17 @@ const Dash = () => {
             <View style={styles.rideRow}>
               <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
               <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, { fontWeight: 'bold' }]}>
-                  {lastRide.destination}
-                </Text>
+                <Text style={styles.rideText}>{lastRide.destination.name}</Text>
               </View>
             </View>
 
             {/* Date & Time */}
             <View style={styles.rideRow}>
-              <FontAwesome name="clock-o" size={14} color="#888" style={styles.icon} />
+              <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, {marginLeft: 4}]} />
               <Text style={styles.rideText}>
-                {lastRide.date.day} • {lastRide.date.time}
+                {new Date(lastRide.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+                {' • '}
+                {new Date(lastRide.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
               </Text>
             </View>
 
