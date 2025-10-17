@@ -6,10 +6,7 @@ import { StyledTitle as Title } from '../../components/StyledTitle';
 import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
 import ActiveRideCard from '../../components/ActiveRideCard';
 import { StyledButton as Button } from '../../components/StyledButton';
-import { StyledBorderText as BorderText } from '../../components/StyledBorderText';
 import { useRouter } from 'expo-router';
-import Entypo from '@expo/vector-icons/Entypo';
-import Octicons from '@expo/vector-icons/Octicons';
 import { useRide } from '../../context/RideContext';
 import user from '../../data/userData.json'
 
@@ -110,28 +107,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
-  },
-  creatorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  rideRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-    flex: 1,
-  },
-  rideText: {
-    fontSize: 14,
-    flex: 1,
-  },
-  handle: {
-    color: '#888',
-    flex: 1,
-  },
-  icon: {
-    marginRight: 10,
   },
   selectedCard: {
     backgroundColor: '#888',

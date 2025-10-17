@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import CustomMarker from './CustomMarker';
 import { View, StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 

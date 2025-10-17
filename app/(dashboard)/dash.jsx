@@ -15,7 +15,7 @@ const Dash = () => {
     <ScrollView>
       <Title>Start your journey!</Title>
 
-      {/* Create Ride */}
+      {/* Create Ride -> route directly to chooseStart if recent rides empty */}
       <TouchableOpacity style={styles.button} onPress={() => router.push('/create')}>
         <Text style={styles.buttonTitle}>Create a Ride</Text>
         <Text style={styles.buttonText}>
@@ -39,7 +39,7 @@ const Dash = () => {
         </Text>
       </TouchableOpacity> */}
 
-      <Title>Your Last Ride</Title>
+      <Title>Your last ride</Title>
 
       {/* Last Ride Card */}
       <RideHistoryCard ride={lastRide} onPress={() => router.push(`/ride/${lastRide.id}`)}/>

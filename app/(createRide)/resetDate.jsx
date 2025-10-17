@@ -15,7 +15,7 @@ export default function TimeDetails() {
   const router = useRouter();
   const { rideData, setRideData } = useRide();
   const [selection, setSelection] = useState('now');
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
 
 
   const handleNext = () => {
@@ -51,15 +51,15 @@ export default function TimeDetails() {
       <Title>Departure time</Title>
 
       <CardButton onPress={() => setSelection('now')} style={selection === 'now' ? styles.selectedCard : {}}>
-        <Text style={styles.timeText}>Leave Now</Text>
+        <Text style={styles.timeText}>Leave now</Text>
       </CardButton>
       <CardButton onPress={() => setSelection('later')} style={selection === 'later' ? styles.selectedCard : {}}>
-        <Text style={styles.timeText}>Schedule for Later</Text>
+        <Text style={styles.timeText}>Schedule for later</Text>
       </CardButton>
 
       {selection === 'later' && (
         <StyledDateTimePicker
-          style={{width: '100%'}}
+        style={{width: '100%'}}
           value={date}
           mode="datetime"
           onChange={onDateChange}

@@ -1,26 +1,15 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { StyledText as Text } from '../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
-import { StyledCard as Card} from '../../../components/StyledCard'
-import { StyledTitle as Title } from '../../../components/StyledTitle' 
-import { StyledBorderText as BorderText } from '../../../components/StyledBorderText'
-import { StyledBorderView as BorderView } from '../../../components/StyledBorderView'
 import RideDetailsCard from '../../../components/RideDetailsCard'
-import Entypo from '@expo/vector-icons/Entypo'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import Octicons from '@expo/vector-icons/Octicons'
-import { useRouter, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
+import RouteMap from '../../../components/RouteMap'
 import rides from '../../../data/rideData.json'
-import React, { useState } from 'react';
+import React  from 'react';
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
   const ride = rides.find(r => r.id === parseInt(id));
-
-  const router = useRouter();
-  
-  const [showPassengers, setShowPassengers] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
 
   if (!ride) {
     return (
@@ -32,7 +21,7 @@ const RideDetails = () => {
 
   return (
     <ScrollView>
-      <Title>Ride Details</Title>
+      <RouteMap start={{ latitude: ride.start.coords.lat, longitude: ride.start.coords.lng }} destination={{ latitude: ride.destination.coords.lat, longitude: ride.destination.coords.lng }} />
 
       <RideDetailsCard ride={ride} showRequestJoin={false}></RideDetailsCard>
     </ScrollView>

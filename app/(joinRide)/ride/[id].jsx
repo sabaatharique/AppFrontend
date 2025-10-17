@@ -5,7 +5,7 @@ import RideDetailsCard from '../../../components/RideDetailsCard'
 import RouteMap from '../../../components/RouteMap'
 import { useLocalSearchParams } from 'expo-router'
 import rides from '../../../data/rideData.json'
-import React, { useState } from 'react';
+import React from 'react';
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();

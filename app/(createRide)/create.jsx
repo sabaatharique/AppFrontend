@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import { StyledFauxSearch as Search} from '../../components/StyledFauxSearch' 
 import { StyledTitle as Title } from '../../components/StyledTitle'
 import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
+import { StyledBorderText as BorderText } from '../../components/StyledBorderText' 
 import { StyledText as Text } from '../../components/StyledText'
 import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar'
 import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
@@ -16,21 +18,23 @@ export default function CreateRide() {
   const router = useRouter();
   const {setRideData} = useRide();
 
+  const recentRides = [rides[0], rides[1], rides[2]];
+
   return (
     <ScrollView>
       <Title>Create a new ride</Title>
 
         {/* search field */}
-        <TextInput
-          placeholder="Where to today?"
-          onFocus={() => {
+        <Search
+          title="Where to today?"
+          onPress={() => {
             router.push('/chooseStart');
           }}
         />
     
         <Title>Renew a previous ride</Title>
 
-        {rides.map((ride, index) => (
+        {recentRides.map((ride, index) => (
           <CardButton
             key={index}
             onPress={() => {
@@ -46,7 +50,7 @@ export default function CreateRide() {
             <View style={styles.rideRow}>
               <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
               <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.start.name}</Text>
+                <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start.name}</BorderText>
               </View>
             </View>
 
@@ -54,7 +58,7 @@ export default function CreateRide() {
             <View style={styles.rideRow}>
               <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
               <View style={{ flex: 1 }}>
-                <Text style={[styles.rideText, {marginVertical: 0}]}>{ride.destination.name}</Text>
+                <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination.name}</BorderText>
               </View>
             </View>
 
