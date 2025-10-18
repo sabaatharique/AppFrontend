@@ -10,7 +10,7 @@
     "date": { "day": "7 October", "time": "2:30 PM" },
     "fare": "173.33",
     "totalPassengers": 5,
-    "transport": "Private Car",
+    "transport": "CNG",
     "preferences": "University students preferred",
     "gender": "Female"
   },
@@ -55,7 +55,7 @@
     "date": { "day": "7 October", "time": "2:30 PM" },
     "fare": "20.00",
     "totalPassengers": 1,
-    "transport": "Local Bus",
+    "transport": "CNG",
     "preferences": "No preferences",
     "gender": "Male"
   },
@@ -114,7 +114,7 @@
     "date": { "day": "7 October", "time": "2:30 PM" },
     "fare": "20.00",
     "totalPassengers": 1,
-    "transport": "Local Bus",
+    "transport": "Bus",
     "preferences": "No preferences",
     "gender": "Male"
   }

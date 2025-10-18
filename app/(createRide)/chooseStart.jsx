@@ -23,15 +23,22 @@ export default function ChooseStart() {
 
       <MapSearchWrapper onPlaceSelected={handlePlaceSelected} searchQuery={selectedPlace?.formatted_address} style={{width: '100%'}} />
 
-      {selectedPlace && (
+      <View style={styles.buttonRow}>
+        <Button
+          title='Back'
+          onPress={() => router.back()}
+          style={{ width: '30%' }}
+        ></Button>
+        {selectedPlace && (
         <Button
           title='Next'
           onPress={() =>
-            router.push('/chooseDest')
-          }
-          style={{width: '100%', marginTop: 20, alignSelf: 'flex-end'}}>
-        </Button>   
-      )}
+            router.push('/(createRide)/chooseDest')
+        }
+        style={{width: '30%'}}>
+        </Button>
+        )}
+      </View>
     </ScrollView>
   )
 }
@@ -44,6 +51,13 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 8,
     alignContent: 'flex-start',
+    width: '100%',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 'auto', 
+    marginTop: 15,
     width: '100%',
   },
   rideRow: {

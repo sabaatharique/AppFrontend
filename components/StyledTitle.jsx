@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 24,
-    marginTop: 15,
+    marginTop: 5,
   },
 });

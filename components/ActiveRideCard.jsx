@@ -12,6 +12,19 @@ import Octicons from '@expo/vector-icons/Octicons';
 export default function ActiveRideCard({ ride, showRequestButton = false, showPreferences = false, onPress, onPressRequest }) {
   return (
     <CardButton onPress={onPress}>
+
+    {(ride.gender != 'Any') && (
+        <View
+          style={[
+            styles.genderBadge,
+            ride.gender.toLowerCase() === 'female' ? styles.femaleBadge : styles.maleBadge
+          ]}>
+          <Text style={styles.genderText}>
+            {ride.gender.toLowerCase() === 'female' ? 'Female only' : 'Male only'}
+          </Text>
+        </View>
+      )}
+
       {/* Ride creator */}
       <View style={styles.creatorRow}>
         <Text style={{ fontSize: 30 }}>👤 </Text>
@@ -108,7 +121,7 @@ export default function ActiveRideCard({ ride, showRequestButton = false, showPr
               <Text style={styles.rideText}>Other:</Text>
             </View>
             <View style={styles.rideColumn}>
-              <Text style={styles.rideText}>{ride.preferences}</Text>
+              <Text style={styles.rideText}>{ride.preferences ? ride.preferences : '-'}</Text>
             </View>
           </View>
         </BorderView>
@@ -124,9 +137,30 @@ const styles = StyleSheet.create({
     fontSize: 14, 
     marginVertical: 5,
   },
+  genderBadge: {
+    position: 'absolute',
+    top: -10,
+    right: 15,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    zIndex: 10,
+  },
+  femaleBadge: {
+    backgroundColor: '#f0a5c6',
+  },
+  maleBadge: {
+    backgroundColor: '#91cdeb',
+  },
+  genderText: {
+    fontSize: 12,
+    fontWeight: 'semibold',
+    color: '#fff',
+  },
   creatorRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 5,
     marginBottom: 8,
   },
   rideRow: {

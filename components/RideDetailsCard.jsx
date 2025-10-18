@@ -113,6 +113,39 @@ export default function RideDetailsCard({ ride, showRequestJoin = false }) {
         </View>
       )}
 
+      <View style={styles.subtitle}>
+        <Text style={[styles.rideText,{fontWeight: 'bold'}]}>Preferences</Text>
+      </View>
+
+      <BorderView>
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>Total passengers:</Text>
+          </View>
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>{ride.partners.length} / {ride.totalPassengers}</Text>
+          </View>
+        </View>
+
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>Preferred gender:</Text>
+          </View>
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>{ride.gender}</Text>
+          </View>
+        </View>
+
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>Other:</Text>
+          </View>
+          <View style={styles.rideColumn}>
+            <Text style={styles.rideText}>{ride.preferences}</Text>
+          </View>
+        </View>
+      </BorderView>
+
       {/* Transport & Fare */}
       <View style={styles.subtitle}>
         <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Transport</Text>
