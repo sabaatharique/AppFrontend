@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
-import { StyledTitle as Title } from '../../components/StyledTitle';
-import rides from '../../data/rideData.json';
-import { RideHistoryCard } from '../../components/RideHistoryCard';
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
+import { StyledTitle as Title } from '../../../components/StyledTitle';
+import rides from '../../../data/rideData.json';
+import { RideHistoryCard } from '../../../components/RideHistoryCard';
 import { useRouter } from 'expo-router';
 
 const UserRides = () => {

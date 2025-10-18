@@ -1,18 +1,18 @@
 import { useRouter } from 'expo-router';
 import { View, StyleSheet, TouchableOpacity, ScrollView as RNScrollView } from 'react-native'; 
-import { StyledFauxSearch as Search } from '../../components/StyledFauxSearch'; 
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
-import { StyledTitle as Title } from '../../components/StyledTitle';
-import { StyledText as Text } from '../../components/StyledText';
-import { StyledDateTimePicker } from '../../components/StyledDateTimePicker';
-import { StyledButton as Button } from '../../components/StyledButton';
-import { StyledBorderView as BorderView } from '../../components/StyledBorderView'; 
-import RideCard from '../../components/ActiveRideCard';
+import { StyledFauxSearch as Search } from '../../../components/StyledFauxSearch'; 
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
+import { StyledTitle as Title } from '../../../components/StyledTitle';
+import { StyledText as Text } from '../../../components/StyledText';
+import { StyledDateTimePicker } from '../../../components/StyledDateTimePicker';
+import { StyledButton as Button } from '../../../components/StyledButton';
+import { StyledBorderView as BorderView } from '../../../components/StyledBorderView'; 
+import RideCard from '../../../components/ActiveRideCard';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import rides from '../../data/rideData.json';
-import { useSearch } from '../../context/SearchContext';
+import rides from '../../../data/rideData.json';
+import { useSearch } from '../../../context/SearchContext';
 import React, { useState, useEffect, useRef } from 'react';
 
 function haversineDistance(coords1, coords2) {
@@ -240,8 +240,6 @@ const AvailableRides = () => {
 };
 
 export default AvailableRides;
-
-
 
 const styles = StyleSheet.create({
   dropdownContainer: {

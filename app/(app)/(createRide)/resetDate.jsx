@@ -1,15 +1,15 @@
 
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
-import { StyledText as Text } from '../../components/StyledText';
-import { StyledTitle as Title } from '../../components/StyledTitle';
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
-import { StyledButton as Button } from '../../components/StyledButton';
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
+import { StyledText as Text } from '../../../components/StyledText';
+import { StyledTitle as Title } from '../../../components/StyledTitle';
+import { StyledCardButton as CardButton } from '../../../components/StyledCardButton';
+import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRouter } from 'expo-router';
-import { useRide } from '../../context/RideContext';
-import { StyledDateTimePicker } from '../../components/StyledDateTimePicker';
-import ActiveRideCard from '../../components/ActiveRideCard';
+import { useRide } from '../../../context/RideContext';
+import { StyledDateTimePicker } from '../../../components/StyledDateTimePicker';
+import ActiveRideCard from '../../../components/ActiveRideCard';
 
 export default function TimeDetails() {
   const router = useRouter();

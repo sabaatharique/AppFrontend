@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { RideProvider } from '../../context/RideContext';
+import { RideProvider } from '../../../context/RideContext';
 
 export default function CreateRideLayout() {
   return (

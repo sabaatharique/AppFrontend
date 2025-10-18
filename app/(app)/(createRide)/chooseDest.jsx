@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { StyledTitle as Title } from '../../components/StyledTitle'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { StyledButton as Button } from '../../components/StyledButton'
-import MapSearchWrapper from '../../components/MapSearchWrapper'
+import { StyledTitle as Title } from '../../../components/StyledTitle'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import { StyledButton as Button } from '../../../components/StyledButton'
+import MapSearchWrapper from '../../../components/MapSearchWrapper'
 import { useRouter } from 'expo-router'
-import { useRide } from '../../context/RideContext'
+import { useRide } from '../../../context/RideContext'
 
 
 export default function ChooseDest() {

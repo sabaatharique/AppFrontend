@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "start": { "name": "Islamic University of Technology, Boardbazar", "coords": { "lat": 23.948353860919553, "lng":  90.37927342914683 } },
-    "destination": { "name": "House #18, Road 6, Sector 5, Uttara", "coords": { "lat": 23.8800, "lng": 90.3980 } },
+    "start": { "name": "House #18, Road 6, Sector 5, Uttara", "coords": { "lat": 23.8800, "lng": 90.3980 } },
+    "destination": { "name": "Islamic University of Technology, Boardbazar", "coords": { "lat": 23.948353860919553, "lng":  90.37927342914683 } },
     "creator": { "name": "Saba Atharique", "handle": "@saba130" },
     "partners": [
       { "name": "Ridita Alam", "handle": "@ridita110" }
@@ -32,8 +32,8 @@
   },
   {
     "id": 3,
-    "start": { "name": "Islamic University of Technology, Boardbazar", "coords": { "lat": 23.948353860919553, "lng":  90.37927342914683 } },
-    "destination": { "name": "Tokyo Kitchen, House 56/B, Banani", "coords": { "lat": 23.7805, "lng": 90.4001 } },
+    "start": { "name": "Tokyo Kitchen, House 56/B, Banani", "coords": { "lat": 23.7805, "lng": 90.4001 } },
+    "destination": { "name": "Islamic University of Technology, Boardbazar", "coords": { "lat": 23.948353860919553, "lng":  90.37927342914683 } },
     "creator": { "name": "Rahatut Tahrim Mounota", "handle": "@mounota122" },
     "partners": [
       { "name": "Ridita Alam", "handle": "@ridita110" },

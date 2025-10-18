@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { StyledFauxSearch as Search} from '../../components/StyledFauxSearch' 
-import { StyledTitle as Title } from '../../components/StyledTitle'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { StyledBorderText as BorderText } from '../../components/StyledBorderText' 
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledSearchBar as TextInput } from '../../components/StyledSearchBar'
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
+import { StyledFauxSearch as Search} from '../../../components/StyledFauxSearch' 
+import { StyledTitle as Title } from '../../../components/StyledTitle'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import { StyledBorderText as BorderText } from '../../../components/StyledBorderText' 
+import { StyledText as Text } from '../../../components/StyledText'
+import { StyledCardButton as CardButton } from '../../../components/StyledCardButton'
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
-import rides from '../../data/rideData.json'
+import rides from '../../../data/rideData.json'
 import { useRouter } from 'expo-router'
-import { useRide } from '../../context/RideContext';
+import { useRide } from '../../../context/RideContext';
 
 export default function CreateRide() {
   const router = useRouter();

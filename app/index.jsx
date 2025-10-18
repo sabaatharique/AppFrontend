@@ -20,11 +20,11 @@ const Home = () => {
       // Fade in animation
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 100,
         useNativeDriver: true,
       }).start(() => {
         // After 3 second, navigate to dashboard
-        setTimeout(() => router.replace('/dash'), 3000);
+        setTimeout(() => router.replace('/dash'), 500);
       });
     }
   }, [fontsLoaded]);

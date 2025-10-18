@@ -1,10 +1,10 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { StyledText as Text } from '../../components/StyledText';
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
-import { StyledTitle as Title } from '../../components/StyledTitle';
-import { RideHistoryCard } from '../../components/RideHistoryCard';
+import { StyledText as Text } from '../../../components/StyledText';
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
+import { StyledTitle as Title } from '../../../components/StyledTitle';
+import { RideHistoryCard } from '../../../components/RideHistoryCard';
 import { useRouter } from 'expo-router';
-import rides from '../../data/rideData.json';
+import rides from '../../../data/rideData.json';
 import React from 'react';
 
 const Dash = () => {

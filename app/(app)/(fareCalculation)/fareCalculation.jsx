@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton'
-import rides from '../../data/rideData.json'
+import { View, StyleSheet } from 'react-native'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import { StyledText as Text } from '../../../components/StyledText'
+import { StyledCardButton as CardButton } from '../../../components/StyledCardButton'
+import rides from '../../../data/rideData.json'
 
 export default function FareCalculation() {
   // Use the first ride from rides.json as the current ride

@@ -1,11 +1,11 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { StyledCard as Card} from '../../components/StyledCard'
-import { StyledLink } from '../../components/StyledLink'
+import { StyledText as Text } from '../../../components/StyledText'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import { StyledCard as Card} from '../../../components/StyledCard'
+import { StyledLink } from '../../../components/StyledLink'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
-import users from '../../data/userData.json'
-import rides from '../../data/rideData.json'
+import users from '../../../data/userData.json'
+import rides from '../../../data/rideData.json'
 
 const UserProfile = () => {
   const user = users[0];

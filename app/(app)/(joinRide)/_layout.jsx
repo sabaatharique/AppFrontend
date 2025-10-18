@@ -1,6 +1,6 @@
 
 import { Stack } from 'expo-router';
-import { SearchProvider } from '../../context/SearchContext';
+import { SearchProvider } from '../../../context/SearchContext';
 
 export default function JoinRideLayout() {
   return (

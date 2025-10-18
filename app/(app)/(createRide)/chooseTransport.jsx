@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
-import { StyledText as Text } from '../../components/StyledText';
-import { StyledTitle as Title } from '../../components/StyledTitle';
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
-import ActiveRideCard from '../../components/ActiveRideCard';
-import { StyledButton as Button } from '../../components/StyledButton';
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
+import { StyledText as Text } from '../../../components/StyledText';
+import { StyledTitle as Title } from '../../../components/StyledTitle';
+import { StyledCardButton as CardButton } from '../../../components/StyledCardButton';
+import ActiveRideCard from '../../../components/ActiveRideCard';
+import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRouter } from 'expo-router';
-import { useRide } from '../../context/RideContext';
-import user from '../../data/userData.json'
+import { useRide } from '../../../context/RideContext';
+import user from '../../../data/userData.json'
 
 export default function ChooseTransport() {
   const router = useRouter();

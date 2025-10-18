@@ -1,9 +1,9 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { StyledText as Text } from '../../components/StyledText';
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
+import { StyledText as Text } from '../../../components/StyledText';
+import { StyledCardButton as CardButton } from '../../../components/StyledCardButton';
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
 import React, { useState } from 'react';
-import notifications from '../../data/notificationData.json';
+import notifications from '../../../data/notificationData.json';
 
 const Notifications = () => {
   const [notificationData, setNotificationData] = useState(notifications);

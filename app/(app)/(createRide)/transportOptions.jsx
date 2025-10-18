@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView';
-import { StyledText as Text } from '../../components/StyledText';
-import { StyledTitle as Title } from '../../components/StyledTitle';
-import { StyledCardButton as CardButton } from '../../components/StyledCardButton';
-import ActiveRideCard from '../../components/ActiveRideCard';
-import { StyledButton as Button } from '../../components/StyledButton';
-import { StyledBorderText as BorderText } from '../../components/StyledBorderText';
-import Entypo from '@expo/vector-icons/Entypo';
-import Octicons from '@expo/vector-icons/Octicons';
-import { useRide } from '../../context/RideContext';
+import { View, StyleSheet } from 'react-native';
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
+import { StyledText as Text } from '../../../components/StyledText';
+import { StyledTitle as Title } from '../../../components/StyledTitle';
+import { StyledCardButton as CardButton } from '../../../components/StyledCardButton';
+import ActiveRideCard from '../../../components/ActiveRideCard';
+import { StyledButton as Button } from '../../../components/StyledButton';
+import { useRide } from '../../../context/RideContext';
 import { useRouter } from 'expo-router';
-import user from '../../data/userData.json'
+import user from '../../../data/userData.json'
 
 
 export default function TransportOptions() {
