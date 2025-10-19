@@ -8,15 +8,24 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We use your location to set your ride's starting point."
+      }
     },
     "android": {
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "config": {
+        "googleMaps": {
+          "apiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}"
+        }
+      },
+      "package": "com.anonymous.AppFrontend"
     },
-    "web": {
-    },
-    "plugins": [
-      "expo-router"
-    ]
+    "web": {},
+    "plugins": ["expo-router"]
   }
 }
