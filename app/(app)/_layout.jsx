@@ -1,0 +1,80 @@
+import { Tabs } from 'expo-router';
+import React from 'react';
+import DashboardHeader from '../../components/AppHeader';
+import Entypo from '@expo/vector-icons/Entypo';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        header: () => <DashboardHeader />,
+        headerShown: true,
+        tabBarLabelStyle: { fontFamily: 'Montserrat-SemiBold', fontSize: 10 },
+        tabBarStyle: {
+          borderRadius: 30,
+          position: 'absolute',
+          bottom: 0,
+          left: 20,
+          right: 20,
+          elevation: 0,
+          backgroundColor: '#ffffff',
+          height: 100,
+        },
+        tabBarActiveTintColor: '#e63e4c',
+        tabBarInactiveTintColor: '#000000',
+      }}
+    >
+      <Tabs.Screen
+        name="(dashboard)/dash"
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ color }) => <Entypo name="home" color={color} size={22} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(dashboard)/rides"
+        options={{
+          title: 'Ride Status',
+          tabBarIcon: ({ color }) => <FontAwesome name="car" color={color} size={18} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(dashboard)/notifs"
+        options={{
+          title: 'Notifications',
+          tabBarIcon: ({ color }) => <Ionicons name="notifications" color={color} size={20} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(dashboard)/profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <Ionicons name="person" color={color} size={20} />,
+        }}
+      />
+      {/* hide from tabs */} 
+      <Tabs.Screen 
+      name="(dashboard)/user/[handle]" 
+      options={{ href: null}} 
+      />
+      <Tabs.Screen 
+      name="(joinRide)" 
+      options={{ href: null}} 
+      />
+      <Tabs.Screen 
+      name="(fareCalculation)/fareCalculation" 
+      options={{ href: null}} 
+      />
+      <Tabs.Screen 
+      name="(dashboard)/ride/[id]" 
+      options={{ href: null}} 
+      />
+      <Tabs.Screen 
+      name="(createRide)" 
+      options={{ href: null}} 
+      />
+    </Tabs>
+  );
+}
