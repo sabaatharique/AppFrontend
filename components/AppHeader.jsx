@@ -6,17 +6,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const DashboardHeader = () => {
   return (
     <View style={styles.container}>
-      {/* App Title */}
       <Text style={{ fontWeight: 'bold', color: '#e63e4c', fontSize: 16 }}>
         BashayJabo
       </Text>
 
-      {/* Settings Button */}
       <TouchableOpacity style={styles.button}>
-        {/* Icon */}
         <Ionicons name="settings-sharp" size={24} color="#ababab" />
-        {/* Fallback Text */}
-        <Text style={styles.buttonText}>Settings</Text>
       </TouchableOpacity>
     </View>
   );
@@ -45,3 +40,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+

@@ -1,13 +1,11 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledText as Text } from '../../components/StyledText'
-import { StyledScrollView as ScrollView } from '../../components/StyledScrollView'
-import { StyledCard as Card} from '../../components/StyledCard'
+import { StyledText as Text } from '../../../components/StyledText'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import { StyledCard as Card} from '../../../components/StyledCard'
+import { StyledLink } from '../../../components/StyledLink'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import Entypo from '@expo/vector-icons/Entypo'
-import users from '../../data/userData.json'
-import rides from '../../data/rideData.json'
-import React from 'react'
+import users from '../../../data/userData.json'
+import rides from '../../../data/rideData.json'
 
 const UserProfile = () => {
   const user = users[0];
@@ -64,20 +62,11 @@ const UserProfile = () => {
         {/* contact info */}
         <View>
           <Text style={styles.sectionTitle}>Contact</Text>
-          <TouchableOpacity style={styles.contactLink}>
-            <Entypo name="facebook" size={22} color="#1877f2" style={styles.icon} />
-            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.name}</Text>
-          </TouchableOpacity>
+          <StyledLink type='facebook' text={user.name} value={user.fb}></StyledLink>
+                    
+          <StyledLink type='phone' text={user.phone} value={user.phone}></StyledLink>
           
-          <TouchableOpacity style={styles.contactLink}>
-            <FontAwesome name="phone" size={22} color="black" style={styles.icon} />
-            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.phone || '-'}</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.contactLink}>
-            <Entypo name="email" size={20} color="#888" style={styles.icon} />
-            <Text style={[styles.infoText, {fontWeight: 'semibold'}]}>{user.email || '-'}</Text>
-          </TouchableOpacity> 
+          <StyledLink type='email' text={user.email} value={user.email} ></StyledLink>
         </View>      
       </Card>
     </ScrollView>
