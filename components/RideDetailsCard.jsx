@@ -81,7 +81,7 @@ export default function RideDetailsCard({ ride, showRequestJoin = false, onPress
 
         {showRequestJoin && (
           <View style={styles.contactRow}>
-            <TouchableOpacity style={{ paddingHorizontal: 10, marginRight: 15 }}>
+            <TouchableOpacity style={{ paddingHorizontal: 10, marginRight: 15 }} onPress={() => router.push('../../(chat)/chatScreen')}>
               <Ionicons name="chatbubble-ellipses" size={22} color="#e63e4c" />
             </TouchableOpacity>
             <StyledLink type="phone" value={creator.phone} style={{ marginVertical: 0 }} />

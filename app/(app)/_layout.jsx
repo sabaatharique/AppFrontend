@@ -75,6 +75,10 @@ export default function TabsLayout() {
       name="(createRide)" 
       options={{ href: null}} 
       />
+      <Tabs.Screen 
+      name="(chat)/chatScreen" 
+      options={{ href: null}} 
+      />
     </Tabs>
   );
 }
