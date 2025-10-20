@@ -24,17 +24,20 @@ const RouteMap = ({ start, destination }) => {
       if (json.routes.length) {
         const points = decodePolyline(json.routes[0].overview_polyline.points);
         setRouteCoords(points);
-
-        // fit map to show entire route
-        mapRef.current.fitToCoordinates(points, {
-          edgePadding: { top: 80, right: 50, bottom: 80, left: 50 },
-          animated: true,
-        });
       }
     } catch (error) {
       console.error('Error fetching directions:', error);
     }
   };
+
+  useEffect(() => {
+    if (routeCoords.length > 0 && mapRef.current) {
+      mapRef.current.fitToCoordinates(routeCoords, {
+        edgePadding: { top: 80, right: 50, bottom: 80, left: 50 },
+        animated: true,
+      });
+    }
+  }, [routeCoords]);
 
   // decode Google’s encoded polyline into lat/lng array
   const decodePolyline = (t, e) => {
