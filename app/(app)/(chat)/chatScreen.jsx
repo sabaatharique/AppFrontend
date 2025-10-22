@@ -1,14 +1,19 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Keyboard, Modal, PanResponder, Animated, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Keyboard, Modal, PanResponder, Animated, Alert, Platform, Dimensions } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { GiftedChat, Bubble, InputToolbar, Send, Composer } from 'react-native-gifted-chat';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
-import * as Sharing from 'expo-sharing';
+import * as IntentLauncher from 'expo-intent-launcher';
+import * as Animatable from 'react-native-animatable';
+import { Audio } from 'expo-audio';
+import { Video } from 'expo-video';
 import users from '../../../data/userData.json';
+import * as Linking from 'expo-linking';
 import { StyledText as Text } from '../../../components/StyledText';
+
 
 const SwipeableBubble = ({ children, message, onReply, position }) => {
   const translateX = useRef(new Animated.Value(0)).current;
@@ -19,17 +24,17 @@ const SwipeableBubble = ({ children, message, onReply, position }) => {
         return Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > 10;
       },
       onPanResponderMove: (evt, gestureState) => {
-        if (position === 'left' && gestureState.dx > 0) { // received message, swipe right
+        if (position === 'left' && gestureState.dx > 0) { 
           translateX.setValue(gestureState.dx);
-        } else if (position === 'right' && gestureState.dx < 0) { // sent message, swipe left
+        } else if (position === 'right' && gestureState.dx < 0) { 
           translateX.setValue(gestureState.dx);
         }
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (position === 'left' && gestureState.dx > 80) { // received message
+        if (position === 'left' && gestureState.dx > 80) { 
           onReply(message);
           Animated.spring(translateX, { toValue: 0, useNativeDriver: true }).start();
-        } else if (position === 'right' && gestureState.dx < -80) { // sent message
+        } else if (position === 'right' && gestureState.dx < -80) { 
           onReply(message);
           Animated.spring(translateX, { toValue: 0, useNativeDriver: true }).start();
         } else {
@@ -54,6 +59,8 @@ export default function ChatScreen() {
   const { handle } = useLocalSearchParams();
   const user = users.find(u => u.handle === handle);
   const flatListRef = useRef(null);
+  const chatRef = useRef(null);
+  const animRefs = useRef({});
 
   if (!user) {
     return (
@@ -100,7 +107,7 @@ export default function ChatScreen() {
 
       if (!newMsgs[0].image && !newMsgs[0].document) {
         // Simulated replies
-        setTimeout(() => {
+        /*setTimeout(() => {
           const replyMessage = {
             _id: Date.now() + 1,
             text: "Hello! Ami saba.",
@@ -118,7 +125,7 @@ export default function ChatScreen() {
             user: { _id: 2, name: user.name, avatar: user.profilePicture },
           };
           setMessages(prev => GiftedChat.append(prev, [replyMessage2]));
-        }, 3000);
+        }, 3000);*/
       }
     },
     [replyingTo, user.name, user.profilePicture]
@@ -148,45 +155,44 @@ export default function ChatScreen() {
     if (!hasPermission) return;
 
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
       quality: 1,
     });
 
     if (!result.canceled && result.assets?.length > 0) {
+      const asset = result.assets[0];
       onSend([{
         _id: Date.now().toString(),
         createdAt: new Date(),
         user: { _id: 1 },
-        image: result.assets[0].uri,
+        image: asset.type === 'image' ? asset.uri : undefined,
+        video: asset.type === 'video' ? asset.uri : undefined,
       }]);
     }
   };
 
   const pickDocument = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync();
-      if (!result.canceled) {
-        const asset = result.assets[0];
-        const newMessage = {
-          _id: Date.now().toString(),
-          createdAt: new Date(),
-          user: {
-            _id: 1,
-          },
-          document: {
-            name: asset.name,
-            uri: asset.uri,
-            size: asset.size,
-          },
-        };
-        onSend([newMessage]);
-      }
-    } catch (err) {
-      // Handle errors
+  try {
+    const result = await DocumentPicker.getDocumentAsync({copyToCacheDirectory: false});
+    if (!result.canceled) {
+      const asset = result.assets[0];
+      const newMessage = {
+        _id: Date.now().toString(),
+        createdAt: new Date(),
+        user: { _id: 1 },
+        document: {
+          name: asset.name,
+          uri: asset.uri,
+          size: asset.size,
+        },
+      };
+      onSend([newMessage]); 
     }
-  };
-
+  } catch (err) {
+    console.log('Error picking document:', err);
+  }
+};
 
   // Image picker
   const pickImageFromLibrary = async () => {
@@ -194,18 +200,21 @@ export default function ChatScreen() {
     if (!hasPermission) return;
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // only images
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,  
       quality: 1,
+      allowsMultipleSelection: true,
     });
 
     if (!result.canceled && result.assets?.length > 0) {
-      onSend([{
-        _id: Date.now().toString(),
+      const messagesToSend = result.assets.map(asset => ({
+        _id: Date.now().toString() + Math.random(), 
         createdAt: new Date(),
         user: { _id: 1 },
-        image: result.assets[0].uri,
-      }]);
+        image: asset.type === 'image' ? asset.uri : undefined,
+        video: asset.type === 'video' ? asset.uri : undefined,
+      }));
+      onSend(messagesToSend);
     }
   };
 
@@ -213,9 +222,14 @@ export default function ChatScreen() {
     const index = messages.findIndex(m => m._id === message._id);
     if (index !== -1 && flatListRef.current) {
       flatListRef.current.scrollToIndex({ index, animated: true });
+
+
+      const animRef = animRefs.current[message._id];
+        if (animRef && animRef.pulse) {
+          animRef.pulse(800);
+        }
     }
   };
-
 
   // Get initials
   const getInitials = (name) => {
@@ -227,7 +241,7 @@ export default function ChatScreen() {
   // Avatar rendering (no avatar for sender)
   const renderAvatar = (props) => {
     const { user } = props.currentMessage;
-    if (user._id === 1) return null; // remove sender avatar
+    if (user._id === 1) return null; 
     if (user.avatar) return <Image source={{ uri: user.avatar }} style={styles.avatar} />;
     return (
       <View style={[styles.avatar, styles.initialsAvatar]}>
@@ -238,6 +252,8 @@ export default function ChatScreen() {
 
   // Bubble styling
   const renderBubble = (props) => {
+  const { currentMessage, position } = props;
+
     return (
       <SwipeableBubble
         message={props.currentMessage}
@@ -245,8 +261,8 @@ export default function ChatScreen() {
         position={props.position}
       >
         {/* Reply preview */}
-        {props.currentMessage.replyTo && (
-          <TouchableOpacity onPress={() => handleReplyPress(props.currentMessage.replyTo)}>
+        {currentMessage.replyTo && (
+          <TouchableOpacity onPress={() => handleReplyPress(currentMessage.replyTo)}>
             <View style={styles.replyBubble}>
               <Text style={styles.replyName}>Reply to:</Text>
               <Text style={styles.replySnippet}>
@@ -255,33 +271,42 @@ export default function ChatScreen() {
             </View>
           </TouchableOpacity>
         )}
-        <Bubble
-          {...props}
-          wrapperStyle={{
-            left: styles.receivedBubble,
-            right: styles.sentBubble,
+
+        <Animatable.View
+          ref={(ref) => {
+            if (ref) animRefs.current[props.currentMessage._id] = ref;
           }}
-          textStyle={{
-            left: styles.receivedText,
-            right: styles.sentText,
-          }}
-          timeTextStyle={{
-            right: {
-              color: '#555',
-              fontSize: 11,
-              textAlign: 'right',
-              marginTop: 2,
-              marginRight: 4,
-            },
-            left: {
-              color: '#777',
-              fontSize: 11,
-              textAlign: 'right',
-              marginTop: 2,
-              marginRight: 4,
-            },
-          }}
-        />
+        >
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              left: styles.receivedBubble,
+              right: styles.sentBubble,
+            }}
+            textStyle={{
+              left: styles.receivedText,
+              right: styles.sentText,
+            }}
+            timeTextStyle={{
+              right: {
+                color: '#ffffffff',
+                fontSize: 11,
+                flexDirection: 'row',
+                textAlign: 'right',
+                marginTop: 2,
+                marginRight: 4,
+              },
+              left: {
+                color: '#777',
+                fontSize: 11,
+                textAlign: 'right',
+                flexDirection: "row",
+                marginTop: 2,
+                marginRight: 4,
+              },
+            }}
+          />
+        </Animatable.View>
       </SwipeableBubble>
     );
   };
@@ -317,11 +342,49 @@ export default function ChatScreen() {
     </View>
   );
 
-  /*openDocument*/
+  const getMimeType = (fileName) => {
+    if (fileName.endsWith('.pdf')) return 'application/pdf';
+    if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) 
+      return 'application/msword';
+    if (fileName.endsWith('.txt')) return 'text/plain';
+    if (fileName.match(/\.(jpg|jpeg|png|gif)$/)) return 'image/*';
+    if (fileName.match(/\.(mp4|mov|avi|mkv)$/)) return 'video/*';
+    if (fileName.match(/\.(mp3|wav|ogg)$/)) return 'audio/*';
+    return '*/*';
+  };
 
+  const openDocument = async (document) => {
+    try {
+      const mimeType = getMimeType(document.name);
+
+      if (Platform.OS === 'android') {
+        await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+          data: document.uri,
+          type: mimeType,
+          flags: 1, 
+        });
+      } else {
+        if (mimeType.startsWith('image') || mimeType.startsWith('video') || mimeType.startsWith('audio')) {
+          
+          const supported = await Linking.canOpenURL(document.uri);
+          if (supported) await Linking.openURL(document.uri);
+          else Alert.alert('Cannot open file', 'No app can open this media file.');
+        } else {
+          // Documents 
+          const supported = await Linking.canOpenURL(document.uri);
+          if (supported) await Linking.openURL(document.uri);
+          else Alert.alert('Cannot open document', 'No app can open this file.');
+        }
+      }
+    } catch (err) {
+      console.log('Error opening document:', err);
+      Alert.alert('Error', 'Cannot open this file.');
+    }
+  };
 
   const renderCustomView = (props) => {
     const { currentMessage } = props;
+
     if (currentMessage.document) {
       return (
         <TouchableOpacity
@@ -329,7 +392,7 @@ export default function ChatScreen() {
           onPress={() => openDocument(currentMessage.document)}
         >
           <Ionicons name="document-text-outline" size={30} color="#000" />
-          <Text style={[styles.fileName, { flexShrink: 1, flexWrap: 'wrap' }]}> 
+          <Text style={styles.fileName}  ellipsizeMode="clip">
             {currentMessage.document.name}
           </Text>
         </TouchableOpacity>
@@ -419,6 +482,20 @@ export default function ChatScreen() {
     );
   };
 
+  const renderMessageVideo = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.video) {
+      return (
+        <Video
+          source={{ uri: currentMessage.video }}
+          style={{ width: 250, height: 150, borderRadius: 13 }}
+          useNativeControls
+          resizeMode="contain"
+        />
+      );
+    }
+    return null;
+  };
 
 
   return (
@@ -464,6 +541,7 @@ export default function ChatScreen() {
 
       {/* Gifted Chat */}
       <GiftedChat
+        ref = {chatRef}
         messages={messages}
         onSend={msgs => onSend(msgs)}
         user={{ _id: 1 }}
@@ -476,6 +554,7 @@ export default function ChatScreen() {
         renderSend={renderSend}
         renderActions={renderActions}
         renderMessageImage={renderMessageImage}
+        renderMessageVideo={renderMessageVideo}
         renderCustomView={renderCustomView}
         listViewProps={{
           ref: flatListRef,
@@ -540,7 +619,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   sentBubble: {
-    backgroundColor: '#DCF8C6',
+    backgroundColor: '#1f1f1f',
     borderRadius: 16,
     padding: 8,
     marginBottom: 2,
@@ -554,7 +633,7 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   sentText: {
-    color: '#000',
+    color: 'white',
     fontSize: 16,
   },
   receivedText: {
@@ -590,7 +669,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 10,
-    color: 'gray',
+    color: 'white',
     marginTop: 2,
     marginHorizontal: 6,
   },
@@ -650,10 +729,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
+    borderWidth: 1,         
+    borderColor: '#888',
     padding: 10,
     margin: 5,
   },
   fileName: {
-    marginLeft: 10,
+    marginLeft: 8,
+    flexShrink: 1,
+    flexWrap: 'wrap',
   },
-});
+}); 
