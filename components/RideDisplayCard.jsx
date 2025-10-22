@@ -8,7 +8,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
 import { Link } from 'expo-router';
 
-export function RideHistoryCard({ ride, onPress }) {
+export function RideDisplayCard({ ride, onPress }) {
   return (
       <CardButton style={styles.card} onPress={onPress}>
         {/* creator */}

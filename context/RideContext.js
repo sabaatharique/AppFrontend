@@ -13,8 +13,9 @@ export const RideProvider = ({ children }) => {
     totalPassengers: 0,
     fare: '',
     partners: [],
-    gender: '',
+    gender: 'Any',
     preferences: '',
+    routePolyline: ''
   });
 
   return (

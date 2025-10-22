@@ -29,7 +29,7 @@ const RideDetails = () => {
         <Text style={{fontSize: 16, fontWeight: 'semibold'}}>Back</Text>
       </TouchableOpacity>
 
-      <RouteMap start={{ latitude: ride.start.coords.lat, longitude: ride.start.coords.lng }} destination={{ latitude: ride.destination.coords.lat, longitude: ride.destination.coords.lng }} />
+      <RouteMap ride={ride} />
 
       <RideDetailsCard ride={ride} showRequestJoin={true} onPressRequest={() => router.push('joinRequested')}></RideDetailsCard>
     </ScrollView>

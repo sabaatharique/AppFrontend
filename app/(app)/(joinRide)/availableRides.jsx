@@ -1,35 +1,126 @@
-import { useRouter } from 'expo-router';
-import { View, StyleSheet, TouchableOpacity, ScrollView as RNScrollView } from 'react-native'; 
-import { StyledFauxSearch as Search } from '../../../components/StyledFauxSearch'; 
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import { StyledFauxSearch as Search } from '../../../components/StyledFauxSearch';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
 import { StyledTitle as Title } from '../../../components/StyledTitle';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledDateTimePicker } from '../../../components/StyledDateTimePicker';
 import { StyledButton as Button } from '../../../components/StyledButton';
-import { StyledBorderView as BorderView } from '../../../components/StyledBorderView'; 
+import { StyledBorderView as BorderView } from '../../../components/StyledBorderView';
 import RideCard from '../../../components/ActiveRideCard';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import rides from '../../../data/rideData.json';
 import { useSearch } from '../../../context/SearchContext';
-import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'expo-router';
+import * as polyline from '@mapbox/polyline';
 
-function haversineDistance(coords1, coords2) {
-  const toRad = (x) => (x * Math.PI) / 180;
-  const lat1 = coords1.lat;
-  const lon1 = coords1.lng;
-  const lat2 = coords2.lat;
-  const lon2 = coords2.lng;
-  const R = 6371; // km
+const toRad = (x) => (x * Math.PI) / 180;
 
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+function normLatLng(p) {
+  if (!p) return null;
+  return {
+    latitude: p.latitude ?? p.lat,
+    longitude: p.longitude ?? p.lng,
+  };
 }
+
+function haversineKm(aIn, bIn) {
+  const a = normLatLng(aIn);
+  const b = normLatLng(bIn);
+  if (!a || !b) return Infinity;
+
+  const R = 6371;
+  const dLat = toRad(b.latitude - a.latitude);
+  const dLon = toRad(b.longitude - a.longitude);
+  const lat1 = toRad(a.latitude);
+  const lat2 = toRad(b.latitude);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function xyAt(refLat, pIn) {
+  const p = normLatLng(pIn);
+  const x = toRad(p.longitude) * Math.cos(toRad(refLat));
+  const y = toRad(p.latitude);
+  return { x, y };
+}
+
+// Project point P onto segment V->W 
+function projectPointToSegment(pIn, vIn, wIn) {
+  const p = normLatLng(pIn);
+  const v = normLatLng(vIn);
+  const w = normLatLng(wIn);
+  if (!p || !v || !w) {
+    return { distKm: Infinity, t: 0, proj: null, segLenKm: 0 };
+  }
+
+  const refLat = (v.latitude + w.latitude) / 2;
+  const P = xyAt(refLat, p);
+  const V = xyAt(refLat, v);
+  const W = xyAt(refLat, w);
+
+  const vx = W.x - V.x;
+  const vy = W.y - V.y;
+  const len2 = vx * vx + vy * vy;
+
+  let t = 0;
+  if (len2 > 0) {
+    t = ((P.x - V.x) * vx + (P.y - V.y) * vy) / len2;
+    t = Math.max(0, Math.min(1, t));
+  }
+
+  const proj = {
+    latitude: v.latitude + t * (w.latitude - v.latitude),
+    longitude: v.longitude + t * (w.longitude - v.longitude),
+  };
+
+  const distKm = haversineKm(p, proj);
+  const segLenKm = haversineKm(v, w);
+
+  return { distKm, t, proj, segLenKm };
+}
+
+// Location near polyline + cumulative position (km) along route 
+function projectPointToRoute(locationIn, routePolyline, thresholdKm) {
+  const location = normLatLng(locationIn);
+  if (!location || !routePolyline) {
+    return { onRoute: false, posKm: -1, minDistKm: Infinity };
+  }
+
+  const routeCoords = polyline
+    .decode(routePolyline)
+    .map(([lat, lng]) => ({ latitude: lat, longitude: lng }));
+
+  if (routeCoords.length < 2) {
+    return { onRoute: false, posKm: -1, minDistKm: Infinity };
+  }
+
+  let bestMinDist = Infinity;
+  let bestPosKm = 0;
+  let cumulative = 0;
+
+  for (let i = 0; i < routeCoords.length - 1; i++) {
+    const v = routeCoords[i];
+    const w = routeCoords[i + 1];
+    const { distKm, t, segLenKm } = projectPointToSegment(location, v, w);
+    if (distKm < bestMinDist) {
+      bestMinDist = distKm;
+      bestPosKm = cumulative + t * segLenKm;
+    }
+    cumulative += segLenKm;
+  }
+
+  return {
+    onRoute: bestMinDist <= thresholdKm,
+    posKm: bestPosKm,
+    minDistKm: bestMinDist,
+  };
+}
+
 
 const AvailableRides = () => {
   const router = useRouter();
@@ -41,30 +132,57 @@ const AvailableRides = () => {
   const [date, setDate] = useState(null);
   const [selectedTransport, setSelectedTransport] = useState(null);
   const [selectedGender, setSelectedGender] = useState(null);
+  const [leaveNow, setLeaveNow] = useState(false);
   const [displayedRides, setDisplayedRides] = useState(rides);
 
-  const filterRides = (ridesList) => {
-    const searchRadius = 5; // km
-    const startCoords = searchData.start?.coords;
-    const destCoords = searchData.destination?.coords;
-
+  const filterRides = async (ridesList) => {
+    const RADIUS_THRESHOLD_KM = 5; // near endpoints
+    const ROUTE_THRESHOLD_KM = 2;  // near the route
+    const ORDER_EPS_KM = 0.05;     // tolerance
+    const { start, destination } = searchData;
+    const startCoords = start?.coords;
+    const destCoords = destination?.coords;
     let filtered = ridesList;
+    if (startCoords && destCoords) {
+      filtered = ridesList.filter((ride) => {
+        const ridePolyline = ride.routePolyline;
 
-    // Location-based filtering
-    if (startCoords || destCoords) {
-      filtered = filtered.filter((ride) => {
-        const startDistance = startCoords
-          ? haversineDistance(startCoords, ride.start.coords)
-          : Infinity;
-        const destDistance = destCoords
-          ? haversineDistance(destCoords, ride.destination.coords)
-          : Infinity;
+        // 1) projections to route
+        const startProj = projectPointToRoute(
+          { latitude: startCoords.latitude ?? startCoords.lat, longitude: startCoords.longitude ?? startCoords.lng },
+          ridePolyline,
+          ROUTE_THRESHOLD_KM
+        );
+        const destProj = projectPointToRoute(
+          { latitude: destCoords.latitude ?? destCoords.lat, longitude: destCoords.longitude ?? destCoords.lng },
+          ridePolyline,
+          ROUTE_THRESHOLD_KM
+        );
 
-        if (startCoords && destCoords)
-          return startDistance <= searchRadius && destDistance <= searchRadius;
-        else if (startCoords) return startDistance <= searchRadius;
-        else if (destCoords) return destDistance <= searchRadius;
-        else return true;
+        // 2) endpoint fallbacks
+        const startNearStart = haversineKm(ride.start.coords, startCoords) <= RADIUS_THRESHOLD_KM;
+        const destNearEnd   = haversineKm(ride.destination.coords, destCoords) <= RADIUS_THRESHOLD_KM;
+
+        const startOK = startProj.onRoute || startNearStart;
+        const destOK  = destProj.onRoute  || destNearEnd;
+
+        // 3) ordering only when both points are on the route
+        let orderOK = true;
+        if (startProj.onRoute && destProj.onRoute) {
+          orderOK = startProj.posKm <= destProj.posKm + ORDER_EPS_KM;
+        }
+
+        return startOK && destOK && orderOK;
+      });
+    } else if (startCoords || destCoords) {
+      filtered = ridesList.filter((ride) => {
+        const sMatch = startCoords
+          ? haversineKm(ride.start.coords, startCoords) <= RADIUS_THRESHOLD_KM
+          : true;
+        const dMatch = destCoords
+          ? haversineKm(ride.destination.coords, destCoords) <= RADIUS_THRESHOLD_KM
+          : true;
+        return sMatch && dMatch;
       });
     }
 
@@ -79,27 +197,28 @@ const AvailableRides = () => {
     return filtered;
   };
 
-  // Auto reapply filters when data or filters change 
   useEffect(() => {
-    const filtered = filterRides(rides);
-    setDisplayedRides(filtered);
+    (async () => {
+      const filtered = await filterRides(rides);
+      setDisplayedRides(filtered);
 
-    // Scroll to "Available Rides" section when filters change
-    if (scrollRef.current) {
-      setTimeout(() => {
-        scrollRef.current.scrollToEnd({ animated: true });
-      }, 150);
-    }
+      if (scrollRef.current) {
+        setTimeout(() => scrollRef.current.scrollToEnd({ animated: true }), 150);
+      }
+    })();
   }, [selectedTransport, selectedGender, searchData]);
 
-  const onDateChange = (selectedDate) => {
-    setDate(selectedDate || date);
-  };
+  const onDateChange = (selectedDate) => setDate(selectedDate || date);
 
-  const handleSearch = () => {
-    setDisplayedRides(filterRides(rides));
+  const handleSearch = async () => {
+    const filtered = await filterRides(rides);
+    setDisplayedRides(filtered);
     setShowSearch(true);
   };
+
+  const toggleLeaveNow = () => {
+    setLeaveNow(!leaveNow);
+  }
 
   const clearFilters = () => {
     setSelectedTransport(null);
@@ -116,11 +235,11 @@ const AvailableRides = () => {
       {!showSearch && (
         <View style={styles.dropdownContainer}>
           <Search
-            title={searchData.start.name || 'Starting point'}
+            title={searchData.start?.name || 'Starting point'}
             onPress={() => router.push('/searchStart')}
           />
           <Search
-            title={searchData.destination.name || 'Destination'}
+            title={searchData.destination?.name || 'Destination'}
             onPress={() => router.push('/searchDest')}
           />
           <StyledDateTimePicker
@@ -134,18 +253,28 @@ const AvailableRides = () => {
         </View>
       )}
 
-      {/* Filter toggle */}
-      <TouchableOpacity
-        style={styles.filterToggle}
-        onPress={() => setShowFilters(!showFilters)}>
-        <FontAwesome6 name="sliders" size={14} color="white" />
-        <Text style={styles.filterToggleText}>Filters</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonRow}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Switch
+            trackColor={{false: '#ababab', true: '#c9c9c9'}}
+            thumbColor={leaveNow ? '#e63e4c' : '#000'}
+            value={leaveNow}
+            onValueChange={toggleLeaveNow}
+          /> 
+          <Text style={{marginLeft: 5, color: leaveNow ? '#e63e4c' : '000'}}>Leave now</Text>
+        </View>
+         
 
-      {/* Filters section */}
+        <TouchableOpacity
+          style={styles.filterToggle}
+          onPress={() => setShowFilters(!showFilters)}>
+          <FontAwesome6 name="sliders" size={14} color="white" />
+          <Text style={styles.filterToggleText}>Filters</Text>
+        </TouchableOpacity>
+      </View>
+
       {showFilters && (
         <BorderView style={{ width: '100%' }}>
-          {/* Transport filters */}
           <View style={styles.filterGroup}>
             <Text style={styles.filterLabel}>Transport</Text>
             <View style={styles.filterOptions}>
@@ -184,7 +313,6 @@ const AvailableRides = () => {
             </View>
           </View>
 
-          {/* Gender filters */}
           <View style={styles.filterGroup}>
             <Text style={styles.filterLabel}>Gender</Text>
             <View style={styles.filterOptions}>
@@ -197,7 +325,9 @@ const AvailableRides = () => {
                   ]}
                   onPress={() => setSelectedGender(selectedGender === g ? null : g)}>
                   <FontAwesome6
-                    name={g === 'Male' ? 'person' : g === 'Female' ? 'person-dress' : 'users'}
+                    name={
+                      g === 'Male' ? 'person' : g === 'Female' ? 'person-dress' : 'users'
+                    }
                     size={14}
                     color={selectedGender === g ? 'white' : '#444'}
                   />
@@ -220,7 +350,7 @@ const AvailableRides = () => {
         </BorderView>
       )}
 
-      <Title>Available Rides</Title>
+      <Title style={{marginTop: 10}}>Available rides</Title>
 
       {displayedRides.length > 0 ? (
         displayedRides.map((ride, index) => (
@@ -233,7 +363,13 @@ const AvailableRides = () => {
           />
         ))
       ) : (
-        <Text style={{marginVertical: 10}}>No rides found matching your criteria.</Text>
+        <>
+          <Text style={{ marginVertical: 10 }}>No rides found matching your criteria.</Text>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/chooseStart')}>
+            <Text style={styles.buttonTitle}>Create a Ride</Text>
+            <FontAwesome name="chevron-right" size={14} color="#fff" />
+          </TouchableOpacity>
+        </>
       )}
     </ScrollView>
   );
@@ -241,7 +377,25 @@ const AvailableRides = () => {
 
 export default AvailableRides;
 
+
 const styles = StyleSheet.create({
+  button: {
+    marginVertical: 10,
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: '#1f1f1f',
+    flexDirection: 'row',
+    alignContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  buttonTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 6,
+    width: '95%',
+  },
   dropdownContainer: {
     borderColor: '#2a2a2a',
     borderWidth: 1,
@@ -255,20 +409,18 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'space-between',
-    marginTop: 15,
     width: '100%',
   },
   filterToggle: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-end',
     backgroundColor: '#222',
     paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     borderRadius: 16,
-    marginVertical: 6,
   },
   filterToggleText: {
     color: 'white',

@@ -4,15 +4,25 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const RouteMap = ({ start, destination }) => {
+const RouteMap = ({ ride }) => {
   const mapRef = useRef(null);
   const [routeCoords, setRouteCoords] = useState([]);
 
+  const startCoords = ride?.start?.coords ? { latitude: ride.start.coords.lat, longitude: ride.start.coords.lng } : null;
+  const destCoords = ride?.destination?.coords ? { latitude: ride.destination.coords.lat, longitude: ride.destination.coords.lng } : null;
+
   useEffect(() => {
-    if (start && destination) {
-      fetchDirections(start, destination);
+    if (!startCoords || !destCoords) return;
+
+    // If polyline already exists, decode and use it directly
+    if (ride.routePolyline) {
+      const decoded = decodePolyline(ride.routePolyline);
+      setRouteCoords(decoded);
+    } else {
+      // Otherwise, fetch 
+      fetchDirections(startCoords, destCoords);
     }
-  }, [start, destination]);
+  }, [ride]);
 
   const fetchDirections = async (start, destination) => {
     try {
@@ -22,8 +32,11 @@ const RouteMap = ({ start, destination }) => {
       const json = await response.json();
 
       if (json.routes.length) {
-        const points = decodePolyline(json.routes[0].overview_polyline.points);
-        setRouteCoords(points);
+        const encoded = json.routes[0].overview_polyline.points;
+        const decoded = decodePolyline(encoded);
+        setRouteCoords(decoded);
+
+        // await updateRideRoute(ride.id, encoded);
       }
     } catch (error) {
       console.error('Error fetching directions:', error);
@@ -33,14 +46,13 @@ const RouteMap = ({ start, destination }) => {
   useEffect(() => {
     if (routeCoords.length > 0 && mapRef.current) {
       mapRef.current.fitToCoordinates(routeCoords, {
-        edgePadding: { top: 80, right: 50, bottom: 80, left: 50 },
+        edgePadding: { top: 320, right: 200, bottom: 300, left: 200 },
         animated: true,
       });
     }
   }, [routeCoords]);
 
-  // decode Google’s encoded polyline into lat/lng array
-  const decodePolyline = (t, e) => {
+  const decodePolyline = (t) => {
     let points = [];
     let index = 0, lat = 0, lng = 0;
 
@@ -73,12 +85,8 @@ const RouteMap = ({ start, destination }) => {
   return (
     <View style={styles.mapWrapper}>
       <MapView ref={mapRef} style={styles.map}>
-        {start && (
-          <Marker coordinate={start} title="Start" pinColor="orange" />
-        )}
-        {destination && (
-          <Marker coordinate={destination} title="Destination" pinColor="#e63e4c" />
-        )}
+        {startCoords && <Marker coordinate={startCoords} title="Start" pinColor="orange" />}
+        {destCoords && <Marker coordinate={destCoords} title="Destination" pinColor="#e63e4c" />}
         {routeCoords.length > 0 && (
           <Polyline coordinates={routeCoords} strokeWidth={4} strokeColor="black" />
         )}
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
   mapWrapper: {
     width: '100%',
     aspectRatio: 1,
-    borderRadius: 500,
+    borderRadius: 250,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#000',

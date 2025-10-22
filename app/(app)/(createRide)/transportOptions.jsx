@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledTitle as Title } from '../../../components/StyledTitle';
@@ -8,16 +8,25 @@ import ActiveRideCard from '../../../components/ActiveRideCard';
 import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRide } from '../../../context/RideContext';
 import { useRouter } from 'expo-router';
-import user from '../../../data/userData.json'
-
 
 export default function TransportOptions() {
   const router = useRouter();
   const { rideData, setRideData } = useRide();
   const [selectedTransport, setSelectedTransport] = useState(null);
   const transportOptions = ['Uber', 'Pathao', 'Private Car', 'Other'];
+  const [fareEstimate, setFareEstimate] = useState('');
 
-  const creator = user[0];
+  const handleNext = () => {
+    let fareValue = fareEstimate.trim();
+    if (fareValue === '' || isNaN(fareValue) || parseFloat(fareValue) < 0) {
+      fareValue = 'TBA';
+    } else {
+      fareValue = parseFloat(fareValue).toFixed(2); 
+    }
+
+    setRideData({ ...rideData, fare: fareValue, transport: selectedTransport === 'Other' ? 'Car' : selectedTransport });
+    router.push('/ridePreferences');
+  }
 
   return (
     <ScrollView>
@@ -33,24 +42,37 @@ export default function TransportOptions() {
         </CardButton>
       ))}
 
-      
-          <View style={styles.buttonRow}>
-            <Button
-            title='Back'
-            onPress={() => router.back()}
-            style={{ width: '30%' }}
-            ></Button>
+      {selectedTransport && (
+        <>
+        <Title>Fare (optional)</Title>
 
-            {selectedTransport && (
-              <Button
-                title="Next"
-                onPress={() => {
-                  setRideData({ ...rideData, transport: selectedTransport });
-                  router.push('/ridePreferences');
-                }}
-              ></Button>
-            )}
-          </View>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 10,}}>
+          <TextInput
+            style={styles.fareInput}
+            placeholder='Enter fare...'
+            keyboardType='numeric'
+            value={fareEstimate}
+            onChangeText={(text) => setFareEstimate(text.replace(/[^0-9.]/g, ''))} 
+          ></TextInput>
+          <Text style={{marginLeft: 10}}>BDT</Text>
+        </View>
+        </>
+      )}
+      
+      <View style={styles.buttonRow}>
+        <Button
+        title='Back'
+        onPress={() => router.back()}
+        style={{ width: '30%' }}
+        ></Button>
+
+        {selectedTransport && (
+          <Button
+            title="Next"
+            onPress={handleNext}
+          ></Button>
+        )}
+      </View>
       
     </ScrollView>
   )
@@ -97,26 +119,14 @@ const styles = StyleSheet.create({
     marginTop: 15,
     width: '100%',
   },
-  creatorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  rideRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-    flex: 1,
-  },
-  rideText: {
-    fontSize: 14,
-    flex: 1,
-  },
-  handle: {
-    color: '#888',
-    flex: 1,
-  },
-  icon: {
-    marginRight: 10,
-  },
+  fareInput: {
+    width: '50%',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#000',
+    fontSize: 16,
+    fontFamily: 'Montserrat-Regular'
+  }
 })

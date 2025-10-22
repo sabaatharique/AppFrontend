@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { RideProvider } from '../../context/RideContext';
+import { SearchProvider } from '../../context/SearchContext';
 import DashboardHeader from '../../components/AppHeader';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,7 +8,9 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabsLayout() {
   return (
-    <Tabs
+    <SearchProvider>
+      <RideProvider>
+        <Tabs
       screenOptions={{
         header: () => <DashboardHeader />,
         headerShown: true,
@@ -34,7 +37,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="(dashboard)/rides"
+        name="(dashboard)/(rides)"
         options={{
           title: 'Ride Status',
           tabBarIcon: ({ color }) => <FontAwesome name="car" color={color} size={18} />,
@@ -68,10 +71,6 @@ export default function TabsLayout() {
       options={{ href: null}} 
       />
       <Tabs.Screen 
-      name="(dashboard)/ride/[id]" 
-      options={{ href: null}} 
-      />
-      <Tabs.Screen 
       name="(createRide)" 
       options={{ href: null}} 
       />
@@ -79,6 +78,7 @@ export default function TabsLayout() {
       name="(chat)/chatScreen" 
       options={{ href: null}} 
       />
-    </Tabs>
-  );
-}
+            </Tabs>
+          </RideProvider>
+        </SearchProvider>
+      );}
