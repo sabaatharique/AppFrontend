@@ -80,7 +80,11 @@ export default function TabsLayout() {
       />
       <Tabs.Screen 
       name="(chat)/chatScreen" 
-      options={{ href: null}} 
+      options={{
+        href: null,
+        headerShown: false,
+        tabBarStyle: { display: 'none'}
+      }} 
       />
             </Tabs>
           </RideProvider>
