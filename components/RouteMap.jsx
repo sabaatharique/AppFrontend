@@ -1,20 +1,40 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
+import CustomMarker from './CustomMapMarker';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const RouteMap = ({ start, destination }) => {
+const RouteMap = ({ ride, userStartCoords, userDestCoords }) => {
   const mapRef = useRef(null);
   const [routeCoords, setRouteCoords] = useState([]);
+  const [userRouteCoords, setUserRouteCoords] = useState([]);
+
+  const startCoords = ride?.start?.coords ? { latitude: ride.start.coords.lat, longitude: ride.start.coords.lng } : null;
+  const destCoords = ride?.destination?.coords ? { latitude: ride.destination.coords.lat, longitude: ride.destination.coords.lng } : null;
+  const userStart = userStartCoords ? { latitude: userStartCoords.lat, longitude: userStartCoords.lng } : null;
+  const userDest = userDestCoords ? { latitude: userDestCoords.lat, longitude: userDestCoords.lng } : null;
 
   useEffect(() => {
-    if (start && destination) {
-      fetchDirections(start, destination);
-    }
-  }, [start, destination]);
+    if (!startCoords || !destCoords) return;
 
-  const fetchDirections = async (start, destination) => {
+    // If polyline already exists, decode and use it directly
+    if (ride.routePolyline) {
+      const decoded = decodePolyline(ride.routePolyline);
+      setRouteCoords(decoded);
+    } else {
+      // Otherwise, fetch 
+      fetchDirections(startCoords, destCoords, setRouteCoords);
+    }
+  }, [ride]);
+
+  useEffect(() => {
+    if (userStart && userDest) {
+      fetchDirections(userStart, userDest, setUserRouteCoords);
+    }
+  }, [userStart, userDest]);
+
+  const fetchDirections = async (start, destination, setCoords) => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${destination.latitude},${destination.longitude}&mode=driving&key=${GOOGLE_MAPS_APIKEY}`
@@ -22,8 +42,11 @@ const RouteMap = ({ start, destination }) => {
       const json = await response.json();
 
       if (json.routes.length) {
-        const points = decodePolyline(json.routes[0].overview_polyline.points);
-        setRouteCoords(points);
+        const encoded = json.routes[0].overview_polyline.points;
+        const decoded = decodePolyline(encoded);
+        setCoords(decoded);
+
+        // await updateRideRoute(ride.id, encoded);
       }
     } catch (error) {
       console.error('Error fetching directions:', error);
@@ -31,16 +54,16 @@ const RouteMap = ({ start, destination }) => {
   };
 
   useEffect(() => {
-    if (routeCoords.length > 0 && mapRef.current) {
-      mapRef.current.fitToCoordinates(routeCoords, {
-        edgePadding: { top: 80, right: 50, bottom: 80, left: 50 },
+    const allCoords = [...routeCoords, ...userRouteCoords];
+    if (allCoords.length > 0 && mapRef.current) {
+      mapRef.current.fitToCoordinates(allCoords, {
+        edgePadding: { top: 320, right: 200, bottom: 300, left: 200 },
         animated: true,
       });
     }
-  }, [routeCoords]);
+  }, [routeCoords, userRouteCoords]);
 
-  // decode Google’s encoded polyline into lat/lng array
-  const decodePolyline = (t, e) => {
+  const decodePolyline = (t) => {
     let points = [];
     let index = 0, lat = 0, lng = 0;
 
@@ -73,14 +96,16 @@ const RouteMap = ({ start, destination }) => {
   return (
     <View style={styles.mapWrapper}>
       <MapView ref={mapRef} style={styles.map}>
-        {start && (
-          <Marker coordinate={start} title="Start" pinColor="orange" />
-        )}
-        {destination && (
-          <Marker coordinate={destination} title="Destination" pinColor="#e63e4c" />
-        )}
+        {startCoords && <Marker coordinate={startCoords} title="Start" pinColor="orange"/>}
+        {destCoords && <Marker coordinate={destCoords} title="Destination" pinColor="#e63e4c"/>}
         {routeCoords.length > 0 && (
-          <Polyline coordinates={routeCoords} strokeWidth={4} strokeColor="black" />
+          <Polyline coordinates={routeCoords} strokeWidth={7} strokeColor="#1f1f1f" />
+        )}
+        
+        {userStart && <CustomMarker coordinate={userStart} title="Your pickup" color="#888" iconName="circle" size={18}/>}
+        {userDest && <CustomMarker coordinate={userDest} title="Your drop-off" color="#888" iconName="circle"  size={18}/>}
+        {userRouteCoords.length > 0 && (
+          <Polyline coordinates={userRouteCoords} strokeWidth={4} strokeColor="#ababab"/>
         )}
       </MapView>
     </View>
@@ -93,7 +118,7 @@ const styles = StyleSheet.create({
   mapWrapper: {
     width: '100%',
     aspectRatio: 1,
-    borderRadius: 500,
+    borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#000',

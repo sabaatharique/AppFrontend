@@ -33,7 +33,7 @@ export default function ChooseStart() {
         <Button
           title='Next'
           onPress={() =>
-            router.push('/(createRide)/chooseDest')
+            router.push('/chooseDest')
         }
         style={{width: '30%'}}>
         </Button>

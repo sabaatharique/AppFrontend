@@ -4,12 +4,11 @@ import { StyledScrollView as ScrollView } from '../../../components/StyledScroll
 import { useRouter } from 'expo-router';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledTitle as Title } from '../../../components/StyledTitle'; 
-import ActiveRideCard from '../../../components/ActiveRideCard';
+import RideCard from '../../../components/RideDisplayCard';
 import { StyledCard as Card} from '../../../components/StyledCard';
 import { StyledSearchBar as TextInput } from '../../../components/StyledSearchBar';
 import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRide } from '../../../context/RideContext';
-import user from '../../../data/userData.json'
 
 
 export default function RidePreferences() {
@@ -20,9 +19,7 @@ export default function RidePreferences() {
     gender: 'Any',
     otherNotes: ''
   });
-  
-
-  const creator = user[0];
+  const maxPartners = rideData.transport === 'Car' ? 4 : rideData.transport === 'CNG' ? 3 : 10;
 
   const handleNext = () => {
     setRideData({
@@ -30,7 +27,6 @@ export default function RidePreferences() {
       gender: preferences.gender,
       totalPassengers: preferences.numPartners,
       preferences: preferences.otherNotes,
-      fare: '100',
     });
     router.push('/rideCreated');
   };
@@ -40,7 +36,7 @@ export default function RidePreferences() {
     <ScrollView>
       <Title>Your trip</Title>
 
-      <ActiveRideCard ride={rideData} />
+      <RideCard create={true} ride={rideData} />
 
       <Title>Ride preferences</Title>
 
@@ -51,7 +47,7 @@ export default function RidePreferences() {
             <Text style={styles.numericButtonText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.numericValue}>{preferences.numPartners}</Text>
-          <TouchableOpacity onPress={() => setPreferences(p => ({ ...p, numPartners: Math.min(10, p.numPartners + 1 )}))} style={styles.numericButton}>
+          <TouchableOpacity onPress={() => setPreferences(p => ({ ...p, numPartners: Math.min(maxPartners, p.numPartners + 1 )}))} style={styles.numericButton}>
             <Text style={styles.numericButtonText}>+</Text>
           </TouchableOpacity>
         </View>

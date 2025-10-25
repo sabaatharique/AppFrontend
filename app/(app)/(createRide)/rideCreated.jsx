@@ -5,7 +5,7 @@ import { StyledText as Text } from '../../../components/StyledText';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'; 
 import { StyledTitle as Title } from '../../../components/StyledTitle'; 
 import { useRide } from '../../../context/RideContext';
-import ActiveRideCard from '../../../components/ActiveRideCard';
+import RideCard from '../../../components/RideDisplayCard';
 import RouteMap from '../../../components/RouteMap';
 
 
@@ -17,9 +17,9 @@ export default function RideCreated() {
     <ScrollView>
       <Title>Your ride is created!</Title>
 
-      <RouteMap start={{ latitude: rideData.start.coords.lat, longitude: rideData.start.coords.lng }} destination={{ latitude: rideData.destination.coords.lat, longitude: rideData.destination.coords.lng }} />
+      <RouteMap ride={rideData} />
 
-      <ActiveRideCard ride={rideData} showPreferences={true}/>
+      <RideCard create={true} ride={rideData} />
 
       <View style={{flexDirection: 'column', alignSelf: 'center', alignItems: 'center', marginVertical: 15}}>
         <Text>Other users can now see your ride!</Text>

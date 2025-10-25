@@ -13,11 +13,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import users from '../data/userData.json';
 
-export default function RideDetailsCard({ ride, showRequestJoin = false, onPressRequest }) {
+export default function RideDetailsCard({ ride, ongoing = false, join = false }) {
   const router = useRouter();
   const [showPassengers, setShowPassengers] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   if (!ride) return <Text>No ride data provided.</Text>;
 
@@ -27,33 +28,45 @@ export default function RideDetailsCard({ ride, showRequestJoin = false, onPress
   const creator = findUserByHandle(ride.creator.handle);
 
   const handleRequest = () => {
-    if (onPressRequest) {
-      onPressRequest();
-    }
+    router.push('/joinRequested')
     setIsRequested(true);
+  };
+
+  const handleComplete = () => {
+    router.push('/complete')
+    setIsCompleted(true);
   };
 
   return (
     <Card>
-      {showRequestJoin && (
+      {join && (
         <Button
-          title={isRequested ? "Request Sent" : "Request to Join"}
+          title={isRequested ? "Request sent" : "Request to join"}
           style={[{ marginBottom: 20 }, isRequested && { backgroundColor: '#ababab' }]}
           onPress={handleRequest}
           disabled={isRequested}
+        />
+      )}
+      
+      {ongoing && (
+        <Button
+          title={isCompleted ? "Ride completed" : "Complete ride"}
+          style={[{ marginBottom: 20 }, isCompleted && { backgroundColor: '#ababab' }]}
+          onPress={handleComplete}
+          disabled={isCompleted}
         />
       )}
 
       {/* Start location */}
       <View style={styles.rideRow}>
         <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
-        <BorderText style={styles.rideText}>{ride.start.name}</BorderText>
+        <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.start.name}</BorderText>
       </View>
 
       {/* Destination */}
       <View style={styles.rideRow}>
         <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
-        <BorderText style={styles.rideText}>{ride.destination.name}</BorderText>
+        <BorderText style={[styles.rideText, {marginVertical: 0}]}>{ride.destination.name}</BorderText>
       </View>
 
       {/* Date/time */}
@@ -79,7 +92,7 @@ export default function RideDetailsCard({ ride, showRequestJoin = false, onPress
           </View>
         </TouchableOpacity>
 
-        {showRequestJoin && (
+        {(join || ongoing) && (
           <View style={styles.contactRow}>
             <TouchableOpacity style={{ paddingHorizontal: 10, marginRight: 15 }} onPress={() => router.push({ pathname: '/(chat)/chatScreen', params: { handle: creator.handle } })}>
               <Ionicons name="chatbubble-ellipses" size={22} color="#e63e4c" />
@@ -108,7 +121,7 @@ export default function RideDetailsCard({ ride, showRequestJoin = false, onPress
                 <View key={index} style={styles.creatorContainer}>
                   <TouchableOpacity
                     style={styles.creatorRow}
-                    onPress={() => router.push(`../../user/${partner.handle}`)}
+                    onPress={() => router.push(`/user/${partner.handle}`)}
                   >
                     <Text style={{ fontSize: 30 }}>👤 </Text>
                     <View>
@@ -163,7 +176,7 @@ export default function RideDetailsCard({ ride, showRequestJoin = false, onPress
 
       <View style={styles.rideRow}>
         <View style={styles.rideColumn}>
-          <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
+          <Text style={styles.transportText}>{ride.transport}</Text>
         </View>
         <View style={styles.rideColumn}>
           <Text>BDT {ride.fare}</Text>
@@ -227,11 +240,13 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   transportText: {
-    backgroundColor: '#ababab',
-    color: '#fff',
-    paddingHorizontal: 10,
+    fontSize: 14, 
+    color: '#000',
+    backgroundColor: '#e0e0e0',
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
+    fontWeight: 'semibold',
   },
   handle: {
     color: '#888',

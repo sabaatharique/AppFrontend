@@ -2,13 +2,13 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
 import { StyledTitle as Title } from '../../../components/StyledTitle';
-import { RideHistoryCard } from '../../../components/RideHistoryCard';
+import RideCard from '../../../components/RideDisplayCard';
 import { useRouter } from 'expo-router';
 import rides from '../../../data/rideData.json';
 import React from 'react';
 
 const Dash = () => {
-  const lastRide = rides[0];
+  const activeRide = rides[0];
   const router = useRouter();
 
   return (
@@ -39,10 +39,10 @@ const Dash = () => {
         </Text>
       </TouchableOpacity> */}
 
-      <Title>Your last ride</Title>
+      <Title style={{marginTop: 10}}>Your ongoing rides</Title>
 
-      {/* Last Ride Card */}
-      <RideHistoryCard ride={lastRide} onPress={() => router.push(`/ride/${lastRide.id}`)}/>
+      {/* Ride Card */}
+      <RideCard ride={activeRide} ongoing={true} onPress={() => router.push(`/${activeRide.id}`)}/>
     </ScrollView>
   );
 };

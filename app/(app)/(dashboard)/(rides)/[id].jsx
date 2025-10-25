@@ -1,17 +1,16 @@
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { TouchableOpacity, StyleSheet } from 'react-native'
 import { StyledText as Text } from '../../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../../components/StyledScrollView'
 import RideDetailsCard from '../../../../components/RideDetailsCard'
-import RouteMap from '../../../../components/RouteMap'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useSearch } from '../../../../context/SearchContext';
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import RouteMap from '../../../../components/RouteMap'
 import rides from '../../../../data/rideData.json'
-import React from 'react';
+import React  from 'react';
+
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
-  const { searchData } = useSearch();
   const ride = rides.find(r => r.id === parseInt(id));
 
   const router = useRouter();
@@ -24,9 +23,6 @@ const RideDetails = () => {
     );
   }
 
-  const userStartCoords = searchData.start?.coords;
-  const userDestCoords = searchData.destination?.coords;
-
   return (
     <ScrollView>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -34,9 +30,10 @@ const RideDetails = () => {
         <Text style={{fontSize: 16, fontWeight: 'semibold'}}>Back</Text>
       </TouchableOpacity>
 
-      <RouteMap ride={ride} userStartCoords={userStartCoords} userDestCoords={userDestCoords} />
+      <RouteMap ride={ride} />
 
-      <RideDetailsCard ride={ride} join={true}></RideDetailsCard>
+      <RideDetailsCard ride={ride} ongoing={ride.id <= 2} ></RideDetailsCard>
+      
     </ScrollView>
   );
 };

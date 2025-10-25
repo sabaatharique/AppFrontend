@@ -8,22 +8,28 @@ import { StyledBorderView as BorderView } from './StyledBorderView';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
+import { useRouter } from 'expo-router'; 
 
-
-export default function ActiveRideCard({ ride, showRequestButton = false, showPreferences = false, onPress, onPressRequest }) {
+export default function RideDisplayCard({ ride, join = false, create = false, ongoing = false, onPress }) {
   const [isRequested, setIsRequested] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const router = useRouter();
 
   const handleRequest = () => {
-    if (onPressRequest) {
-      onPressRequest();
-    }
+    router.push('/joinRequested')
     setIsRequested(true);
   };
 
-  return (
-    <CardButton onPress={onPress}>
+  const handleComplete = () => {
+    router.push('/complete')
+    setIsCompleted(true);
+  };
 
-    {(ride.gender != 'Any') && (
+  return (
+    <CardButton onPress={onPress} disabled={onPress ? false : true}>
+
+    {(join || create) && (ride.gender != 'Any') && (
         <View
           style={[
             styles.genderBadge,
@@ -36,27 +42,29 @@ export default function ActiveRideCard({ ride, showRequestButton = false, showPr
       )}
 
       {/* Ride creator */}
-      <View style={styles.creatorRow}>
-        <Text style={{ fontSize: 30 }}>👤 </Text>
-        <View>
-          <Text style={{ fontWeight: 'semibold', fontSize: 16 }}>{ride.creator.name}</Text>
-          <Text style={styles.handle}>{ride.creator.handle}</Text>
+      {(join || create || ongoing) && (
+        <View style={styles.creatorRow}>
+          <Text style={{ fontSize: 30 }}>👤 </Text>
+          <View>
+            <Text style={{ fontWeight: 'semibold', fontSize: 16 }}>{ride.creator.name}</Text>
+            <Text style={styles.handle}>{ride.creator.handle}</Text>
+          </View>
         </View>
-      </View>
-
+      )}
+      
       {/* Start location */}
-      <View style={styles.rideRow}>
+      <View style={[styles.rideRow, { marginVertical: 0 }]}>
         <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
         <View style={{ flex: 1 }}>
-          <BorderText style={[styles.rideText, { marginVertical: 0 }]}>{ride.start.name}</BorderText>
+          <BorderText style={styles.rideText}>{ride.start.name}</BorderText>
         </View>
       </View>
 
       {/* Destination */}
-      <View style={styles.rideRow}>
+      <View style={[styles.rideRow, { marginVertical: 0 }]}>
         <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
         <View style={{ flex: 1 }}>
-          <BorderText style={[styles.rideText, { marginVertical: 0 }]}>{ride.destination.name}</BorderText>
+          <BorderText style={styles.rideText}>{ride.destination.name}</BorderText>
         </View>
       </View>
 
@@ -80,30 +88,43 @@ export default function ActiveRideCard({ ride, showRequestButton = false, showPr
           </View>
 
           <View style={{ width: '33%', alignItems: 'center' }}>
-            <Text style={{ fontSize: 12 }}>Seats</Text>
+            <Text style={{ fontSize: 12 }}>{join ? 'Seats' : create ? 'Passengers' : 'Participants'}</Text>
             <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>
-              {ride.totalPassengers - ride.partners.length}
+              {join ? ride.totalPassengers - ride.partners.length : create ? ride.totalPassengers : ride.partners.length + 1}
             </Text>
           </View>
 
           <View style={{ width: '33%', alignItems: 'center' }}>
-            <Text style={{ fontSize: 12 }}>Your fare</Text>
-            <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>BDT {ride.fare}</Text>
+            <Text style={{ fontSize: 12 }}>Total fare</Text>
+            {ride.fare === 'TBA' ? (
+              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>TBA</Text>
+            ) : (
+              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>BDT {ride.fare}</Text>
+            )}
           </View>
         </View>
       )}
       
 
-      {showRequestButton && (
+      {join && (
         <Button
           style={[{ marginTop: 10 }, isRequested && { backgroundColor: '#ababab' }]}
-          title={isRequested ? "Request Sent" : "Request to Join"}
+          title={isRequested ? "Request sent" : "Request to join"}
           onPress={handleRequest}
           disabled={isRequested}
         />
       )}
 
-      {showPreferences && ( <>
+      {ongoing && (
+        <Button
+          title={isCompleted ? "Ride completed" : "Complete ride"}
+          style={[{ marginTop: 10 }, isCompleted && { backgroundColor: '#ababab' }]}
+          onPress={handleComplete}
+          disabled={isCompleted}
+        />
+      )}
+
+      {(create && ride.preferences) && ( <>
         <View style={styles.subtitle}>
           <Text style={[styles.rideText,{fontWeight: 'semibold'}]}>Preferences</Text>
         </View>

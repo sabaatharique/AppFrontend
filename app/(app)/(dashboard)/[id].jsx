@@ -1,12 +1,13 @@
 import { TouchableOpacity, StyleSheet } from 'react-native'
-import { StyledText as Text } from '../../../../components/StyledText'
-import { StyledScrollView as ScrollView } from '../../../../components/StyledScrollView'
-import RideDetailsCard from '../../../../components/RideDetailsCard'
+import { StyledText as Text } from '../../../components/StyledText'
+import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
+import RideDetailsCard from '../../../components/RideDetailsCard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import RouteMap from '../../../../components/RouteMap'
-import rides from '../../../../data/rideData.json'
+import RouteMap from '../../../components/RouteMap'
+import rides from '../../../data/rideData.json'
 import React  from 'react';
+
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
@@ -29,9 +30,9 @@ const RideDetails = () => {
         <Text style={{fontSize: 16, fontWeight: 'semibold'}}>Back</Text>
       </TouchableOpacity>
 
-      <RouteMap start={{ latitude: ride.start.coords.lat, longitude: ride.start.coords.lng }} destination={{ latitude: ride.destination.coords.lat, longitude: ride.destination.coords.lng }} />
+      <RouteMap ride={ride} />
 
-      <RideDetailsCard ride={ride} showRequestJoin={false} ></RideDetailsCard>
+      <RideDetailsCard ride={ride} ongoing={ride.id <= 2} ></RideDetailsCard>
     </ScrollView>
   );
 };

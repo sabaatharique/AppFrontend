@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { StyledFauxSearch as Search} from '../../../components/StyledFauxSearch' 
 import { StyledTitle as Title } from '../../../components/StyledTitle'
@@ -10,6 +10,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
 import rides from '../../../data/rideData.json'
+import user from '../../../data/userData.json'
 import { useRouter } from 'expo-router'
 import { useRide } from '../../../context/RideContext';
 
@@ -27,6 +28,19 @@ export default function CreateRide() {
         <Search
           title="Where to today?"
           onPress={() => {
+            setRideData({
+              creator: {name: user[0].name, handle: user[0].handle},
+              start: { name: '', coords: null },
+              destination: { name: '', coords: null },
+              transport: '',
+              date: {day: '', time: ''},
+              totalPassengers: 0,
+              fare: '',
+              partners: [],
+              gender: 'Any',
+              preferences: '',
+              routePolyline: ''
+            });
             router.push('/chooseStart');
           }}
         />
@@ -39,6 +53,7 @@ export default function CreateRide() {
             onPress={() => {
               setRideData({
                 ...ride,
+                date: {day: '', time: ''},
                 partners: [],
               });
           
