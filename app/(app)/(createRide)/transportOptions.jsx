@@ -4,7 +4,7 @@ import { StyledScrollView as ScrollView } from '../../../components/StyledScroll
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledTitle as Title } from '../../../components/StyledTitle';
 import { StyledCardButton as CardButton } from '../../../components/StyledCardButton';
-import ActiveRideCard from '../../../components/ActiveRideCard';
+import RideCard from '../../../components/RideDisplayCard';
 import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRide } from '../../../context/RideContext';
 import { useRouter } from 'expo-router';
@@ -23,7 +23,6 @@ export default function TransportOptions() {
     } else {
       fareValue = parseFloat(fareValue).toFixed(2); 
     }
-
     setRideData({ ...rideData, fare: fareValue, transport: selectedTransport === 'Other' ? 'Car' : selectedTransport });
     router.push('/ridePreferences');
   }
@@ -32,7 +31,7 @@ export default function TransportOptions() {
     <ScrollView>
       <Title>Your Trip</Title>
 
-      <ActiveRideCard ride={rideData} />
+      <RideCard create={true} ride={rideData} />
 
       <Title>Choose a service</Title>
 

@@ -1,91 +1,227 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StyledText as Text } from './StyledText';
 import { StyledCardButton as CardButton } from './StyledCardButton';
+import { StyledButton as Button } from './StyledButton';
 import { StyledBorderText as BorderText } from './StyledBorderText';
+import { StyledBorderView as BorderView } from './StyledBorderView';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router'; 
 
-export function RideDisplayCard({ ride, onPress }) {
+export default function RideDisplayCard({ ride, join = false, create = false, ongoing = false, onPress }) {
+  const [isRequested, setIsRequested] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const router = useRouter();
+
+  const handleRequest = () => {
+    router.push('/joinRequested')
+    setIsRequested(true);
+  };
+
+  const handleComplete = () => {
+    router.push('/complete')
+    setIsCompleted(true);
+  };
+
   return (
-      <CardButton style={styles.card} onPress={onPress}>
-        {/* creator */}
+    <CardButton onPress={onPress} disabled={onPress ? false : true}>
+
+    {(join || create) && (ride.gender != 'Any') && (
+        <View
+          style={[
+            styles.genderBadge,
+            ride.gender.toLowerCase() === 'female' ? styles.femaleBadge : styles.maleBadge
+          ]}>
+          <Text style={styles.genderText}>
+            {ride.gender.toLowerCase() === 'female' ? 'Female only' : 'Male only'}
+          </Text>
+        </View>
+      )}
+
+      {/* Ride creator */}
+      {(join || create || ongoing) && (
         <View style={styles.creatorRow}>
           <Text style={{ fontSize: 30 }}>👤 </Text>
           <View>
-            <Text style={styles.rideText}>{ride.creator.name}</Text>
+            <Text style={{ fontWeight: 'semibold', fontSize: 16 }}>{ride.creator.name}</Text>
             <Text style={styles.handle}>{ride.creator.handle}</Text>
           </View>
         </View>
-
-        {/* start location */}
-        <View style={styles.rideRow}>
-          <Octicons name="dot-fill" size={16} color="#e63e4c" style={styles.icon} />
-          <BorderText style={[styles.rideText, { marginVertical: 0 }]}>{ride.start.name}</BorderText>
+      )}
+      
+      {/* Start location */}
+      <View style={[styles.rideRow, { marginVertical: 0 }]}>
+        <Octicons name="dot-fill" size={18} color="#e63e4c" style={styles.icon} />
+        <View style={{ flex: 1 }}>
+          <BorderText style={styles.rideText}>{ride.start.name}</BorderText>
         </View>
+      </View>
 
-        {/* destination location */}
-        <View style={styles.rideRow}>
-          <Entypo name="location-pin" size={16} color="#e63e4c" style={styles.icon} />
-          <BorderText style={[styles.rideText, { marginVertical: 0 }]}>{ride.destination.name}</BorderText>
+      {/* Destination */}
+      <View style={[styles.rideRow, { marginVertical: 0 }]}>
+        <Entypo name="location-pin" size={18} color="#e63e4c" style={styles.icon} />
+        <View style={{ flex: 1 }}>
+          <BorderText style={styles.rideText}>{ride.destination.name}</BorderText>
         </View>
+      </View>
 
-        {/* time & date */}
+      {/* Time & date */}
+      {ride.date.day && ride.date.time && (
         <View style={styles.rideRow}>
           <FontAwesome name="clock-o" size={14} color="#888" style={[styles.icon, { marginLeft: 4 }]} />
-          <Text style={styles.rideText}>{ride.date.day}, {ride.date.time}</Text>
-        </View>
-
-        {/* transport & fare */}
-        <View style={styles.rideRow}>
-          <View style={styles.rideColumn}>
-            <Text style={[styles.rideText, styles.transportText]}>{ride.transport}</Text>
-          </View>
-
-          <View style={styles.rideColumn}>
-            <Text>BDT {ride.fare}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.rideText}>{ride.date.day}, {ride.date.time}</Text>
           </View>
         </View>
-      </CardButton>
+      )}
+      
+
+      {/* Transport, seats, fare */}
+      {ride.transport && (
+        <View style={styles.transportContainer}>
+          <View style={{ width: '33%', flex: 1, alignItems: 'center' }}>
+            <Text style={{ fontSize: 12 }}>Transport</Text>
+            <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>{ride.transport}</Text>
+          </View>
+
+          <View style={{ width: '33%', alignItems: 'center' }}>
+            <Text style={{ fontSize: 12 }}>{join ? 'Seats' : create ? 'Passengers' : 'Participants'}</Text>
+            <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>
+              {join ? ride.totalPassengers - ride.partners.length : create ? ride.totalPassengers : ride.partners.length + 1}
+            </Text>
+          </View>
+
+          <View style={{ width: '33%', alignItems: 'center' }}>
+            <Text style={{ fontSize: 12 }}>Total fare</Text>
+            {ride.fare === 'TBA' ? (
+              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>TBA</Text>
+            ) : (
+              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>BDT {ride.fare}</Text>
+            )}
+          </View>
+        </View>
+      )}
+      
+
+      {join && (
+        <Button
+          style={[{ marginTop: 10 }, isRequested && { backgroundColor: '#ababab' }]}
+          title={isRequested ? "Request sent" : "Request to join"}
+          onPress={handleRequest}
+          disabled={isRequested}
+        />
+      )}
+
+      {ongoing && (
+        <Button
+          title={isCompleted ? "Ride completed" : "Complete ride"}
+          style={[{ marginTop: 10 }, isCompleted && { backgroundColor: '#ababab' }]}
+          onPress={handleComplete}
+          disabled={isCompleted}
+        />
+      )}
+
+      {(create && ride.preferences) && ( <>
+        <View style={styles.subtitle}>
+          <Text style={[styles.rideText,{fontWeight: 'semibold'}]}>Preferences</Text>
+        </View>
+
+        <BorderView>
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>Total passengers:</Text>
+            </View>
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>{ride.partners.length} / {ride.totalPassengers}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>Preferred gender:</Text>
+            </View>
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>{ride.gender}</Text>
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>Other:</Text>
+            </View>
+            <View style={styles.rideColumn}>
+              <Text style={styles.rideText}>{ride.preferences ? ride.preferences : '-'}</Text>
+            </View>
+          </View>
+        </BorderView>
+      </>
+      )}
+    </CardButton>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    marginVertical: 6,
-  },
-  rideRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  subtitle: {
+    fontWeight: 'semibold', 
+    fontSize: 14, 
     marginVertical: 5,
   },
-  rideText: {
-    fontSize: 14,
-    flex: 1,
-  },
-  rideColumn: {
-    alignItems: 'flex-start',
-    marginTop: 5,
-    width: '50%',
-  },
-  transportText: {
-    backgroundColor: '#ababab',
-    color: '#fff',
-    paddingHorizontal: 10,
+  genderBadge: {
+    position: 'absolute',
+    top: -10,
+    right: 15,
     paddingVertical: 4,
+    paddingHorizontal: 8,
     borderRadius: 12,
+    zIndex: 10,
   },
-  handle: {
-    color: '#888',
-    fontSize: 13,
-    flex: 1,
+  femaleBadge: {
+    backgroundColor: '#f0a5c6',
+  },
+  maleBadge: {
+    backgroundColor: '#91cdeb',
+  },
+  genderText: {
+    fontSize: 12,
+    fontWeight: 'semibold',
+    color: '#fff',
   },
   creatorRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
+    marginBottom: 8,
+  },
+  rideRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+    flex: 1,
+  }, 
+  rideColumn: {
+    alignItems: 'flex-start',
+    marginTop: 5,
+    width: '50%'
+  },
+  rideText: {
+    fontSize: 14,
+    flex: 1,
+  },
+  transportContainer: {
+    borderRadius: 14,
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    marginVertical: 6,
+    padding: 8,
+    alignItems: 'flex-end',
+  },
+  handle: {
+    color: '#888',
+    fontSize: 13,
+    flex: 1,
   },
   icon: {
     marginRight: 10,

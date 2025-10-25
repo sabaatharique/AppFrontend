@@ -1,15 +1,17 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../../../components/StyledText'
 import { StyledScrollView as ScrollView } from '../../../../components/StyledScrollView'
 import RideDetailsCard from '../../../../components/RideDetailsCard'
 import RouteMap from '../../../../components/RouteMap'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useSearch } from '../../../../context/SearchContext';
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import rides from '../../../../data/rideData.json'
 import React from 'react';
 
 const RideDetails = () => {
   const { id } = useLocalSearchParams();
+  const { searchData } = useSearch();
   const ride = rides.find(r => r.id === parseInt(id));
 
   const router = useRouter();
@@ -22,6 +24,9 @@ const RideDetails = () => {
     );
   }
 
+  const userStartCoords = searchData.start?.coords;
+  const userDestCoords = searchData.destination?.coords;
+
   return (
     <ScrollView>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -29,9 +34,9 @@ const RideDetails = () => {
         <Text style={{fontSize: 16, fontWeight: 'semibold'}}>Back</Text>
       </TouchableOpacity>
 
-      <RouteMap ride={ride} />
+      <RouteMap ride={ride} userStartCoords={userStartCoords} userDestCoords={userDestCoords} />
 
-      <RideDetailsCard ride={ride} showRequestJoin={true} onPressRequest={() => router.push('joinRequested')}></RideDetailsCard>
+      <RideDetailsCard ride={ride} join={true}></RideDetailsCard>
     </ScrollView>
   );
 };

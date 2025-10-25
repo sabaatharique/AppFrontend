@@ -7,7 +7,7 @@ import { StyledText as Text } from '../../../components/StyledText';
 import { StyledDateTimePicker } from '../../../components/StyledDateTimePicker';
 import { StyledButton as Button } from '../../../components/StyledButton';
 import { StyledBorderView as BorderView } from '../../../components/StyledBorderView';
-import RideCard from '../../../components/ActiveRideCard';
+import RideCard from '../../../components/RideDisplayCard';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -357,9 +357,8 @@ const AvailableRides = () => {
           <RideCard
             key={index}
             ride={ride}
+            join={true}
             onPress={() => router.push(`/ride/${ride.id}`)}
-            showRequestButton={true}
-            onPressRequest={() => router.push('joinRequested')}
           />
         ))
       ) : (

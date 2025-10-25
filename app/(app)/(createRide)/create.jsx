@@ -53,6 +53,7 @@ export default function CreateRide() {
             onPress={() => {
               setRideData({
                 ...ride,
+                date: {day: '', time: ''},
                 partners: [],
               });
           

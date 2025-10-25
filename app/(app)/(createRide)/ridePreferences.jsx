@@ -4,7 +4,7 @@ import { StyledScrollView as ScrollView } from '../../../components/StyledScroll
 import { useRouter } from 'expo-router';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledTitle as Title } from '../../../components/StyledTitle'; 
-import ActiveRideCard from '../../../components/ActiveRideCard';
+import RideCard from '../../../components/RideDisplayCard';
 import { StyledCard as Card} from '../../../components/StyledCard';
 import { StyledSearchBar as TextInput } from '../../../components/StyledSearchBar';
 import { StyledButton as Button } from '../../../components/StyledButton';
@@ -36,7 +36,7 @@ export default function RidePreferences() {
     <ScrollView>
       <Title>Your trip</Title>
 
-      <ActiveRideCard ride={rideData} />
+      <RideCard create={true} ride={rideData} />
 
       <Title>Ride preferences</Title>
 

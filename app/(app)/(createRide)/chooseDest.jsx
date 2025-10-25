@@ -35,7 +35,7 @@ export default function ChooseDest() {
         <Button
           title='Next'
           onPress={() =>
-            router.push('/(createRide)/timeDetails')
+            router.push('/chooseDate')
         }
         style={{width: '30%'}}>
         </Button>

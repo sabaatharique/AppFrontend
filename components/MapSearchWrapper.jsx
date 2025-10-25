@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   mapWrapper: {
     width: '100%',
     aspectRatio: 1,
-    borderRadius: 500,
+    borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#000',

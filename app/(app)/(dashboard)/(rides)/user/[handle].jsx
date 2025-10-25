@@ -1,12 +1,12 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { StyledText as Text } from '../../../../components/StyledText'
-import { StyledScrollView as ScrollView } from '../../../../components/StyledScrollView'
-import { StyledCard as Card} from '../../../../components/StyledCard'
-import { StyledLink } from '../../../../components/StyledLink'
+import { StyledText as Text } from '../../../../../components/StyledText'
+import { StyledScrollView as ScrollView } from '../../../../../components/StyledScrollView'
+import { StyledCard as Card} from '../../../../../components/StyledCard'
+import { StyledLink } from '../../../../../components/StyledLink'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import users from '../../../../data/userData.json'
-import rides from '../../../../data/rideData.json'
+import users from '../../../../../data/userData.json'
+import rides from '../../../../../data/rideData.json'
 import React from 'react'
 
 const UserDetails = () => {

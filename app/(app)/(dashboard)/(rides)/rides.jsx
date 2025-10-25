@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyledScrollView as ScrollView } from '../../../../components/StyledScrollView';
 import { StyledTitle as Title } from '../../../../components/StyledTitle';
-import { RideDisplayCard } from '../../../../components/RideDisplayCard';
+import RideCard from '../../../../components/RideDisplayCard';
 import { useRouter } from 'expo-router';
 import rides from '../../../../data/rideData.json';
 
@@ -16,13 +16,13 @@ const UserRides = () => {
       <Title>Your ongoing rides</Title>
       
       {activeRides.map((ride, index=2) => (
-        <RideDisplayCard key={index} ride={ride} onPress={() => router.push(`/${ride.id}`)} />
+        <RideCard key={index} ride={ride} ongoing={true} onPress={() => router.push(`/${ride.id}`)} />
       ))}
 
       <Title style={{marginTop: 10}}>Your previous rides</Title>
       
       {previousRides.map((ride, index=2) => (
-        <RideDisplayCard key={index} ride={ride} onPress={() => router.push(`/${ride.id}`)} />
+        <RideCard key={index} ride={ride} onPress={() => router.push(`/${ride.id}`)} />
       ))}
     </ScrollView>
   )

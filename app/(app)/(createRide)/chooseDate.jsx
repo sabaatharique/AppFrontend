@@ -9,7 +9,7 @@ import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRouter } from 'expo-router';
 import { useRide } from '../../../context/RideContext';
 import { StyledDateTimePicker } from '../../../components/StyledDateTimePicker';
-import ActiveRideCard from '../../../components/ActiveRideCard';
+import RideCard from '../../../components/RideDisplayCard';
 
 export default function TimeDetails() {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function TimeDetails() {
         return;
       }
     }
-    router.push('/(createRide)/chooseTransport');
+    router.push('/chooseTransport');
   };
 
   const onDateChange = (selectedDate) => {
@@ -46,7 +46,7 @@ export default function TimeDetails() {
     <ScrollView>
       <Title>Your trip</Title>
 
-      <ActiveRideCard ride={rideData}/>
+      <RideCard create={true} ride={rideData} />
 
       <Title>Departure time</Title>
 
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   selectedCard: {
-    backgroundColor: '#888',
+    fontWeight: 'bold',
     borderWidth: 2,
     borderColor: '#000',
   }

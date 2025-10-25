@@ -59,7 +59,7 @@ export default function TabsLayout() {
       />
       {/* hide from tabs */} 
       <Tabs.Screen 
-      name="(dashboard)/user/[handle]" 
+      name="(dashboard)/[id]" 
       options={{ href: null}} 
       />
       <Tabs.Screen 
@@ -67,7 +67,11 @@ export default function TabsLayout() {
       options={{ href: null}} 
       />
       <Tabs.Screen 
-      name="(fareCalculation)/fareCalculation" 
+      name="(completeRide)/complete" 
+      options={{ href: null}} 
+      />
+      <Tabs.Screen 
+      name="(completeRide)/fareCalculation" 
       options={{ href: null}} 
       />
       <Tabs.Screen 
