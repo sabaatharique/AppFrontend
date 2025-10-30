@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet} from "react-native";
 
-export function StyledScrollView(props) {
-    return <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
+export function StyledScrollView(props, style) {
+    return <ScrollView style={[styles.scrollView, style]} contentContainerStyle={styles.contentContainer}>
       {props.children}
     </ScrollView>;
 }

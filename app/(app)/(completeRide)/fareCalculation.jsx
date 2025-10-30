@@ -69,48 +69,28 @@ export default function FareCalculation() {
 
   return (
     <ScrollView>
-      <Title>Ride participants</Title>
-      
-      <CardButton>
-        <View style={{width: '100%'}}>
-          <View style={styles.participantRow}>
-            <View style={styles.creatorRow}>
-              <Text style={{ fontSize: 30 }}>👤 </Text>
-              <View>
-                <Text style={{ fontWeight: 'semibold', fontSize: 16 }}>{currentRide.creator.name}</Text>
-                <Text style={styles.handle}>{currentRide.creator.handle}</Text>
-              </View>
-            </View>
-            <Text style={styles.participantRole}>Creator</Text>
-          </View>
-          
-          {currentRide.partners.map((partner, index) => (
-            <View key={index} style={styles.participantRow}>
-              <View style={styles.creatorRow}>
-                <Text style={{ fontSize: 30 }}>👤 </Text>
-                <View>
-                  <Text style={{ fontWeight: 'semibold', fontSize: 16 }}>{partner.name}</Text>
-                  <Text style={styles.handle}>{partner.handle}</Text>
-                </View>
-              </View>
-              <Text style={styles.participantRole}>Buddy</Text>
-            </View>
-          ))}
-        </View>
-      </CardButton>
-
       <Title style={{marginTop: 10}}>Fare breakdown</Title>
       
       <CardButton>
         <View style={{width: '100%'}}>
           <View style={styles.fareRow}>
-            <Text style={styles.fareLabel}>Total Fare:</Text>
+            <Text style={styles.fareLabel}>Total fare:</Text>
             <Text style={styles.fareValue}>BDT {currentRide.fare}</Text>
           </View>
 
           {fareBreakdown.map((p, i) => (
             <View key={i} style={styles.fareRow}>
-              <Text>{p.handle}</Text>
+              <View style={{width: '40%'}}>
+                <Text style={{fontSize: 30 }}>👤 </Text>
+                <View style={styles.participantRow}>
+                  <View style={styles.creatorRow}>
+                    <View>
+                      <Text style={{ fontWeight: 'semibold', fontSize: 16 }}>{p.name}</Text>
+                      <Text style={styles.handle}>{p.handle}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
               <Text>{p.distance.toFixed(2)} km</Text>
               <Text>BDT {p.fare}</Text>
             </View>
@@ -119,9 +99,9 @@ export default function FareCalculation() {
       </CardButton>
 
       <Button
-        title='Finish'
+        title='Next'
         onPress={() =>
-          router.push('/dash')
+          router.push('/partnerFeedback')
       }
       style={{marginTop: 20, width: '100%'}}>
       </Button>

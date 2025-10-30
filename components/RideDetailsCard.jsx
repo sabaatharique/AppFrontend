@@ -183,7 +183,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
         </View>
       </View>
 
-      {/* Fare Breakdown */}
+      {/* Fare Breakdown 
       <View style={styles.subtitle}>
         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setShowBreakdown(!showBreakdown)}>
           <Text style={[styles.rideText, { fontWeight: 'bold' }]}>Fare Breakdown </Text>
@@ -214,6 +214,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
           ))}
         </BorderView>
       )}
+      */}
     </Card>
   );
 }

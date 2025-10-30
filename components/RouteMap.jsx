@@ -5,7 +5,7 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const RouteMap = ({ ride, userStartCoords, userDestCoords }) => {
+const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }) => {
   const mapRef = useRef(null);
   const [routeCoords, setRouteCoords] = useState([]);
   const [userRouteCoords, setUserRouteCoords] = useState([]);
@@ -57,7 +57,7 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords }) => {
     const allCoords = [...routeCoords, ...userRouteCoords];
     if (allCoords.length > 0 && mapRef.current) {
       mapRef.current.fitToCoordinates(allCoords, {
-        edgePadding: { top: 320, right: 200, bottom: 300, left: 200 },
+        edgePadding: { top: small ? 350 : 130, right: 200, bottom: small ? 300 : 330, left: 200 },
         animated: true,
       });
     }
@@ -94,7 +94,7 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords }) => {
   };
 
   return (
-    <View style={styles.mapWrapper}>
+    <View style={[styles.mapWrapper, small ? {aspectRatio: 1.25} : {aspectRatio: 0.5}, style]}>
       <MapView ref={mapRef} style={styles.map}>
         {startCoords && <Marker coordinate={startCoords} title="Start" pinColor="orange"/>}
         {destCoords && <Marker coordinate={destCoords} title="Destination" pinColor="#e63e4c"/>}
@@ -117,13 +117,9 @@ export default RouteMap;
 const styles = StyleSheet.create({
   mapWrapper: {
     width: '100%',
-    aspectRatio: 1,
-    borderRadius: 16,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#000',
-    backgroundColor: '#e6e6e6',
-    marginVertical: 10,
+    borderRadius: 16,
+    backgroundColor: '#fff',
   },
   map: {
     width: '100%',

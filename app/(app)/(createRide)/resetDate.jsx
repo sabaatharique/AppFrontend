@@ -51,10 +51,10 @@ export default function TimeDetails() {
       <Title>Departure time</Title>
 
       <CardButton onPress={() => setSelection('now')} style={selection === 'now' ? styles.selectedCard : {}}>
-        <Text style={styles.timeText}>Leave now</Text>
+        <Text style={[styles.timeText, selection === 'now' ? {fontWeight: 'semibold'} : {}]}>Leave now</Text>
       </CardButton>
       <CardButton onPress={() => setSelection('later')} style={selection === 'later' ? styles.selectedCard : {}}>
-        <Text style={styles.timeText}>Schedule for later</Text>
+        <Text style={[styles.timeText, selection === 'later' ? {fontWeight: 'semibold'} : {}]}>Schedule for later</Text>
       </CardButton>
 
       {selection === 'later' && (
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   selectedCard: {
-    fontWeight: 'bold',
+    backgroundColor: '#e6e6e6',
     borderWidth: 2,
     borderColor: '#000',
   }

@@ -75,6 +75,10 @@ export default function TabsLayout() {
       options={{ href: null}} 
       />
       <Tabs.Screen 
+      name="(completeRide)/partnerFeedback" 
+      options={{ href: null}} 
+      />
+      <Tabs.Screen 
       name="(createRide)" 
       options={{ href: null}} 
       />

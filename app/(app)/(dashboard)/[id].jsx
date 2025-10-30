@@ -1,5 +1,6 @@
-import { TouchableOpacity, StyleSheet } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import { StyledText as Text } from '../../../components/StyledText'
+import { StyledTitle as Title } from '../../../components/StyledTitle'
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
 import RideDetailsCard from '../../../components/RideDetailsCard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -25,10 +26,11 @@ const RideDetails = () => {
 
   return (
     <ScrollView>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <FontAwesome style={{marginRight: 10}} name="chevron-left" size={14} color="black" />
-        <Text style={{fontSize: 16, fontWeight: 'semibold'}}>Back</Text>
+      <TouchableOpacity onPress={() => router.back()}>
+        <FontAwesome name="arrow-left" size={18} color="black" />
       </TouchableOpacity>
+
+      <Title style={{marginBottom: 5}}>Ride details</Title>
 
       <RouteMap ride={ride} />
 
@@ -38,10 +40,3 @@ const RideDetails = () => {
 };
 
 export default RideDetails;
-
-const styles = StyleSheet.create({
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  }
-});

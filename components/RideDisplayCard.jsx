@@ -105,7 +105,7 @@ export default function RideDisplayCard({ ride, join = false, create = false, on
         </View>
       )}
       
-
+      {/*
       {join && (
         <Button
           style={[{ marginTop: 10 }, isRequested && { backgroundColor: '#ababab' }]}
@@ -114,6 +114,7 @@ export default function RideDisplayCard({ ride, join = false, create = false, on
           disabled={isRequested}
         />
       )}
+      */}
 
       {ongoing && (
         <Button

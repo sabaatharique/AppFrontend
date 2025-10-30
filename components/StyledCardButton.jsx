@@ -4,8 +4,8 @@ export function StyledCardButton(props) {
   return <Pressable {...props} 
     style={({pressed}) =>  [
       styles.card, 
-      props.style, 
-      {backgroundColor: pressed ? '#e6e6e6' : '#fff'}]}>
+      {backgroundColor: pressed ? '#e6e6e6' : '#fff'},
+      props.style]}>
     {props.children}
     </Pressable>;
 }

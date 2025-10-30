@@ -87,7 +87,7 @@ export default function MapSearch({ onPlaceSelected, searchQuery, style }) {
   }
 
   return (
-    <View style={style}>
+    <View style={[style, {marginTop: 5}]}>
       <TextInput
         placeholder="Search location..."
         value={query}
@@ -139,7 +139,7 @@ export default function MapSearch({ onPlaceSelected, searchQuery, style }) {
 const styles = StyleSheet.create({
   mapWrapper: {
     width: '100%',
-    aspectRatio: 1,
+    aspectRatio: 0.8,
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,

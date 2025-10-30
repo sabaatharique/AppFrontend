@@ -8,11 +8,15 @@ import RideCard from '../../../components/RideDisplayCard';
 import { StyledButton as Button } from '../../../components/StyledButton';
 import { useRouter } from 'expo-router';
 import { useRide } from '../../../context/RideContext';
+import Entypo from '@expo/vector-icons/Entypo';
 
 export default function ChooseTransport() {
   const router = useRouter();
   const { rideData, setRideData } = useRide();
   const [selectedTransport, setSelectedTransport] = useState(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const transportOptions = ['Uber', 'Pathao', 'Private Car', 'Other'];
   const [fareEstimate, setFareEstimate] = useState('');
 
   const handleNext = () => {
@@ -25,11 +29,7 @@ export default function ChooseTransport() {
 
     setRideData({ ...rideData, transport: selectedTransport, fare: fareValue });
 
-    if (selectedTransport === 'Car') {
-      router.push('/transportOptions');
-    } else {
-      router.push('/ridePreferences');
-    }
+    router.push('/ridePreferences');
   };
 
   return (
@@ -40,26 +40,42 @@ export default function ChooseTransport() {
 
       <Title>Select transport</Title>
 
-      <CardButton onPress={() => setSelectedTransport('Car')} style={selectedTransport === 'Car' ? styles.selectedCard : {}}>
-        <View style={styles.transportRow}>
-          <Text style={styles.transportIcon}>🚗</Text>
-          <Text style={styles.transportText}>Car</Text>
-        </View>
-      </CardButton>
-      <CardButton onPress={() => setSelectedTransport('CNG')} style={selectedTransport === 'CNG' ? styles.selectedCard : {}}>
-        <View style={styles.transportRow}>
-          <Text style={styles.transportIcon}>🛺</Text>
-          <Text style={styles.transportText}>CNG</Text>
-        </View>
-      </CardButton>
-      <CardButton onPress={() => setSelectedTransport('Bus')} style={selectedTransport === 'Bus' ? styles.selectedCard : {}}>
-        <View style={styles.transportRow}>
-          <Text style={styles.transportIcon}>🚌</Text>
-          <Text style={styles.transportText}>Bus</Text>
+      <CardButton onPress={() => setShowOptions(!showOptions)} style={transportOptions.includes(selectedTransport) ? styles.selectedCard : {}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={styles.transportRow}>
+            <Text style={styles.transportIcon}>🚗</Text>
+            <Text style={[styles.transportText, transportOptions.includes(selectedTransport) ? {fontWeight: 'semibold'} : {}]}>{selectedTransport && transportOptions.includes(selectedTransport) ? selectedTransport : 'Car'}</Text>
+          </View>
+          <Entypo name={showOptions ? "chevron-up" : "chevron-down"} size={18} color="black" />
         </View>
       </CardButton>
 
-      {(selectedTransport === 'Bus' || selectedTransport === 'CNG') && (
+      {showOptions && ( <>
+        <Title style={{fontSize: 20}}>Choose a service: </Title>
+        {transportOptions.map((option) => (
+          <CardButton key={option} onPress={() => {
+            setSelectedTransport(option);
+           }}
+            style={[{width: '95%', alignSelf: 'flex-end'}, selectedTransport === option ? styles.selectedCard : {}]} >
+            <Text style={[styles.transportText, selectedTransport === option ? {fontWeight: 'semibold'} : {}]}>{option}</Text>
+          </CardButton>
+        ))}</>
+      )}
+
+      <CardButton onPress={() => {setSelectedTransport('CNG'); setShowOptions(false);}} style={selectedTransport === 'CNG' ? styles.selectedCard : {}}>
+        <View style={styles.transportRow}>
+          <Text style={styles.transportIcon}>🛺</Text>
+          <Text style={[styles.transportText, selectedTransport === 'CNG' ? {fontWeight: 'semibold'} : {}]}>CNG</Text>
+        </View>
+      </CardButton>
+      <CardButton onPress={() => {setSelectedTransport('Bus'); setShowOptions(false);}} style={selectedTransport === 'Bus' ? styles.selectedCard : {}}>
+        <View style={styles.transportRow}>
+          <Text style={styles.transportIcon}>🚌</Text>
+          <Text style={[styles.transportText, selectedTransport === 'Bus' ? {fontWeight: 'semibold'} : {}]}>Bus</Text>
+        </View>
+      </CardButton>
+
+      {selectedTransport && (
         <>
         <Title>Fare (optional)</Title>
 
@@ -133,7 +149,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedCard: {
-    backgroundColor: '#888',
+    backgroundColor: '#e6e6e6',
     borderWidth: 2,
     borderColor: '#000',
   },

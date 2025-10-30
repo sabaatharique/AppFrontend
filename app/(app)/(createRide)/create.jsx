@@ -45,7 +45,7 @@ export default function CreateRide() {
           }}
         />
     
-        <Title>Renew a previous ride</Title>
+        <Title style={{marginTop: 10}}>Renew a previous ride</Title>
 
         {recentRides.map((ride, index) => (
           <CardButton
