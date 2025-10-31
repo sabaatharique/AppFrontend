@@ -27,7 +27,7 @@ const RideDetails = () => {
   return (
     <ScrollView>
      <TouchableOpacity onPress={() => router.back()}>
-        <FontAwesome name="arrow-left" size={18} color="black" />
+        <FontAwesome style={{paddingRight: 10}} name="chevron-left" size={18} color="black" />
       </TouchableOpacity>
 
       <Title style={{marginBottom: 5}}>Ride details</Title>

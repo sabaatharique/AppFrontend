@@ -19,7 +19,7 @@ export default function RideCreated() {
 
       <RouteMap ride={rideData} />
 
-      <RideCard create={true} ride={rideData} />
+      <RideCard create={true} ride={rideData} style={{marginTop: 15}} />
 
       <View style={{flexDirection: 'column', alignSelf: 'center', alignItems: 'center', marginVertical: 15}}>
         <Text>Other users can now see your ride!</Text>

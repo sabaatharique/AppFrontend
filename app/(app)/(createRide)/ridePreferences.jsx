@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
 import { useRouter } from 'expo-router';
 import { StyledText as Text } from '../../../components/StyledText';
@@ -7,13 +7,15 @@ import { StyledTitle as Title } from '../../../components/StyledTitle';
 import RideCard from '../../../components/RideDisplayCard';
 import { StyledCard as Card} from '../../../components/StyledCard';
 import { StyledSearchBar as TextInput } from '../../../components/StyledSearchBar';
-import { StyledButton as Button } from '../../../components/StyledButton';
+import { StyledNavigatorButton as NavButton } from '../../../components/StyledNavigatorButton';
 import { useRide } from '../../../context/RideContext';
 
 
 export default function RidePreferences() {
   const router = useRouter();
   const { rideData, setRideData } = useRide();
+  const scrollViewRef = useRef(null);
+  const textInputRef = useRef(null);
   const [preferences, setPreferences] = useState({
     numPartners: 1,
     gender: 'Any',
@@ -30,10 +32,25 @@ export default function RidePreferences() {
     });
     router.push('/rideCreated');
   };
-  
+
+  const handleTextInputFocus = () => {
+    // Scroll to ensure input is visible when keyboard appears
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
 
   return (
-    <ScrollView>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <ScrollView 
+        ref={scrollViewRef}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 50 }}
+      >
       <Title>Your trip</Title>
 
       <RideCard create={true} ride={rideData} />
@@ -66,27 +83,31 @@ export default function RidePreferences() {
 
         <Text style={styles.formText}>Other</Text>
         <TextInput
+          ref={textInputRef}
           placeholder='Add notes (optional)'
           value={preferences.otherNotes}
           onChangeText={text => setPreferences(p => ({ ...p, otherNotes: text }))}
+          onFocus={handleTextInputFocus}
           multiline
+          style={styles.textInput}
         />
       </Card>
 
 
       <View style={styles.buttonRow}>
-        <Button
-          title='Back'
+      <NavButton
           onPress={() => router.back()}
-          style={{ width: '30%' }}
-        ></Button>
-        <Button
-          title='Finish'
-          onPress={handleNext}
-          style={{ width: '35%' }}
-        ></Button>
+          style={{ width: '25%' }}
+        />
+        <NavButton
+          onPress={() => handleNext()}
+          title="Finish"
+          back={false}
+          style={{ width: '25%' }}
+        />
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -132,8 +153,10 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 15,
+    marginTop: 20,
+    marginBottom: 10,
     width: '100%',
   },
   creatorRow: {
@@ -176,5 +199,9 @@ const styles = StyleSheet.create({
   numericValue: {
     fontSize: 16,
     marginHorizontal: 15,
+  },
+  textInput: {
+    minHeight: 100,
+    textAlignVertical: 'top',
   },
 })

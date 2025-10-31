@@ -10,7 +10,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Octicons from '@expo/vector-icons/Octicons';
 import { useRouter } from 'expo-router'; 
 
-export default function RideDisplayCard({ ride, join = false, create = false, ongoing = false, onPress }) {
+export default function RideDisplayCard({ ride, style, join = false, create = false, ongoing = false, onPress }) {
   const [isRequested, setIsRequested] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
@@ -27,7 +27,7 @@ export default function RideDisplayCard({ ride, join = false, create = false, on
   };
 
   return (
-    <CardButton onPress={onPress} disabled={onPress ? false : true}>
+    <CardButton style={style} onPress={onPress} disabled={onPress ? false : true}>
 
     {(join || create) && (ride.gender != 'Any') && (
         <View

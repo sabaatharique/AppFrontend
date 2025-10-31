@@ -1,10 +1,16 @@
+import React from "react";
 import { ScrollView, StyleSheet} from "react-native";
 
-export function StyledScrollView(props, style) {
-    return <ScrollView style={[styles.scrollView, style]} contentContainerStyle={styles.contentContainer}>
+export const StyledScrollView = React.forwardRef((props, ref) => {
+    return <ScrollView 
+      ref={ref}
+      style={[styles.scrollView, props.style]} 
+      contentContainerStyle={[styles.contentContainer, props.contentContainerStyle]}
+      {...props}
+    >
       {props.children}
     </ScrollView>;
-}
+});
 
 const styles = StyleSheet.create({
     scrollView: {

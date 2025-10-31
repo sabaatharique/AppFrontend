@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledTitle as Title } from '../../../components/StyledTitle';
 import { StyledCardButton as CardButton } from '../../../components/StyledCardButton';
-import { StyledButton as Button } from '../../../components/StyledButton';
+import { StyledNavigatorButton as NavButton } from '../../../components/StyledNavigatorButton';
 import { useRouter } from 'expo-router';
 import { useRide } from '../../../context/RideContext';
 import { StyledDateTimePicker } from '../../../components/StyledDateTimePicker';
@@ -51,10 +50,10 @@ export default function TimeDetails() {
       <Title>Departure time</Title>
 
       <CardButton onPress={() => setSelection('now')} style={selection === 'now' ? styles.selectedCard : {}}>
-      <Text style={[styles.timeText, selection === 'now' ? {fontWeight: 'semibold'} : {}]}>Leave now</Text>
+        <Text style={[styles.timeText, selection === 'now' ? {fontWeight: 'semibold', color: '#fff'} : {}]}>Leave now</Text>
       </CardButton>
       <CardButton onPress={() => setSelection('later')} style={selection === 'later' ? styles.selectedCard : {}}>
-      <Text style={[styles.timeText, selection === 'later' ? {fontWeight: 'semibold'} : {}]}>Schedule for later</Text>
+        <Text style={[styles.timeText, selection === 'later' ? {fontWeight: 'semibold', color: '#fff'} : {}]}>Schedule for later</Text>
       </CardButton>
 
       {selection === 'later' && (
@@ -67,18 +66,16 @@ export default function TimeDetails() {
       )}
 
       <View style={styles.buttonRow}>
-        <Button
-          title='Back'
+      <NavButton
           onPress={() => router.back()}
-          style={{ width: '30%' }}
-        ></Button>
-
+          style={{ width: '25%' }}
+        />
         {selection && (
-          <Button
-            title='Next'
-            onPress={handleNext}
-            style={{ width: '30%' }}
-          ></Button>
+        <NavButton
+          onPress={() => handleNext()}
+          back={false}
+          style={{ width: '25%' }}
+        />
         )}
       </View>
     </ScrollView>
@@ -97,8 +94,8 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   selectedCard: {
-    backgroundColor: '#e6e6e6',
+    backgroundColor: '#1f1f1f',
     borderWidth: 2,
-    borderColor: '#000',
+    color: '#fff',
   }
 })

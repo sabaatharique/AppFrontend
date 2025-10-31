@@ -18,5 +18,10 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0.5, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 2,
   }
 })

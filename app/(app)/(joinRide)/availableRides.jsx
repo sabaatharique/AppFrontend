@@ -11,6 +11,7 @@ import RideCard from '../../../components/RideDisplayCard';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import rides from '../../../data/rideData.json';
 import { useSearch } from '../../../context/SearchContext';
 import { useRouter } from 'expo-router';
@@ -132,8 +133,9 @@ const AvailableRides = () => {
   const [date, setDate] = useState(null);
   const [selectedTransport, setSelectedTransport] = useState(null);
   const [selectedGender, setSelectedGender] = useState(null);
-  const [leaveNow, setLeaveNow] = useState(false);
+  const [leaveNow, setLeaveNow] = useState(true);
   const [displayedRides, setDisplayedRides] = useState(rides);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const filterRides = async (ridesList) => {
     const RADIUS_THRESHOLD_KM = 5; // near endpoints
@@ -208,16 +210,29 @@ const AvailableRides = () => {
     })();
   }, [selectedTransport, selectedGender, searchData]);
 
-  const onDateChange = (selectedDate) => setDate(selectedDate || date);
-
-  const handleSearch = async () => {
-    const filtered = await filterRides(rides);
-    setDisplayedRides(filtered);
-    setShowSearch(true);
+  const onDateChange = (selectedDate) => {
+    setDate(selectedDate || date);
+    setShowDatePicker(false);
   };
 
   const toggleLeaveNow = () => {
-    setLeaveNow(!leaveNow);
+    const newLeaveNow = !leaveNow;
+    setLeaveNow(newLeaveNow);
+    // Open date picker when switching to scheduled mode
+    if (!newLeaveNow) {
+      setShowDatePicker(true);
+    } else {
+      // Clear date when switching back to "leave now"
+      setDate(null);
+    }
+  }
+
+  const handleDatePickerCancel = () => {
+    setShowDatePicker(false);
+    // If user cancels and no date was set, switch back to "leave now"
+    if (!date) {
+      setLeaveNow(true);
+    }
   }
 
   const clearFilters = () => {
@@ -230,8 +245,9 @@ const AvailableRides = () => {
     <ScrollView innerRef={scrollRef}>
       <Title>Search for a ride</Title>
 
-      {showSearch && <Search title="Where to today?" onPress={() => setShowSearch(false)} />}
+      <Search title="Where to today?" onPress={() => router.push('/searchRoute')} />
 
+      {/*
       {!showSearch && (
         <View style={styles.dropdownContainer}>
           <Search
@@ -252,29 +268,78 @@ const AvailableRides = () => {
           <Button title="Ready to go" onPress={handleSearch} style={{ width: '100%' }} />
         </View>
       )}
+      */}
 
-      <View style={styles.buttonRow}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Switch
-            trackColor={{false: '#ababab', true: '#c9c9c9'}}
-            thumbColor={leaveNow ? '#e63e4c' : '#000'}
-            value={leaveNow}
-            onValueChange={toggleLeaveNow}
-          /> 
-          <Text style={{marginLeft: 5, color: leaveNow ? '#e63e4c' : '000'}}>Leave now</Text>
+      <View style={styles.controlsContainer}>
+        <View style={styles.scheduleContainer}>
+          <TouchableOpacity
+            style={[styles.scheduleOption, leaveNow && styles.scheduleOptionActive]}
+            onPress={() => {
+              if (!leaveNow) toggleLeaveNow();
+            }}>
+            <Text style={[styles.scheduleOptionText, leaveNow && styles.scheduleOptionTextActive]}>
+              Leave now
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.scheduleOption, !leaveNow && styles.scheduleOptionActive]}
+            onPress={() => {
+              if (leaveNow) toggleLeaveNow();
+            }}>
+            <Text style={[styles.scheduleOptionText, !leaveNow && styles.scheduleOptionTextActive]}>
+              Schedule
+            </Text>
+          </TouchableOpacity>
         </View>
-         
+
+        {!leaveNow && date && (
+          <TouchableOpacity 
+            style={styles.dateButton}
+            onPress={() => setShowDatePicker(true)}>
+            <FontAwesome name="calendar" size={14} color="#e63e4c" />
+            <Text style={styles.dateButtonText}>
+              {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, {date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+            </Text>
+            <FontAwesome name="chevron-right" size={12} color="#e63e4c" />
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity
-          style={styles.filterToggle}
+          style={[styles.filterToggle, showFilters && styles.filterToggleActive]}
           onPress={() => setShowFilters(!showFilters)}>
-          <FontAwesome6 name="sliders" size={14} color="white" />
-          <Text style={styles.filterToggleText}>Filters</Text>
+          <FontAwesome6 name="sliders" size={14} color={showFilters ? "white" : "#333"} />
+          <Text style={[styles.filterToggleText, showFilters && styles.filterToggleTextActive]}>
+            Filters
+          </Text>
+          {(selectedTransport || selectedGender) && (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>
+                {(selectedTransport ? 1 : 0) + (selectedGender ? 1 : 0)}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
 
+      <DateTimePickerModal
+        isVisible={showDatePicker}
+        mode="datetime"
+        date={date || new Date()}
+        onConfirm={onDateChange}
+        onCancel={handleDatePickerCancel}
+      />
+
       {showFilters && (
-        <BorderView style={{ width: '100%' }}>
+        <BorderView style={styles.filtersContainer}>
+          <View style={styles.filterHeader}>
+            <Text style={styles.filterHeaderText}>Filter by:</Text>
+            {(selectedTransport || selectedGender) && (
+              <TouchableOpacity style={styles.clearButton} onPress={clearFilters}>
+                <Text style={styles.clearButtonText}>Clear all</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
           <View style={styles.filterGroup}>
             <Text style={styles.filterLabel}>Transport</Text>
             <View style={styles.filterOptions}>
@@ -291,20 +356,20 @@ const AvailableRides = () => {
                   {type === 'CNG' ? (
                     <MaterialCommunityIcons
                       name="rickshaw"
-                      size={22}
-                      color={selectedTransport === type ? 'white' : '#444'}
+                      size={18}
+                      color={selectedTransport === type ? 'white' : '#666'}
                     />
                   ) : (
                     <FontAwesome
                       name={type === 'Car' ? 'car' : 'bus'}
                       size={14}
-                      color={selectedTransport === type ? 'white' : '#444'}
+                      color={selectedTransport === type ? 'white' : '#666'}
                     />
                   )}
                   <Text
                     style={[
                       styles.filterChipText,
-                      selectedTransport === type && { color: 'white' },
+                      selectedTransport === type && styles.filterChipTextActive,
                     ]}>
                     {type}
                   </Text>
@@ -329,12 +394,12 @@ const AvailableRides = () => {
                       g === 'Male' ? 'person' : g === 'Female' ? 'person-dress' : 'users'
                     }
                     size={14}
-                    color={selectedGender === g ? 'white' : '#444'}
+                    color={selectedGender === g ? 'white' : '#666'}
                   />
                   <Text
                     style={[
                       styles.filterChipText,
-                      selectedGender === g && { color: 'white' },
+                      selectedGender === g && styles.filterChipTextActive,
                     ]}>
                     {g}
                   </Text>
@@ -342,11 +407,6 @@ const AvailableRides = () => {
               ))}
             </View>
           </View>
-
-          <TouchableOpacity style={styles.clearButton} onPress={clearFilters}>
-            <Text style={{ color: '#fff' }}>Clear</Text>
-            <MaterialCommunityIcons name="close" size={14} color="#fff" />
-          </TouchableOpacity>
         </BorderView>
       )}
 
@@ -364,8 +424,8 @@ const AvailableRides = () => {
       ) : (
         <>
           <Text style={{ marginVertical: 10 }}>No rides found matching your criteria.</Text>
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/chooseStart')}>
-            <Text style={styles.buttonTitle}>Create a Ride</Text>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/chooseRoute')}>
+            <Text style={styles.buttonTitle}>Create a ride</Text>
             <FontAwesome name="chevron-right" size={14} color="#fff" />
           </TouchableOpacity>
         </>
@@ -406,6 +466,54 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     width: '100%',
   },
+  controlsContainer: {
+    width: '100%',
+    marginBottom: 10,
+  },
+  scheduleContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#e6e6e6',
+    borderRadius: 14,
+    marginBottom: 10,
+  },
+  scheduleOption: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scheduleOptionActive: {
+    backgroundColor: '#e63e4c',
+  },
+  scheduleOptionText: {
+    fontSize: 14,
+    color: '#000',
+  },
+  scheduleOptionTextActive: {
+    color: '#fff',
+    fontWeight: 'semibold',
+  },
+  dateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#e63e4c',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 10,
+  },
+  dateButtonText: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#000',
+  },
   buttonRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -416,40 +524,81 @@ const styles = StyleSheet.create({
   filterToggle: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#222',
-    paddingVertical: 6,
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#999',
+    paddingVertical: 8,
     paddingHorizontal: 14,
-    borderRadius: 16,
+    borderRadius: 12,
+    position: 'relative',
+  },
+  filterToggleActive: {
+    backgroundColor: '#1f1f1f',
+    borderColor: '#1f1f1f',
   },
   filterToggleText: {
-    color: 'white',
     marginLeft: 6,
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: 'semibold',
+    color: '#000',
+  },
+  filterToggleTextActive: {
+    color: 'white',
+  },
+  filterBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    backgroundColor: '#e63e4c',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+  },
+  filterBadgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  filtersContainer: {
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  filterHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  filterHeaderText: {
+    fontSize: 16,
+    fontWeight: 'semibold',
+    color: '#000',
   },
   filterGroup: {
-    marginBottom: 10,
+    marginBottom: 16,
   },
   filterLabel: {
-    fontSize: 13,
-    color: '#555',
-    marginBottom: 4,
-    fontWeight: '500',
+    fontSize: 14,
+    color: '#000',
+    marginBottom: 8,
   },
   filterOptions: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 8,
   },
   filterChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#ccc',
+    borderColor: '#e6e6e6',
     borderWidth: 1,
     borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginRight: 6,
-    marginBottom: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     backgroundColor: 'white',
   },
   filterChipActive: {
@@ -458,18 +607,22 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     marginLeft: 6,
-    color: '#333',
+    color: '#000',
     fontSize: 13,
+    fontWeight: '500',
+  },
+  filterChipTextActive: {
+    color: 'white',
   },
   clearButton: { 
-    borderRadius: 14,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-    alignSelf: 'flex-end', 
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#888', 
-    width: '30%', 
+    borderRadius: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#e63e4c',
+  },
+  clearButtonText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '600',
   },
 })

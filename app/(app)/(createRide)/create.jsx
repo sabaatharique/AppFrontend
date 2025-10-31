@@ -41,7 +41,7 @@ export default function CreateRide() {
               preferences: '',
               routePolyline: ''
             });
-            router.push('/chooseStart');
+            router.push('/chooseRoute');
           }}
         />
     
@@ -57,7 +57,7 @@ export default function CreateRide() {
                 partners: [],
               });
           
-              router.push('/(createRide)/resetDate');
+              router.push('/resetDate');
             }}
           >
             {/* start location */}

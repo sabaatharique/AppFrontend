@@ -1,10 +1,10 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { StyledText as Text } from '../../../../components/StyledText';
+import { StyledNavigatorButton as NavButton } from '../../../../components/StyledNavigatorButton'
 import RideDetailsCard from '../../../../components/RideDetailsCard';
 import RouteMap from '../../../../components/RouteMap';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSearch } from '../../../../context/SearchContext';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import rides from '../../../../data/rideData.json';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -30,10 +30,7 @@ const RideDetails = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <FontAwesome style={{ marginRight: 10 }} name="chevron-left" size={14} color="black" />
-        <Text style={{ fontSize: 16, fontWeight: 'semibold' }}>Back</Text>
-      </TouchableOpacity>
+      <NavButton style={styles.backButton} onPress={() => router.back()} />
 
       <RouteMap ride={ride} userStartCoords={userStartCoords} userDestCoords={userDestCoords} small={false} />
 
@@ -51,13 +48,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 8,
     zIndex: 1,
+    backgroundColor: '#fff'
   },
-  
 });
