@@ -99,7 +99,7 @@ export default function RideDisplayCard({ ride, style, join = false, create = fa
             {ride.fare === 'TBA' ? (
               <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>TBA</Text>
             ) : (
-              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>BDT {ride.fare}</Text>
+              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>৳ {ride.fare}</Text>
             )}
           </View>
         </View>

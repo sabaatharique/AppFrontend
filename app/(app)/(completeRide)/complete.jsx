@@ -1,7 +1,7 @@
 import React, { use } from 'react';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'
 import { StyledTitle as Title } from '../../../components/StyledTitle' 
-import { StyledButton as Button } from '../../../components/StyledButton'; 
+import { StyledNavigatorButton as NavButton } from '../../../components/StyledNavigatorButton'
 import RouteMap from '../../../components/RouteMap'
 import RideCard from '../../../components/RideDisplayCard'
 import rides from '../../../data/rideData.json'
@@ -19,13 +19,11 @@ export default function FareCalculation() {
 
       <RideCard ride={currentRide} />
 
-      <Button
-          title='Next'
-          onPress={() =>
-            router.push('/fareCalculation')
-        }
-        style={{width: '100%'}}>
-        </Button>
+      <NavButton
+        onPress={() => router.push('/fareCalculation')}
+        back={false}
+        style={{ width: '25%', marginTop: 15, alignSelf: 'flex-end'}}
+      />
 
     </ScrollView>
   )

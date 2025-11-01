@@ -67,15 +67,7 @@ export default function TabsLayout() {
       options={{ href: null}} 
       />
       <Tabs.Screen 
-      name="(completeRide)/complete" 
-      options={{ href: null}} 
-      />
-      <Tabs.Screen 
-      name="(completeRide)/fareCalculation" 
-      options={{ href: null}} 
-      />
-      <Tabs.Screen 
-      name="(completeRide)/partnerFeedback" 
+      name="(completeRide)" 
       options={{ href: null}} 
       />
       <Tabs.Screen 

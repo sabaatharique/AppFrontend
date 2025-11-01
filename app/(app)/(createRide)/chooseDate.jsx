@@ -66,17 +66,17 @@ export default function TimeDetails() {
       )}
 
       <View style={styles.buttonRow}>
-      <NavButton
-          onPress={() => router.back()}
-          style={{ width: '25%' }}
-        />
-        {selection && (
         <NavButton
-          onPress={() => handleNext()}
-          back={false}
-          style={{ width: '25%' }}
-        />
-        )}
+            onPress={() => router.back()}
+            style={{ width: '25%' }}
+          />
+          {selection && (
+          <NavButton
+            onPress={() => handleNext()}
+            back={false}
+            style={{ width: '25%' }}
+          />
+          )}
       </View>
     </ScrollView>
   )

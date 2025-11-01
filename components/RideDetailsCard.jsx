@@ -179,7 +179,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
           <Text style={styles.transportText}>{ride.transport}</Text>
         </View>
         <View style={styles.rideColumn}>
-          <Text>BDT {ride.fare}</Text>
+          <Text>৳ {ride.fare}</Text>
         </View>
       </View>
 
@@ -198,7 +198,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
               <Text style={styles.rideText}>{creator.name}</Text>
             </View>
             <View style={styles.rideColumn}>
-              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>BDT {ride.fare}</Text>
+              <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>৳ {ride.fare}</Text>
             </View>
           </View>
 
@@ -208,7 +208,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
                 <Text style={styles.rideText}>{partner.name}</Text>
               </View>
               <View style={styles.rideColumn}>
-                <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>BDT {ride.fare}</Text>
+                <Text style={[styles.rideText, { fontWeight: 'semibold' }]}>৳ {ride.fare}</Text>
               </View>
             </View>
           ))}

@@ -5,6 +5,9 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
+// Simple in-memory cache to avoid redundant Directions API calls
+const directionsCache = new Map();
+
 const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }) => {
   const mapRef = useRef(null);
   const [routeCoords, setRouteCoords] = useState([]);
@@ -36,6 +39,13 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }
 
   const fetchDirections = async (start, destination, setCoords) => {
     try {
+      const cacheKey = `${start.latitude},${start.longitude}-${destination.latitude},${destination.longitude}`;
+
+      if (directionsCache.has(cacheKey)) {
+        setCoords(directionsCache.get(cacheKey));
+        return;
+      }
+
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${destination.latitude},${destination.longitude}&mode=driving&key=${GOOGLE_MAPS_APIKEY}`
       );
@@ -45,6 +55,7 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }
         const encoded = json.routes[0].overview_polyline.points;
         const decoded = decodePolyline(encoded);
         setCoords(decoded);
+        directionsCache.set(cacheKey, decoded);
 
         // await updateRideRoute(ride.id, encoded);
       }
