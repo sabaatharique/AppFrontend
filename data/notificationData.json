@@ -2,10 +2,9 @@
   {
     "id": 1,
     "type": "join_request",
-    "message": "@ahmed123 wants to join your ride",
+    "message": "sent a join request",
     "user": {
-      "name": "Ahmed Rahman",
-      "handle": "@ahmed123"
+      "handle": "@saba130"
     },
     "ride": {
       "destination": "House #18, Road 6, Sector 5, Uttara",
@@ -19,10 +18,9 @@
   {
     "id": 2,
     "type": "join_request",
-    "message": "@fatima456 wants to join your ride",
+    "message": "sent a join request",
     "user": {
-      "name": "Fatima Khan",
-      "handle": "@fatima456"
+      "handle": "@ridita110"
     },
     "ride": {
       "destination": "House #18, Road 6, Sector 5, Uttara",
@@ -36,10 +34,9 @@
   {
     "id": 3,
     "type": "join_request",
-    "message": "@karim789 wants to join your ride",
+    "message": "sent a join request",
     "user": {
-      "name": "Karim Ahmed",
-      "handle": "@karim789"
+      "handle": "@mounota122"
     },
     "ride": {
       "destination": "House #18, Road 6, Sector 5, Uttara",
@@ -53,10 +50,9 @@
   {
     "id": 4,
     "type": "join_request",
-    "message": "@sarah321 wants to join your ride",
+    "message": "sent a join request",
     "user": {
-      "name": "Sarah Islam",
-      "handle": "@sarah321"
+      "handle": "@mueed_s"
     },
     "ride": {
       "destination": "House #18, Road 6, Sector 5, Uttara",

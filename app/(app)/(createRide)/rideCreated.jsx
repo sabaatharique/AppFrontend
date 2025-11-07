@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StyledText as Text } from '../../../components/StyledText';
 import { StyledScrollView as ScrollView } from '../../../components/StyledScrollView'; 
@@ -22,23 +22,13 @@ export default function RideCreated() {
       <RideCard create={true} ride={rideData} style={{marginTop: 15}} />
 
       <View style={{flexDirection: 'column', alignSelf: 'center', alignItems: 'center', marginVertical: 15}}>
-        <Text>Other users can now see your ride!</Text>
-        <Text>Check your notifications for join requests.</Text>
+        <Text style={{textAlign: 'center'}}>Other users can now see your ride!</Text>
+        <Text style={{textAlign: 'center'}}>Check your notifications for join requests.</Text>
       </View>
 
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    padding: 25, 
-    paddingTop: 10, 
-    backgroundColor: '#f7f7f7' 
-  },
-})
-
 
 
 

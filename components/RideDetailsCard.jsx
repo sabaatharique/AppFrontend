@@ -22,7 +22,6 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
 
   if (!ride) return <Text>No ride data provided.</Text>;
 
-  
   const findUserByHandle = (handle) => users.find(u => u.handle === handle);
 
   const creator = findUserByHandle(ride.creator.handle);
