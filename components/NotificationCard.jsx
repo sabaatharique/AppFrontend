@@ -34,14 +34,15 @@ const NotificationCard = ({ notification, onAccept, onDecline, onRemove }) => {
     <View style={styles.notificationContent}>
       {/* Header */}
       <View style={styles.notificationHeader}>
+        <Text style={{ fontSize: 30 }}>👤 </Text>
         <View style={styles.headerLeft}>
-          <Text style={styles.notificationMessage}>{notification.user.handle} {notification.message}</Text>
-          <Text style={styles.timestamp}>{notification.timestamp}</Text>
+          <Text style={styles.notificationMessage}>{notification.user.handle} {notification.type == 'join_request' ? 'wants to join your ride' : 'jkdnv' }</Text>
         </View>
         <TouchableOpacity onPress={() => onRemove?.(notification.id)}>
           <Entypo name="circle-with-cross" size={20} color="#888" />
         </TouchableOpacity>
       </View>
+      <Text style={styles.timestamp}>{notification.timestamp}</Text>
 
       {/* Ride Info */}
       <View style={styles.rideInfo}>
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      marginBottom: 12,
+      marginBottom: 0,
     },
     headerLeft: {
       flex: 1,
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
     timestamp: {
       fontSize: 12,
       color: '#666',
+      marginBottom: 8,
     },
     rideInfo: {
       marginBottom: 5,

@@ -2,7 +2,6 @@
   {
     "id": 1,
     "type": "join_request",
-    "message": "sent a join request",
     "user": {
       "handle": "@saba130"
     },
@@ -18,7 +17,6 @@
   {
     "id": 2,
     "type": "join_request",
-    "message": "sent a join request",
     "user": {
       "handle": "@ridita110"
     },
@@ -34,7 +32,6 @@
   {
     "id": 3,
     "type": "join_request",
-    "message": "sent a join request",
     "user": {
       "handle": "@mounota122"
     },
@@ -50,7 +47,6 @@
   {
     "id": 4,
     "type": "join_request",
-    "message": "sent a join request",
     "user": {
       "handle": "@mueed_s"
     },

@@ -3,6 +3,9 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import { StyledSearchBar as TextInput } from './StyledSearchBar'
 import { StyledText as Text } from './StyledText'
+import { mapLight } from './mapLight';
+import { mapDark } from './mapDark';
+import { useTheme } from '../context/ThemeContext' 
 import Octicons from '@expo/vector-icons/Octicons'
 import Entypo from '@expo/vector-icons/Entypo'
 
@@ -34,6 +37,7 @@ export default function MapSearch({
   const [sessionToken, setSessionToken] = useState(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const {theme} = useTheme();
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
   function uuidv4() {
@@ -204,6 +208,7 @@ export default function MapSearch({
         <MapView 
           ref={mapRef} 
           style={styles.map} 
+          customMapStyle={theme === 'dark' ? mapDark : mapLight}
           initialRegion={INITIAL_REGION}
           onPress={allowBoth ? handleMapPress : undefined}
         >
@@ -331,7 +336,7 @@ const styles = StyleSheet.create({
   mapWrapper: {
     width: '100%',
     aspectRatio: 0.55,
-    borderRadius: 16,
+    borderRadius: 0,
     overflow: 'hidden',
     backgroundColor: '#fff',
   },
@@ -349,7 +354,7 @@ const styles = StyleSheet.create({
   suggestionList: {
     backgroundColor: '#fff',
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 0.8,
     borderColor: '#ddd',
     maxHeight: 250,
     overflow: 'hidden',

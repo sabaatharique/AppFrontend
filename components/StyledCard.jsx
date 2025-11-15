@@ -10,7 +10,7 @@ export function StyledCard(props) {
 const styles = StyleSheet.create({
   card: { 
     borderRadius: 16,
-    borderWidth: 1,     
+    borderWidth: 0.8,     
     borderColor: '#000000',
     backgroundColor: '#fff',
     padding: 14, 

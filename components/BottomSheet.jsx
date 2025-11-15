@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, useAnimatedProps } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const SPRING_CONFIG = { damping: 20, stiffness: 200 };
@@ -11,7 +11,7 @@ export default function BottomSheet({
   topSnap = 0.2, // as fraction of screen height
   bottomSnap = 0.6, // as fraction of screen height
   children,
-  contentPaddingBottomExtra = 120,
+  contentPaddingBottomExtra = 0,
   style,
   contentContainerStyle,
   scrollProps,
@@ -22,6 +22,7 @@ export default function BottomSheet({
   const initialY = initialPosition === 'expanded' ? screenHeight * topSnap : screenHeight * bottomSnap;
   const translateY = useSharedValue(initialY);
   const context = useSharedValue({ y: initialY });
+  const isCollapsed = useSharedValue(initialPosition === 'collapsed');
 
   const gesture = Gesture.Pan()
     .onStart(() => {
@@ -34,11 +35,15 @@ export default function BottomSheet({
       translateY.value = Math.min(Math.max(next, upperLimit), lowerLimit);
     })
     .onEnd(() => {
-      const mid = (screenHeight * topSnap + screenHeight * bottomSnap) / 2;
-      translateY.value = withSpring(
-        translateY.value > mid ? screenHeight * bottomSnap : screenHeight * topSnap,
-        SPRING_CONFIG
-      );
+      const upper = screenHeight * topSnap;
+      const lower = screenHeight * bottomSnap;
+      const mid = (upper + lower) / 2;
+    
+      const snapTo = translateY.value > mid ? lower : upper;
+    
+      translateY.value = withSpring(snapTo, SPRING_CONFIG);
+    
+      isCollapsed.value = snapTo === lower;
     });
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -48,6 +53,10 @@ export default function BottomSheet({
     };
   });
 
+  const animatedScrollProps = useAnimatedProps(() => {
+    return { scrollEnabled: !isCollapsed.value };
+  });
+
   return (
     <Animated.View style={[styles.container, animatedStyle, style]}>
       <GestureDetector gesture={gesture}>
@@ -55,7 +64,8 @@ export default function BottomSheet({
           <View style={styles.handle} />
         </View>
       </GestureDetector>
-      <ScrollView
+      <Animated.ScrollView
+        animatedProps={animatedScrollProps}
         contentContainerStyle={{
           paddingBottom: insets.bottom + contentPaddingBottomExtra,
           ...(contentContainerStyle || {}),
@@ -68,7 +78,7 @@ export default function BottomSheet({
         {...scrollProps}
       >
         {children}
-      </ScrollView>
+      </Animated.ScrollView>
     </Animated.View>
   );
 }
@@ -82,7 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 20,
+    padding: 18,
+    paddingBottom: 50,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 0.1,
@@ -91,8 +102,8 @@ const styles = StyleSheet.create({
   },
   handleContainer: {
     alignItems: 'center',
-    paddingTop: 8,
-    paddingBottom: 12,
+    paddingTop: 4,
+    paddingBottom: 12
   },
   handle: {
     width: 50,
@@ -101,6 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#d0d0d0',
   },
 });
+
 
 
 

@@ -13,7 +13,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import users from '../data/userData.json';
 
-export default function RideDetailsCard({ ride, ongoing = false, join = false }) {
+export default function RideDetailsCard({ ride, ongoing = false, join = false, onUserPress }) {
   const router = useRouter();
   const [showPassengers, setShowPassengers] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -82,7 +82,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
       <View style={styles.creatorContainer}>
         <TouchableOpacity
           style={styles.creatorRow}
-          onPress={() => router.push(`user/${creator.handle}`)}
+          onPress={() => router.push(`/user/${creator.handle}`)}
         >
           <Text style={{ fontSize: 30 }}>👤 </Text>
           <View>
@@ -93,7 +93,7 @@ export default function RideDetailsCard({ ride, ongoing = false, join = false })
 
         {(join || ongoing) && (
           <View style={styles.contactRow}>
-            <TouchableOpacity style={{ paddingHorizontal: 10, marginRight: 15 }} onPress={() => router.push({ pathname: '/(chat)/chatScreen', params: { handle: creator.handle } })}>
+            <TouchableOpacity style={{ paddingHorizontal: 10, marginRight: 15 }} onPress={() => router.push({ pathname: '/chat/chatScreen', params: { handle: creator.handle } })}>
               <Ionicons name="chatbubble-ellipses" size={22} color="#e63e4c" />
             </TouchableOpacity>
             <StyledLink type="phone" value={creator.phone} style={{ marginVertical: 0 }} />

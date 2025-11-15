@@ -15,12 +15,14 @@ export const StyledScrollView = React.forwardRef((props, ref) => {
 const styles = StyleSheet.create({
     scrollView: {
       padding: 25,
-      paddingTop: 10,
-      marginBottom: 60,
+      paddingTop: 40,
+      paddingBottom: 60,
+      marginBottom: 90,
       backgroundColor: '#f7f7f7',
     },
     contentContainer: {
       alignItems: 'flex-start',
       paddingBottom: 60,
+      backgroundColor: '#f7f7f7',
     }
   });

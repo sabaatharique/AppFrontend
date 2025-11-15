@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import CustomMarker from './CustomMapMarker';
 import MapView, { Marker, Polyline } from 'react-native-maps';
+import { mapLight } from './mapLight';
+import { mapDark } from './mapDark';
+import { useTheme } from '../context/ThemeContext';
 
 const GOOGLE_MAPS_APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -12,6 +15,7 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }
   const mapRef = useRef(null);
   const [routeCoords, setRouteCoords] = useState([]);
   const [userRouteCoords, setUserRouteCoords] = useState([]);
+  const {theme} = useTheme();
 
   const startCoords = ride?.start?.coords ? { latitude: ride.start.coords.lat, longitude: ride.start.coords.lng } : null;
   const destCoords = ride?.destination?.coords ? { latitude: ride.destination.coords.lat, longitude: ride.destination.coords.lng } : null;
@@ -68,7 +72,7 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }
     const allCoords = [...routeCoords, ...userRouteCoords];
     if (allCoords.length > 0 && mapRef.current) {
       mapRef.current.fitToCoordinates(allCoords, {
-        edgePadding: { top: small ? 340 : 130, right: 200, bottom: small ? 300 : 330, left: 200 },
+        edgePadding: { top: small ? 340 : 180, right: 200, bottom: small ? 300 : 260, left: 200 },
         animated: true,
       });
     }
@@ -106,11 +110,15 @@ const RouteMap = ({ ride, userStartCoords, userDestCoords, small = true, style }
 
   return (
     <View style={[styles.mapWrapper, small ? {aspectRatio: 1.25} : {aspectRatio: 0.5}, style]}>
-      <MapView ref={mapRef} style={styles.map}>
+      <MapView 
+        ref={mapRef} 
+        style={styles.map} 
+        customMapStyle={theme === 'dark' ? mapDark : mapLight}
+      >
         {startCoords && <Marker coordinate={startCoords} title="Start" pinColor="orange"/>}
         {destCoords && <Marker coordinate={destCoords} title="Destination" pinColor="#e63e4c"/>}
         {routeCoords.length > 0 && (
-          <Polyline coordinates={routeCoords} strokeWidth={7} strokeColor="#1f1f1f" />
+          <Polyline coordinates={routeCoords} strokeWidth={6} strokeColor={theme === 'dark' ? "#f0e9d3" : "#1f1f1f"} />
         )}
         
         {userStart && <CustomMarker coordinate={userStart} title="Your pickup" color="#888" iconName="circle" size={18}/>}
