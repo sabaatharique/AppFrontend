@@ -5,7 +5,19 @@ import { StyledCard as Card } from '../components/StyledCard';
 import { StyledButton as Button } from '../components/StyledButton';
 import Entypo from '@expo/vector-icons/Entypo';
 
-const NotificationCard = ({ notification, onAccept, onDecline, onRemove }) => {
+const NotificationCard = ({ 
+  notification, 
+  onAccept, 
+  onDecline, 
+  onRemove,
+}) => {
+  
+    const isJoinRequest = notification.type === 'join_request';
+    const isJoinRequestAccepted = notification.type === 'join_request_accepted';
+    const isJoinRequestRejected = notification.type === 'join_request_rejected';
+    const isFareChanged = notification.type === 'fare_changed';
+    const isFriendAddedToRide = notification.type === 'friend_added_to_ride';
+    const isFriendRequest = notification.type === 'friend_request';
   
     const getStatusColor = (status) => {
       switch (status) {
@@ -29,14 +41,30 @@ const NotificationCard = ({ notification, onAccept, onDecline, onRemove }) => {
       }
     };
 
+    let message = '';
+    if (isJoinRequestAccepted) {
+      message = `${notification.user?.handle} has accepted your join request`;
+    } else if (isJoinRequestRejected) {
+      message = `${notification.user?.handle} has rejected your join request`;
+    } else if (isFareChanged) {
+      message = `The fare for your ride has changed to ৳ ${notification.ride?.fare}`;
+    } else if (isFriendAddedToRide) {
+      message = `${notification.user?.handle} added you to a ride`;
+    } else if (isFriendRequest) {
+      message = `${notification.user?.handle} sent you a friend request`;
+    } else if (isJoinRequest) {
+      message = `${notification.user?.handle} wants to join your ride`;
+    }
+
   return (
     <Card>
     <View style={styles.notificationContent}>
       {/* Header */}
       <View style={styles.notificationHeader}>
-        <Text style={{ fontSize: 30 }}>👤 </Text>
+        {!isFareChanged &&  <Text style={{ fontSize: 30 }}>👤 </Text>}
+      
         <View style={styles.headerLeft}>
-          <Text style={styles.notificationMessage}>{notification.user.handle} {notification.type == 'join_request' ? 'wants to join your ride' : 'jkdnv' }</Text>
+          <Text style={styles.notificationMessage}>{message}</Text>
         </View>
         <TouchableOpacity onPress={() => onRemove?.(notification.id)}>
           <Entypo name="circle-with-cross" size={20} color="#888" />
@@ -45,20 +73,22 @@ const NotificationCard = ({ notification, onAccept, onDecline, onRemove }) => {
       <Text style={styles.timestamp}>{notification.timestamp}</Text>
 
       {/* Ride Info */}
-      <View style={styles.rideInfo}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginVertical: 8 }}>
-          <Entypo name="location-pin" size={18} color="#e63e4c" style={{marginRight: 5}} />
-          <Text style={styles.rideText}>{notification.ride.destination}</Text>
-        </View>
+      {!isFriendRequest && (
+        <View style={styles.rideInfo}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginVertical: 8 }}>
+            <Entypo name="location-pin" size={18} color="#e63e4c" style={{marginRight: 5}} />
+            <Text style={styles.rideText}>{notification.ride?.destination}</Text>
+          </View>
 
-        <Text style={styles.rideDetails}>
-          {notification.ride.transport} • {notification.ride.date} •{' '}
-          {notification.ride.time}
-        </Text>
-      </View>
+          <Text style={styles.rideDetails}>
+            {notification.ride?.transport} • {notification.ride?.date} •{' '}
+            {notification.ride?.time}
+          </Text>
+        </View>
+      )}
 
       {/* Action or Status */}
-      {notification.status === 'pending' ? (
+      {(isFriendRequest && notification.status === 'pending') || (isJoinRequest && notification.status === 'pending') ? (
         <View style={styles.buttonContainer}>
           <Button
             style={styles.acceptButton}
@@ -74,16 +104,19 @@ const NotificationCard = ({ notification, onAccept, onDecline, onRemove }) => {
           </Button>
         </View>
       ) : (
-        <View style={styles.statusContainer}>
-          <Text
-            style={[
-              styles.statusText,
-              { color: getStatusColor(notification.status) },
-            ]}
-          >
-            {getStatusText(notification.status)}
-          </Text>
-        </View>
+        // Display status for friend requests (not pending) and other informative notifications
+        (isFriendRequest || isJoinRequest || isJoinRequestAccepted || isJoinRequestRejected) && (
+          <View style={styles.statusContainer}>
+            <Text
+              style={[
+                styles.statusText,
+                { color: getStatusColor(notification.status) },
+              ]}
+            >
+              {getStatusText(notification.status)}
+            </Text>
+          </View>
+        )
       )}
     </View>
   </Card>

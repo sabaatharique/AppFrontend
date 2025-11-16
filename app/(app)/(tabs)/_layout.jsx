@@ -13,7 +13,7 @@ export default function TabsLayout() {
       screenOptions={{
         //header: () => <DashboardHeader />,
         headerShown: false,
-        tabBarLabelStyle: { fontFamily: 'Montserrat-Regular', fontSize: 11 },
+        tabBarLabelStyle: { fontFamily: 'Montserrat-SemiBold', fontSize: 11 },
         tabBarStyle: {
           borderRadius: 30,
           position: 'absolute',
